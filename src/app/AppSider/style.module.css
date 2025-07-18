@@ -1,17 +1,46 @@
 .sider {
 	width: 100%;
 	height: calc(100vh - 64px);
-	overflow-x: hidden;
-	overflow-y: auto;
+
+	position: absolute;
+	background-color: #ffffff;
 	max-width: 580px;
 
 	flex-shrink: 0;
-
 	padding: 12px;
 
+	transition: right 0.3s ease 0s;
+}
+
+.body {
+	height: 100%;
+}
+
+.button {
+	width: 24px;
+	height: 24px;
+	position: absolute;
+	left: -24px;
+
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	background-color: #ffffff;
+	color: rgba(0, 0, 0, 0.25);
+	box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05),
+		0 1px 4px -1px rgba(25, 15, 15, 0.07), 0 0 1px 0 rgba(0, 0, 0, 0.08);
+
+	&:hover {
+		color: black;
+	}
+}
+
+.body {
+	height: 100%;
+	overflow: auto;
 	display: flex;
 	flex-flow: column nowrap;
 	gap: 12px;
-
-	border-left: 1px solid red;
 }

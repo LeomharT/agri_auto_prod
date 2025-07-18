@@ -1,0 +1,17 @@
+.sider {
+	width: 100%;
+	height: calc(100vh - 64px);
+	overflow-x: hidden;
+	overflow-y: auto;
+	max-width: 580px;
+
+	flex-shrink: 0;
+
+	padding: 12px;
+
+	display: flex;
+	flex-flow: column nowrap;
+	gap: 12px;
+
+	border-left: 1px solid red;
+}

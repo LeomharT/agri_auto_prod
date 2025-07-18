@@ -14,9 +14,8 @@ export default class Experience {
 		/**
 		 * Setup
 		 */
-
 		// Sizes
-		this.sizes = new Sizes();
+		this.sizes = new Sizes(this);
 		this.sizes.on(EMIT_EVENTS.RESIZE, () => {
 			this._resize();
 		});
@@ -51,6 +50,7 @@ export default class Experience {
 		// Stats
 		this.stats = new Stats();
 	}
+	public parent?: HTMLDivElement;
 
 	public canvas: HTMLCanvasElement;
 

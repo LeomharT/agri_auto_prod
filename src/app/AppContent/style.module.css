@@ -1,0 +1,14 @@
+.content {
+	width: 100dvw;
+	height: 100dvh;
+	padding-top: 64px;
+
+	display: flex;
+	flex-flow: row nowrap;
+
+	overflow: hidden;
+}
+
+.webgl {
+	width: 100%;
+}

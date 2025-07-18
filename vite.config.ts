@@ -8,4 +8,9 @@ export default defineConfig({
 		hmr: false,
 		host: true,
 	},
+	resolve: {
+		alias: {
+			'@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
+		},
+	},
 });

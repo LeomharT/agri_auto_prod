@@ -1,5 +1,6 @@
 import { App as AntApp, ConfigProvider } from 'antd';
-import Experience from '../components/Experience';
+import AppContent from './AppContent';
+import AppHeader from './AppHeader';
 
 export default function App() {
 	return (
@@ -12,7 +13,8 @@ export default function App() {
 					},
 				}}
 			>
-				<Experience />
+				<AppHeader />
+				<AppContent />
 			</ConfigProvider>
 		</AntApp>
 	);

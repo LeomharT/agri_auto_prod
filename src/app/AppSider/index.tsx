@@ -1,14 +1,14 @@
 import { useMediaQuery } from '@mantine/hooks';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
-import { Card } from 'antd';
 import { useEffect } from 'react';
+import PlaneManage from '../../components/PlantManage';
 import { useApp } from '../../hooks/useApp';
 import classes from './style.module.css';
 
 export default function AppSider() {
 	const matches = useMediaQuery('(max-width: 1080px)');
 
-	const { collapse, dispath } = useApp();
+	const { collapse, dispath, active } = useApp();
 
 	useEffect(() => {
 		if (matches) dispath({ type: 'collapse', payload: true });
@@ -21,6 +21,7 @@ export default function AppSider() {
 				right: collapse ? -580 : 0,
 			}}
 		>
+			{active}
 			<div
 				className={classes.button}
 				onClick={() => dispath({ type: 'collapse', payload: !collapse })}
@@ -31,10 +32,7 @@ export default function AppSider() {
 					<IconChevronRight size={16} />
 				)}
 			</div>
-			<div className={classes.body}>
-				<Card variant='borderless'>1</Card>
-				<Card variant='borderless'>2</Card>
-			</div>
+			<PlaneManage />
 		</div>
 	);
 }

@@ -5,7 +5,7 @@ import {
 	IconTree,
 } from '@tabler/icons-react';
 import { Flex, Tabs } from 'antd';
-import { useState } from 'react';
+import { useApp } from '../../hooks/useApp';
 import classes from './style.module.css';
 
 const menuItems = [
@@ -48,7 +48,11 @@ const menuItems = [
 ];
 
 export default function AppHeader() {
-	const [active, setActive] = useState('plant');
+	const { active, dispath } = useApp();
+
+	function handleOnChange(activeKey: string) {
+		dispath({ type: 'active', payload: activeKey });
+	}
 
 	return (
 		<header className={classes.header}>
@@ -57,7 +61,7 @@ export default function AppHeader() {
 				className={classes.tabs}
 				items={menuItems}
 				accessKey={active}
-				onChange={setActive}
+				onChange={handleOnChange}
 			/>
 		</header>
 	);

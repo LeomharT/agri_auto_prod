@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import Experience from '../../Experience/Experience';
 import { EMIT_EVENTS } from '../../Experience/utils/EventEmitter';
 import { useApp } from '../../hooks/useApp';
+import useExperience from '../../hooks/useExperience';
 import AppSider from '../AppSider';
 import classes from './style.module.css';
 
@@ -11,6 +11,8 @@ export default function AppContent() {
 
 	// WebGL container
 	const ref = useRef<HTMLDivElement>(null);
+
+	const experience = useExperience();
 
 	const { collapse } = useApp();
 
@@ -23,7 +25,6 @@ export default function AppContent() {
 		if (!layout.current) return;
 		if (!ref.current) return;
 
-		const experience = Experience.getInstance();
 		experience.parent = ref.current;
 		experience.sizes.updateSize();
 		experience.sizes.trigger(EMIT_EVENTS.RESIZE);
@@ -40,7 +41,7 @@ export default function AppContent() {
 		return () => {
 			observer.disconnect();
 		};
-	}, [collapse]);
+	}, [collapse, experience]);
 
 	return (
 		<div

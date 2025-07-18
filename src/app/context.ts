@@ -2,9 +2,10 @@ import { createContext, type ActionDispatch } from 'react';
 
 export type AppContextState = {
 	collapse: boolean;
+	active: string;
 };
 
-export const actionType = ['collapse'] as const;
+export const actionType = ['collapse', 'active'] as const;
 
 export type AppContextValue = AppContextState & {
 	dispath: ActionDispatch<[action: Action]>;

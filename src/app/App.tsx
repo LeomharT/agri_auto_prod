@@ -8,10 +8,8 @@ export default function App() {
 	const [state, dispath] = useReducer(
 		(state: AppContextState, action: Action) => {
 			switch (action.type) {
-				case 'collapse':
-					state.collapse = action.payload;
-					break;
 				default:
+					state[action.type] = action.payload as never;
 					break;
 			}
 
@@ -19,6 +17,7 @@ export default function App() {
 		},
 		{
 			collapse: false,
+			active: 'plant',
 		}
 	);
 

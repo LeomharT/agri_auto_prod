@@ -20,6 +20,7 @@
 	width: 24px;
 	height: 24px;
 	position: absolute;
+	top: 12px;
 	left: -24px;
 
 	border-radius: 50%;
@@ -35,12 +36,4 @@
 	&:hover {
 		color: black;
 	}
-}
-
-.body {
-	height: 100%;
-	overflow: auto;
-	display: flex;
-	flex-flow: column nowrap;
-	gap: 12px;
 }

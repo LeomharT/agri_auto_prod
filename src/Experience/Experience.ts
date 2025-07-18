@@ -9,6 +9,12 @@ import Sizes from './utils/Sizes';
 import Time from './utils/Time';
 import World from './world/World';
 
+declare global {
+	interface Window {
+		experience: Experience;
+	}
+}
+
 export default class Experience {
 	private constructor() {
 		/**
@@ -49,6 +55,8 @@ export default class Experience {
 
 		// Stats
 		this.stats = new Stats();
+
+		window.experience = this;
 	}
 	public parent?: HTMLDivElement;
 

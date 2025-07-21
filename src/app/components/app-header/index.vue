@@ -5,7 +5,7 @@ import {
   IconRouter,
   IconTree,
 } from '@tabler/icons-vue';
-import useApp from '../../composables/useApp';
+import useContext from '../../composables/useContext';
 import classes from './style.module.css';
 
 const items = [
@@ -15,7 +15,7 @@ const items = [
   { key: 'data', label: '数据管理', icon: IconDatabase },
 ] as const;
 
-const { activeKey, setActiveKey } = useApp();
+const { activeKey, setActiveKey } = useContext();
 </script>
 
 <template>

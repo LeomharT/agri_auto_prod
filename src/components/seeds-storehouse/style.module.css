@@ -1,0 +1,72 @@
+.body {
+  width: 100%;
+  position: relative;
+}
+
+.list {
+  width: calc(100% - 70px);
+
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 16px;
+
+  padding: 4px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: calc(1px * -1);
+    width: 30px;
+    transition: box-shadow 0.3s;
+    content: '';
+    pointer-events: none;
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: calc(1px * -1);
+    width: 30px;
+    transform: translateX(-70px);
+    transition: box-shadow 0.3s;
+    content: '';
+    pointer-events: none;
+  }
+}
+
+.has-left {
+  &::before {
+    box-shadow: inset 10px 0 8px -8px rgb(0, 0, 0, 0.08);
+  }
+}
+
+.has-right {
+  &::after {
+    box-shadow: inset -10px 0 8px -8px rgb(0, 0, 0, 0.08);
+  }
+}
+
+.seed {
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+
+  > img {
+    width: 40px;
+  }
+}
+
+.add {
+  width: 64px !important;
+  height: 64px !important;
+  line-height: 10px;
+
+  position: absolute;
+  top: 4px;
+  right: 0;
+}

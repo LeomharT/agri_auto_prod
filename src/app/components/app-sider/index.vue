@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-vue';
 import PlantManagement from '../../../components/plant-management/index.vue';
-import useApp from '../../composables/useApp';
+import useContext from '../../composables/useContext';
 import classes from './style.module.css';
 
-const { activeKey, collapse, setCollapse } = useApp();
+const { activeKey, collapse, setCollapse } = useContext();
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 import { inject } from 'vue';
 import { APP_CONTEXT } from '../contex';
 
-export default function useApp() {
+export default function useContext() {
   const { activeKey, setActiveKey } = inject<{
     activeKey: string;
     setActiveKey: (val: string) => void;

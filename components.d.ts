@@ -11,9 +11,12 @@ declare module 'vue' {
     AButton: typeof import('ant-design-vue/es')['Button']
     ACard: typeof import('ant-design-vue/es')['Card']
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
+    AFlex: typeof import('ant-design-vue/es')['Flex']
+    ASpace: typeof import('ant-design-vue/es')['Space']
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
     ATabs: typeof import('ant-design-vue/es')['Tabs']
     PlantManage: typeof import('./src/components/plant-manage/index.vue')['default']
     PlantManagement: typeof import('./src/components/plant-management/index.vue')['default']
+    SeedsStorehouse: typeof import('./src/components/seeds-storehouse/index.vue')['default']
   }
 }

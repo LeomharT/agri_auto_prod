@@ -1,5 +1,6 @@
 .sider {
-  width: var(--app-sider-width);
+  width: 100%;
+  max-width: var(--app-sider-width);
   height: calc(100dvh - var(--app-header-height));
   position: absolute;
   top: 64px;
@@ -8,7 +9,7 @@
   transition: right 0.3s ease 0s;
 
   &[data-collapse='true'] {
-    right: -580px;
+    right: calc(var(--app-sider-width) * -1);
   }
 }
 

@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import { provide, ref } from 'vue';
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools';
+import { useMediaQuery } from '@vueuse/core';
+import { App as AntApp } from 'ant-design-vue';
+import { provide, ref, watchEffect } from 'vue';
 import AppContent from './components/app-content/index.vue';
 import AppHeader from './components/app-header/index.vue';
 import AppSider from './components/app-sider/index.vue';
@@ -16,6 +19,12 @@ function setActiveKey(val: string) {
 function setCollapse(val: boolean) {
   collapse.value = val;
 }
+
+const matches = useMediaQuery('(min-width: 1024px)');
+
+watchEffect(() => {
+  if (!matches.value) setCollapse(true);
+});
 
 // Provides
 provide(APP_CONTEXT.ACTIVE_KEY, {
@@ -36,8 +45,11 @@ provide(APP_CONTEXT.COLLAPSE, {
       },
     }"
   >
-    <app-header />
-    <app-content />
-    <app-sider />
+    <VueQueryDevtools />
+    <ant-app>
+      <app-header />
+      <app-content />
+      <app-sider />
+    </ant-app>
   </a-config-provider>
 </template>

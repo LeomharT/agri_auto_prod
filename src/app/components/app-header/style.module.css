@@ -1,0 +1,47 @@
+.header {
+  width: 100%;
+  height: var(--app-header-height);
+
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding-inline: 16px;
+
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
+    0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+
+  z-index: 1;
+}
+
+.logo {
+  height: 48px;
+}
+
+.tabs {
+  min-width: 0;
+  padding-inline-end: 16px;
+
+  & :global(.ant-tabs-nav) {
+    margin: 0;
+
+    &::before {
+      border: none;
+    }
+  }
+
+  & :global(.ant-tabs-tab) {
+    padding-top: 20px;
+  }
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

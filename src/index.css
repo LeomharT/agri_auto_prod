@@ -1,0 +1,6 @@
+@import url('ant-design-vue/dist/reset.css');
+@import url('./variable.css');
+
+:root {
+  overflow: hidden;
+}

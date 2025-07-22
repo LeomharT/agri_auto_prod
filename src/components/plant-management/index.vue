@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import PlantManage from '../plant-manage/index.vue';
 import SeedsStorehouse from '../seeds-storehouse/index.vue';
 </script>
 <template>
   <a-flex gap="middle" vertical>
     <seeds-storehouse />
-    <a-card title="植物管理" :bordered="false">Plant Management</a-card>
+    <plant-manage />
   </a-flex>
 </template>

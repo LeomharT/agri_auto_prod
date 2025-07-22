@@ -1,17 +1,26 @@
 <script lang="ts" setup>
 import { IconPlus } from '@tabler/icons-vue';
-import { h, onMounted, useTemplateRef } from 'vue';
+import { useQuery } from '@tanstack/vue-query';
+import { Empty } from 'ant-design-vue';
+import { h, onMounted, ref, useTemplateRef, watchEffect } from 'vue';
+import { getAllCropSeedList } from '../../api/plantManagement';
+import { QUERIES } from '../../data/queries';
+import CreateSeeds from './components/create-seeds/index.vue';
 import classes from './style.module.css';
 
 const listRef = useTemplateRef('list-ref');
 
-const seeds = [
-  { key: 1, label: '甜菜', img: '/imgs/beet.png' },
-  { key: 2, label: '胡萝卜', img: '/imgs/carrot.png' },
-  { key: 3, label: '生菜', img: '/imgs/lettuce.png' },
-  { key: 4, label: '黄萝卜', img: '/imgs/yellow-radish.png' },
-  { key: 1, label: '甜菜', img: '/imgs/beet.png' },
-];
+const open = ref(true);
+
+const query = useQuery({
+  queryKey: [QUERIES.ALL_CROP_SEED_LIST],
+  queryFn: getAllCropSeedList,
+  initialData: [] as any,
+});
+
+watchEffect(() => {
+  console.log(query.data.value);
+});
 
 function handleOnDragStart(e: DragEvent, record: (typeof seeds)[number]) {
   e.stopPropagation();
@@ -38,14 +47,13 @@ function scrollShadow(el: HTMLDivElement) {
     el.classList.add(classes['has-right']);
   }
 
-  if (el.scrollLeft === el.clientWidth) {
+  if (el.scrollLeft + el.clientWidth === el.scrollWidth) {
     el.classList.remove(classes['has-right']);
   }
 }
 
 function handleOnScroll(e: Event) {
   const el = e.target as HTMLDivElement;
-
   scrollShadow(el);
 }
 
@@ -58,10 +66,16 @@ onMounted(() => {
 
 <template>
   <a-card title="种子仓库">
+    <create-seeds :open="open" @cancel="open = false" />
     <div :class="classes.body">
       <div ref="list-ref" :class="classes.list" @scroll="handleOnScroll">
+        <a-empty
+          v-if="query.data.value.length === 0"
+          :image="Empty.PRESENTED_IMAGE_SIMPLE"
+          style="margin: 0 auto"
+        />
         <a-space
-          v-for="(seed, index) in seeds"
+          v-for="(seed, index) in query.data.value"
           :key="index"
           align="center"
           direction="vertical"
@@ -82,8 +96,10 @@ onMounted(() => {
       <a-button
         shape="circle"
         size="large"
+        type="dashed"
         :class="classes.add"
         :icon="h(IconPlus, { size: '36px', stroke: '1px' })"
+        @click="open = true"
       >
       </a-button>
     </div>

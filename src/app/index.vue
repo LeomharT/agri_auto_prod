@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools';
-import { useMediaQuery } from '@vueuse/core';
+import { useLocalStorage, useMediaQuery } from '@vueuse/core';
 import { App as AntApp } from 'ant-design-vue';
+import zhCN from 'ant-design-vue/es/locale/zh_CN';
+import 'dayjs/locale/zh-cn';
 import { provide, ref, watchEffect } from 'vue';
+import login from '../components/login/index.vue';
 import AppContent from './components/app-content/index.vue';
 import AppHeader from './components/app-header/index.vue';
 import AppSider from './components/app-sider/index.vue';
@@ -11,6 +14,8 @@ import { APP_CONTEXT } from './contex';
 const activeKey = ref('plant');
 
 const collapse = ref(false);
+
+const token = useLocalStorage('token', '');
 
 function setActiveKey(val: string) {
   activeKey.value = val;
@@ -39,6 +44,7 @@ provide(APP_CONTEXT.COLLAPSE, {
 
 <template>
   <a-config-provider
+    :locale="zhCN"
     :theme="{
       token: {
         colorPrimary: '#00b96b',
@@ -47,9 +53,12 @@ provide(APP_CONTEXT.COLLAPSE, {
   >
     <VueQueryDevtools />
     <ant-app>
-      <app-header />
-      <app-content />
-      <app-sider />
+      <login v-if="!token" />
+      <div v-else>
+        <app-header />
+        <app-content />
+        <app-sider />
+      </div>
     </ant-app>
   </a-config-provider>
 </template>

@@ -47,6 +47,9 @@ function handleOnDrop(e: DragEvent) {
     @dragleave="handleOnDragLeave"
   >
     <context-holder />
-    <div></div>
+
+    <div :class="classes.test">
+      <img src="/imgs/pic_grass_plan1.png" />
+    </div>
   </main>
 </template>

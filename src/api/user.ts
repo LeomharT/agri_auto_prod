@@ -1,3 +1,4 @@
+import type { FarmConfig } from '../models/farm.type';
 import fetchData from '../utils/fetchData';
 
 const prefix: string = import.meta.env.VITE_SERVER_HOST;
@@ -11,7 +12,7 @@ export function login({
   password: string;
   ownerUserId: string;
 }) {
-  return fetchData(`${prefix}/api/auth/login`, {
+  return fetchData<any>(`${prefix}/api/auth/login`, {
     method: 'POST',
     body: JSON.stringify({
       account,
@@ -24,4 +25,8 @@ export function login({
 export function logout() {
   localStorage.clear();
   window.location.href = '/';
+}
+
+export function getFarmConfig() {
+  return fetchData<FarmConfig>(`${prefix}/api/userFarm/getFarmConfig`);
 }

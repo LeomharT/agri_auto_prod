@@ -14,15 +14,13 @@ export default async function fetchData<T extends object>(
   input: RequestInfo | URL,
   init?: RequestInit
 ) {
-  let token = localStorage.getItem('token');
-
-  if (token) token = JSON.parse(token);
+  const token = localStorage.getItem('token');
 
   const defaultHeader: {
     Authorization?: string;
     'CONTENT-TYPE'?: string;
   } = {
-    Authorization: `${token}`,
+    Authorization: `Bearer ${token}`,
     'CONTENT-TYPE': 'application/json',
   };
 
@@ -62,7 +60,7 @@ export default async function fetchData<T extends object>(
         break;
     }
 
-    const data = {
+    const data: T = {
       ...json?.data,
       ...json?.extras,
     };

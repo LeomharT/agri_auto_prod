@@ -1,4 +1,4 @@
 export const QUERIES = {
-  /** 获取植物种子列表 */
+  USER_FARM_CONFIG: 'USER_FARM_CONFIG',
   ALL_CROP_SEED_LIST: 'ALL_CROP_SEED_LIST',
 } as const;

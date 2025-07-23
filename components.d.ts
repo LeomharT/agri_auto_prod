@@ -20,6 +20,7 @@ declare module 'vue' {
     AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
     AModal: typeof import('ant-design-vue/es')['Modal']
     ASpace: typeof import('ant-design-vue/es')['Space']
+    ASpin: typeof import('ant-design-vue/es')['Spin']
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
     ATabs: typeof import('ant-design-vue/es')['Tabs']
     ATree: typeof import('ant-design-vue/es')['Tree']
@@ -30,6 +31,7 @@ declare module 'vue' {
     Login: typeof import('./src/components/login/index.vue')['default']
     PlantManage: typeof import('./src/components/plant-manage/index.vue')['default']
     PlantManagement: typeof import('./src/components/plant-management/index.vue')['default']
+    SeedsInfo: typeof import('./src/components/seeds-storehouse/components/seeds-info/index.vue')['default']
     SeedsStorehouse: typeof import('./src/components/seeds-storehouse/index.vue')['default']
   }
 }

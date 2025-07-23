@@ -1,4 +1,5 @@
-import { inject } from 'vue';
+import { inject, type ComputedRef } from 'vue';
+import type { FarmConfig } from '../../models/farm.type';
 import { APP_CONTEXT } from '../contex';
 
 export default function useContext() {
@@ -12,7 +13,10 @@ export default function useContext() {
     setCollapse: (val: boolean) => void;
   }>(APP_CONTEXT.COLLAPSE)!;
 
+  const farmConfig = inject<ComputedRef<FarmConfig>>(APP_CONTEXT.FARM_CONFIG);
+
   return {
+    farmConfig,
     activeKey,
     setActiveKey,
     collapse,

@@ -2,36 +2,40 @@
 import { IconPlus } from '@tabler/icons-vue';
 import { useQuery } from '@tanstack/vue-query';
 import { Empty } from 'ant-design-vue';
-import { h, onMounted, ref, useTemplateRef, watchEffect } from 'vue';
+import { computed, h, onMounted, ref, useTemplateRef } from 'vue';
 import { getAllCropSeedList } from '../../api/plantManagement';
+import useContext from '../../app/composables/useContext';
 import { QUERIES } from '../../data/queries';
-import CreateSeeds from './components/create-seeds/index.vue';
+import type { Seed } from '../../models/seed.type';
+import SeedsInfo from './components/seeds-info/index.vue';
 import classes from './style.module.css';
+const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;
 
 const listRef = useTemplateRef('list-ref');
 
-const open = ref(true);
+const open = ref(false);
+
+const initialData = ref<undefined | Seed>();
+
+const { farmConfig } = useContext();
 
 const query = useQuery({
   queryKey: [QUERIES.ALL_CROP_SEED_LIST],
-  queryFn: getAllCropSeedList,
-  initialData: [] as any,
+  queryFn: () => getAllCropSeedList(farmConfig?.value?.id as number),
+  enabled: computed(() => Boolean(farmConfig?.value?.id)),
+  initialData: [],
 });
 
-watchEffect(() => {
-  console.log(query.data.value);
-});
-
-function handleOnDragStart(e: DragEvent, record: (typeof seeds)[number]) {
+function handleOnDragStart(e: DragEvent, record: Seed) {
   e.stopPropagation();
 
   // Set drag image
   const img = new Image();
-  img.src = record.img;
+  img.src = filePrefix + record.imageUrl;
   e.dataTransfer?.setDragImage(img, 20, 20);
 
   // Set drag data
-  e.dataTransfer?.setData('type', record.label);
+  e.dataTransfer?.setData('type', record.name);
 }
 
 function scrollShadow(el: HTMLDivElement) {
@@ -57,6 +61,18 @@ function handleOnScroll(e: Event) {
   scrollShadow(el);
 }
 
+function handleOnSeedClick(seed: Seed) {
+  open.value = true;
+  initialData.value = {
+    ...seed,
+  };
+}
+
+function onClose() {
+  open.value = false;
+  initialData.value = undefined;
+}
+
 onMounted(() => {
   if (listRef.value) {
     scrollShadow(listRef.value);
@@ -66,33 +82,46 @@ onMounted(() => {
 
 <template>
   <a-card title="种子仓库">
-    <create-seeds :open="open" @cancel="open = false" />
+    <seeds-info
+      :open="open"
+      :initial-data="initialData"
+      @cancel="onClose"
+      @ok="onClose"
+    />
     <div :class="classes.body">
-      <div ref="list-ref" :class="classes.list" @scroll="handleOnScroll">
-        <a-empty
-          v-if="query.data.value.length === 0"
-          :image="Empty.PRESENTED_IMAGE_SIMPLE"
-          style="margin: 0 auto"
-        />
-        <a-space
-          v-for="(seed, index) in query.data.value"
-          :key="index"
-          align="center"
-          direction="vertical"
-        >
-          <a-button
-            shape="circle"
-            size="large"
-            draggable="true"
-            :class="classes.seed"
-            :icon="h('img', { src: seed.img, draggable: 'false' })"
-            @dragstart="(e:DragEvent) => handleOnDragStart(e, seed)"
+      <a-spin :spinning="query.isFetching.value || !farmConfig?.id">
+        <div ref="list-ref" :class="classes.list" @scroll="handleOnScroll">
+          <a-empty
+            v-if="query.data.value.length === 0"
+            :image="Empty.PRESENTED_IMAGE_SIMPLE"
+            style="margin: 0 auto"
           />
-          <span>
-            {{ seed.label }}
-          </span>
-        </a-space>
-      </div>
+          <a-space
+            v-for="(seed, index) in query.data.value"
+            :key="index"
+            align="center"
+            direction="vertical"
+          >
+            <a-button
+              shape="circle"
+              size="large"
+              draggable="true"
+              :class="classes.seed"
+              :icon="
+                h('img', {
+                  src: filePrefix + seed.imageUrl,
+                  draggable: 'false',
+                })
+              "
+              @click="() => handleOnSeedClick(seed)"
+              @dragstart="(e:DragEvent) => handleOnDragStart(e, seed)"
+            />
+            <span>
+              {{ seed.name }}
+            </span>
+          </a-space>
+        </div>
+      </a-spin>
       <a-button
         shape="circle"
         size="large"

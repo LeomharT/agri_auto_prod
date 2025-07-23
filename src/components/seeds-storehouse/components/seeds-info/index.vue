@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { IconPlus } from '@tabler/icons-vue';
+import { IconPlus, IconTrash } from '@tabler/icons-vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import {
   App,
@@ -10,7 +10,10 @@ import {
 } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface';
 import { defineProps, ref, watchEffect } from 'vue';
-import { addOrUpdateCropSeed } from '../../../../api/plantManagement';
+import {
+  addOrUpdateCropSeed,
+  deleteCropSeed,
+} from '../../../../api/plantManagement';
 import { uploadFile } from '../../../../api/upload';
 import useContext from '../../../../app/composables/useContext';
 import { MUTATIONS } from '../../../../data/mutations';
@@ -25,7 +28,7 @@ type FormInput = {
 
 const props = defineProps<ModalProps & { initialData?: Seed }>();
 
-const { message } = App.useApp();
+const { message, modal } = App.useApp();
 
 const { farmConfig } = useContext();
 
@@ -85,6 +88,25 @@ const mutation = useMutation({
   },
 });
 
+const _delete = useMutation({
+  mutationKey: [MUTATIONS.DELETE_SEED],
+  mutationFn: deleteCropSeed,
+  onSuccess() {
+    // Reset form state
+    resetFields();
+    fileList.value = [];
+
+    // Message
+    message.success('种子信息删除成功');
+    props.onOk?.call({}, {} as any);
+
+    // Reset seed list query
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.ALL_CROP_SEED_LIST],
+    });
+  },
+});
+
 function onUpload(e: UploadRequestOption) {
   const _file = e.file as UploadFile;
 
@@ -126,6 +148,17 @@ function onOk() {
 function onCancel(e: MouseEvent) {
   props.onCancel?.call({}, e);
   resetFields();
+  fileList.value = [];
+}
+
+function onDelete(seed: Seed) {
+  modal.confirm({
+    title: '删除种子',
+    content: `确定删除 ${seed.name} 种子吗?`,
+    onOk() {
+      _delete.mutate(seed.id);
+    },
+  });
 }
 
 watchEffect(() => {
@@ -173,5 +206,17 @@ watchEffect(() => {
         </a-upload>
       </a-form-item>
     </a-form>
+    <a-button
+      v-if="Boolean(props.initialData)"
+      danger
+      block
+      type="default"
+      @click="onDelete(props.initialData!)"
+    >
+      <template #icon>
+        <icon-trash size="16px" style="transform: translate(-2px, 2px)" />
+      </template>
+      删除种子
+    </a-button>
   </a-modal>
 </template>

@@ -2,4 +2,5 @@ export const MUTATIONS = {
   LOGIN: 'LOGIN',
   UPLOAD: 'UPLOAD',
   CREATE_SEED: 'CREATE_SEED',
+  DELETE_SEED: 'DELETE_SEED',
 } as const;

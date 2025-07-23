@@ -32,6 +32,7 @@ function setCollapse(val: boolean) {
 const query = useQuery({
   queryKey: [QUERIES.USER_FARM_CONFIG],
   queryFn: getFarmConfig,
+  enabled: Boolean(token.value),
 });
 
 const matches = useMediaQuery('(min-width: 1024px)');

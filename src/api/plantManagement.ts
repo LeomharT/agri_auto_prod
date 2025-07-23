@@ -16,3 +16,9 @@ export async function addOrUpdateCropSeed(input: Seed) {
     body: JSON.stringify(input),
   });
 }
+
+export async function deleteCropSeed(id: number) {
+  return fetchData(`${prefix}/api/farmCrop/deleteCropSeed?seedId=${id}`, {
+    method: 'DELETE',
+  });
+}

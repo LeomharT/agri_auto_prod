@@ -1,10 +1,6 @@
 <script lang="ts" setup>
+import GroundBlock from '../ground-block/index.vue';
 import classes from './style.module.css';
-
-const waterPic = '/imgs/ground/pic_water@2x.png';
-const addPic = '/imgs/ground/pic_add@2x.png';
-const grassPic = '/imgs/ground/pic_grass@2x.png';
-const seedPic = '/imgs/ground/pic_seed@2x.png';
 </script>
 
 <template>
@@ -12,14 +8,22 @@ const seedPic = '/imgs/ground/pic_seed@2x.png';
     <div :class="classes.ground">
       <div v-for="i in 3 * 6" :class="classes.block" :key="i">
         <a-tooltip title="Plant植物" v-if="i <= 3">
-          <img :src="grassPic" />
+          <ground-block type="grass" />
         </a-tooltip>
-        <img v-if="i > 3 && i <= 6" :src="addPic" />
-        <img v-if="i > 6 && i <= 9" :src="addPic" />
-        <img v-if="i > 9 && i <= 12" :src="waterPic" />
-        <img v-if="i > 12 && i <= 15" :src="seedPic" />
+        <a-tooltip title="Add添加地面" v-if="i > 3 && i <= 6">
+          <ground-block type="add" />
+        </a-tooltip>
+        <a-tooltip title="Add添加地面" v-if="i > 6 && i <= 9">
+          <ground-block type="add" />
+        </a-tooltip>
+        <a-tooltip title="Water水地面" v-if="i > 9 && i <= 12">
+          <ground-block type="water" />
+        </a-tooltip>
+        <a-tooltip title="Seeds种子" v-if="i > 12 && i <= 15">
+          <ground-block type="seed" />
+        </a-tooltip>
         <a-tooltip title="Seeds种子" v-if="i > 15 && i <= 18">
-          <img :src="seedPic" />
+          <ground-block type="seed" />
         </a-tooltip>
       </div>
     </div>

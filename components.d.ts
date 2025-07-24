@@ -41,6 +41,7 @@ declare module 'vue' {
     DeviceManage: typeof import('./src/components/device-management/components/device-manage/index.vue')['default']
     DeviceManagement: typeof import('./src/components/device-management/index.vue')['default']
     Ground: typeof import('./src/components/ground/index.vue')['default']
+    GroundBlock: typeof import('./src/components/ground-block/index.vue')['default']
     Login: typeof import('./src/components/login/index.vue')['default']
     PlantManage: typeof import('./src/components/plant-manage/index.vue')['default']
     PlantManagement: typeof import('./src/components/plant-management/index.vue')['default']

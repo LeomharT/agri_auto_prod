@@ -1,0 +1,42 @@
+.board {
+  width: 960px;
+  min-width: 960px;
+  height: 680px;
+  min-height: 680px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('/imgs/ground/pic_land@2x.png');
+
+  transform: scale(0.85);
+}
+
+.ground {
+  width: fit-content;
+
+  display: grid;
+  gap: 1px;
+
+  grid-template-columns: repeat(3, 130px);
+  grid-template-rows: repeat(6, 130px);
+
+  perspective: 400px;
+  transform-style: preserve-3d;
+  transform: translate(292px, -140px) rotateX(60deg) rotateZ(-45deg);
+}
+
+.block {
+  cursor: pointer;
+
+  > img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.debug {
+  position: absolute;
+  right: 16px;
+  top: 64px;
+  z-index: 99;
+  width: 520px;
+}

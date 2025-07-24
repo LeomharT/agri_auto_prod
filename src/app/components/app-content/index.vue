@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { message } from 'ant-design-vue';
+import Ground from '../../../components/ground/index.vue';
 import useContext from '../../composables/useContext';
 import classes from './style.module.css';
 
@@ -47,9 +48,6 @@ function handleOnDrop(e: DragEvent) {
     @dragleave="handleOnDragLeave"
   >
     <context-holder />
-
-    <div :class="classes.test">
-      <img src="/imgs/pic_grass_plan1.png" />
-    </div>
+    <ground />
   </main>
 </template>

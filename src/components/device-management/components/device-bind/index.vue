@@ -2,16 +2,17 @@
 import { addOrUpdateBindDevice } from '@/api/device';
 import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
+import type { Device } from '@/models/device.type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type ModalProps } from 'ant-design-vue';
 import { useForm } from 'ant-design-vue/es/form';
 import type { SelectValue } from 'ant-design-vue/es/select';
 import type { DefaultOptionType } from 'ant-design-vue/es/vc-cascader';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { getAllDeviceList, getProjectList } from '../../../../api/industry';
 import { QUERIES } from '../../../../data/queries';
 
-const props = defineProps<ModalProps>();
+const props = defineProps<ModalProps & { initialData?: Device }>();
 
 const bindDevice = ref<any>({});
 
@@ -21,7 +22,11 @@ const { message } = App.useApp();
 
 const { farmConfig } = useContext();
 
-const modelRef = ref({
+const modelRef = ref<{
+  projectId?: number;
+  deviceKey?: number;
+  deviceBindType?: number;
+}>({
   projectId: undefined,
   deviceKey: undefined,
   deviceBindType: undefined,
@@ -52,7 +57,7 @@ const mutation = useMutation({
   mutationFn: addOrUpdateBindDevice,
   onSuccess() {
     queryClient.invalidateQueries({ queryKey: [QUERIES.BIND_DEVICES] });
-    message.success('设备绑定成功');
+    message.success('设备信息更新成功');
     onCancel();
   },
 });
@@ -63,6 +68,7 @@ function onOk() {
       ...bindDevice.value,
       ..._data,
       farmId: farmConfig?.value.id,
+      id: props.initialData?.id,
     };
 
     mutation.mutate(data);
@@ -96,11 +102,26 @@ function onDeviceChange(val: SelectValue) {
     };
   }
 }
+
+watch(props, () => {
+  if (props.open) {
+    if (props.initialData) {
+      modelRef.value = {
+        projectId: props.initialData.projectId,
+        deviceBindType: props.initialData.deviceBindType,
+        deviceKey: props.initialData.deviceId,
+      };
+
+      onDeviceChange(props.initialData.deviceId);
+    }
+  }
+});
 </script>
 
 <template>
   <a-modal
     title="绑定设备"
+    :destroy-on-close="true"
     :open="props.open"
     :confirm-loading="mutation.isPending.value"
     @ok="onOk"

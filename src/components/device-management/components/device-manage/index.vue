@@ -17,6 +17,8 @@ const queryClient = useQueryClient();
 
 const { modal } = App.useApp();
 
+const selected = ref<Device | undefined>();
+
 const columns: TableProps<Device>['columns'] = [
   { key: 'deviceName', dataIndex: 'deviceName', title: '已绑定设备' },
   { key: 'productName', dataIndex: 'productName', title: '归属产品' },
@@ -53,12 +55,18 @@ function onDelete(id: number) {
 
 function onCancel() {
   open.value = false;
+  selected.value = undefined;
+}
+
+function onEdit(record: Device) {
+  open.value = true;
+  selected.value = record;
 }
 </script>
 
 <template>
   <a-card title="设备管理" :body-style="{ padding: 0 }">
-    <device-bind :open="open" @cancel="onCancel" />
+    <device-bind :open="open" :initial-data="selected" @cancel="onCancel" />
     <template #extra>
       <a-button type="primary" @click="open = true"> 绑定设备 </a-button>
     </template>
@@ -71,7 +79,12 @@ function onCancel() {
     >
       <template #bodyCell="{ column, text, record }">
         <a-space v-if="column.key === 'options'">
-          <a-button size="small" type="link" style="color: #00b96b">
+          <a-button
+            size="small"
+            type="link"
+            style="color: #00b96b"
+            @click="onEdit(record as Device)"
+          >
             <template #icon>
               <icon-edit size="18px" />
             </template>

@@ -60,12 +60,7 @@ export default async function fetchData<T extends object>(
         break;
     }
 
-    const data: T = {
-      ...json?.data,
-      ...json?.extras,
-    };
-
-    return data;
+    return json.data;
   } catch (e) {
     Modal.destroyAll();
 

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-vue';
+import DeviceManagement from '../../../components/device-management/index.vue';
 import PlantManagement from '../../../components/plant-management/index.vue';
 import useContext from '../../composables/useContext';
 import classes from './style.module.css';
@@ -15,6 +16,7 @@ const { activeKey, collapse, setCollapse } = useContext();
     </div>
     <div :class="classes.body">
       <plant-management v-if="activeKey === 'plant'" />
+      <device-management v-if="activeKey === 'device'" />
     </div>
   </aside>
 </template>

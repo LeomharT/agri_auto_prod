@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import { MUTATIONS } from '@/data/mutations';
 import { IconEdit, IconTrash } from '@tabler/icons-vue';
-import { useQuery } from '@tanstack/vue-query';
-import type { TableProps } from 'ant-design-vue';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { App, message, type TableProps } from 'ant-design-vue';
 import { computed, ref } from 'vue';
-import { getBindDeviceList } from '../../../../api/device';
+import { deleteBindDevice, getBindDeviceList } from '../../../../api/device';
 import useContext from '../../../../app/composables/useContext';
 import { QUERIES } from '../../../../data/queries';
 import type { Device } from '../../../../models/device.type';
@@ -11,6 +12,10 @@ import DeviceBind from '../device-bind/index.vue';
 const { farmConfig } = useContext();
 
 const open = ref(false);
+
+const queryClient = useQueryClient();
+
+const { modal } = App.useApp();
 
 const columns: TableProps<Device>['columns'] = [
   { key: 'deviceName', dataIndex: 'deviceName', title: '已绑定设备' },
@@ -25,6 +30,26 @@ const query = useQuery({
   enabled: computed(() => Boolean(farmConfig?.value)),
   initialData: [],
 });
+
+const mutation = useMutation({
+  mutationKey: [MUTATIONS.DELETE_DEVICE],
+  mutationFn: deleteBindDevice,
+  onSuccess() {
+    queryClient.invalidateQueries({ queryKey: [QUERIES.BIND_DEVICES] });
+    message.success('设备删除成功');
+    onCancel();
+  },
+});
+
+function onDelete(id: number) {
+  modal.confirm({
+    title: '删除设备',
+    content: '您确定删除这个设备吗?',
+    onOk() {
+      mutation.mutate(id);
+    },
+  });
+}
 
 function onCancel() {
   open.value = false;
@@ -44,14 +69,19 @@ function onCancel() {
       :loading="query.isFetching.value"
       :data-source="query.data.value"
     >
-      <template #bodyCell="{ column, text }">
+      <template #bodyCell="{ column, text, record }">
         <a-space v-if="column.key === 'options'">
           <a-button size="small" type="link" style="color: #00b96b">
             <template #icon>
               <icon-edit size="18px" />
             </template>
           </a-button>
-          <a-button danger size="small" type="link">
+          <a-button
+            danger
+            size="small"
+            type="link"
+            @click="onDelete(record.id)"
+          >
             <template #icon>
               <icon-trash size="18px" />
             </template>

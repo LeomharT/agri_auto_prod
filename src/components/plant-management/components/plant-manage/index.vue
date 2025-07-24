@@ -21,7 +21,7 @@ const treeData: TreeProps['treeData'] = [
 const searchValue = ref('');
 
 function onSearch(val: string) {
-  console.log(onSearch);
+  console.log(val);
 }
 </script>
 
@@ -41,7 +41,7 @@ function onSearch(val: string) {
         :tree-data="treeData"
         render
       >
-        <template #title="{ title, key }">
+        <template #title="{ title }">
           <span>{{ title }}</span>
         </template>
       </a-tree>

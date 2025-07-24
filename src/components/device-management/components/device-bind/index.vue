@@ -1,6 +1,9 @@
 <script lang="ts" setup>
-import { useQuery } from '@tanstack/vue-query';
-import type { ModalProps } from 'ant-design-vue';
+import { addOrUpdateBindDevice } from '@/api/device';
+import useContext from '@/app/composables/useContext';
+import { MUTATIONS } from '@/data/mutations';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { App, type ModalProps } from 'ant-design-vue';
 import { useForm } from 'ant-design-vue/es/form';
 import type { SelectValue } from 'ant-design-vue/es/select';
 import type { DefaultOptionType } from 'ant-design-vue/es/vc-cascader';
@@ -11,6 +14,12 @@ import { QUERIES } from '../../../../data/queries';
 const props = defineProps<ModalProps>();
 
 const bindDevice = ref<any>({});
+
+const queryClient = useQueryClient();
+
+const { message } = App.useApp();
+
+const { farmConfig } = useContext();
 
 const modelRef = ref({
   projectId: undefined,
@@ -38,14 +47,25 @@ const devices = useQuery({
   initialData: [],
 });
 
+const mutation = useMutation({
+  mutationKey: [MUTATIONS.BIND_DEVICE],
+  mutationFn: addOrUpdateBindDevice,
+  onSuccess() {
+    queryClient.invalidateQueries({ queryKey: [QUERIES.BIND_DEVICES] });
+    message.success('设备绑定成功');
+    onCancel();
+  },
+});
+
 function onOk() {
   validate().then((_data) => {
     const data = {
       ...bindDevice.value,
       ..._data,
+      farmId: farmConfig?.value.id,
     };
 
-    console.log(data);
+    mutation.mutate(data);
   });
 }
 
@@ -68,14 +88,24 @@ function onDeviceChange(val: SelectValue) {
   if (device) {
     bindDevice.value = {
       ...bindDevice.value,
-      ...device,
+      deviceId: device.id,
+      deviceKey: device.deviceKey,
+      deviceName: device.name,
+      productId: device.productId,
+      productName: device.productName,
     };
   }
 }
 </script>
 
 <template>
-  <a-modal title="绑定设备" :open="props.open" @ok="onOk" @cancel="onCancel">
+  <a-modal
+    title="绑定设备"
+    :open="props.open"
+    :confirm-loading="mutation.isPending.value"
+    @ok="onOk"
+    @cancel="onCancel"
+  >
     <a-form layout="vertical">
       <a-form-item
         v-bind="validateInfos.projectId"

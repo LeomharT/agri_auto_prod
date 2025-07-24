@@ -6,3 +6,16 @@ export function getBindDeviceList(id: number) {
     `${prefix}/api/farmDevice/getBindDeviceList?FarmId=${id}`
   );
 }
+
+export function addOrUpdateBindDevice(data: Device) {
+  return fetchData(`${prefix}/api/farmDevice/addOrUpdateBindDevice`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteBindDevice(id: number) {
+  return fetchData(`${prefix}/api/farmDevice/deleteBindDevice?id=${id}`, {
+    method: 'DELETE',
+  });
+}

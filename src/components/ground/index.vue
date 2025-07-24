@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import GroundBlock from '../ground-block/index.vue';
+import GroundBlock from './components/ground-block/index.vue';
 import classes from './style.module.css';
 </script>
 
 <template>
   <div :class="classes.board">
     <div :class="classes.ground">
-      <div v-for="i in 3 * 6" :class="classes.block" :key="i">
+      <div v-for="i in 3 * 6" :class="classes.blocks" :key="i">
         <a-tooltip title="Plant植物" v-if="i <= 3">
           <ground-block type="grass" />
         </a-tooltip>

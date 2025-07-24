@@ -64,7 +64,7 @@ export default async function fetchData<T extends object>(
       return {
         ...json.extras,
         ...json.data,
-      };
+      } as T;
 
     return json.data;
   } catch (e) {

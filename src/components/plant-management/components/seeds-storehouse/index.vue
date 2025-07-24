@@ -1,12 +1,12 @@
 <script lang="ts" setup>
+import { getAllCropSeedList } from '@/api/plantManagement';
+import useContext from '@/app/composables/useContext';
+import { QUERIES } from '@/data/queries';
+import type { Seed } from '@/models/seed.type';
 import { IconPlus } from '@tabler/icons-vue';
 import { useQuery } from '@tanstack/vue-query';
 import { Empty } from 'ant-design-vue';
 import { computed, h, onMounted, ref, useTemplateRef } from 'vue';
-import { getAllCropSeedList } from '../../api/plantManagement';
-import useContext from '../../app/composables/useContext';
-import { QUERIES } from '../../data/queries';
-import type { Seed } from '../../models/seed.type';
 import SeedsInfo from './components/seeds-info/index.vue';
 import classes from './style.module.css';
 const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;

@@ -24,13 +24,8 @@
   transform: translate(292px, -140px) rotateX(60deg) rotateZ(-45deg);
 }
 
-.block {
+.blocks {
   cursor: pointer;
-
-  > img {
-    width: 100%;
-    height: 100%;
-  }
 }
 
 .debug {

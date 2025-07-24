@@ -10,7 +10,7 @@ export async function getProjectList() {
 }
 
 export async function getAllDeviceList(ProjectId: number) {
-  return await fetchData<IndustryDevice[]>(
+  return fetchData<IndustryDevice[]>(
     `${prefix}/api/iotCloud/getAllDeviceList?ProjectId=${ProjectId}`
   );
 }

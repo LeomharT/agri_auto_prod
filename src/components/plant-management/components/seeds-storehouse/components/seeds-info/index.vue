@@ -1,4 +1,10 @@
 <script lang="ts" setup>
+import { addOrUpdateCropSeed, deleteCropSeed } from '@/api/plantManagement';
+import { uploadFile } from '@/api/upload';
+import useContext from '@/app/composables/useContext';
+import { MUTATIONS } from '@/data/mutations';
+import { QUERIES } from '@/data/queries';
+import type { Seed } from '@/models/seed.type';
 import { IconPlus, IconTrash } from '@tabler/icons-vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import {
@@ -10,15 +16,6 @@ import {
 } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface';
 import { defineProps, ref, watchEffect } from 'vue';
-import {
-  addOrUpdateCropSeed,
-  deleteCropSeed,
-} from '../../../../api/plantManagement';
-import { uploadFile } from '../../../../api/upload';
-import useContext from '../../../../app/composables/useContext';
-import { MUTATIONS } from '../../../../data/mutations';
-import { QUERIES } from '../../../../data/queries';
-import type { Seed } from '../../../../models/seed.type';
 const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;
 
 type FormInput = {

@@ -29,12 +29,7 @@ const mutation = useMutation({
         <h1>SmartFarmer</h1>
       </div>
       <a-typography-title :level="4"> 您好, 欢迎登录👋 </a-typography-title>
-      <a-form
-        size="large"
-        layout="vertical"
-        :model="formState"
-        @finish="mutation.mutate"
-      >
+      <a-form layout="vertical" :model="formState" @finish="mutation.mutate">
         <a-form-item name="account" :rules="[{ required: true }]">
           <a-input v-model:value="formState.account" :prefix="h(IconUser)" />
         </a-form-item>

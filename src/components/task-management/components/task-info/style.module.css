@@ -1,0 +1,13 @@
+.compare {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  gap: 12px;
+
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 80px 1fr;
+
+  & :global(.ant-input-number) {
+    width: 100%;
+  }
+}

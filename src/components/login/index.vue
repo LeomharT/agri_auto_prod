@@ -1,6 +1,7 @@
 <script lang="ts" setup>
+import { IconLock, IconPassword, IconUser } from '@tabler/icons-vue';
 import { useMutation } from '@tanstack/vue-query';
-import { reactive } from 'vue';
+import { h, reactive } from 'vue';
 import { login } from '../../api/user';
 import { MUTATIONS } from '../../data/mutations';
 import classes from './style.module.css';
@@ -22,20 +23,38 @@ const mutation = useMutation({
 
 <template>
   <div :class="classes.login">
-    <a-card title="现代农业自动化生产实训平台" :class="classes.form">
-      <a-form :model="formState" layout="vertical" @finish="mutation.mutate">
-        <a-form-item label="账号" name="account" :rules="[{ required: true }]">
-          <a-input v-model:value="formState.account" />
+    <a-card :class="classes.form">
+      <div :class="classes.logo">
+        <img src="/imgs/icon_smartfarmer@2x.png" />
+        <h1>SmartFarmer</h1>
+      </div>
+      <a-typography-title :level="4"> 您好, 欢迎登录👋 </a-typography-title>
+      <a-form
+        size="large"
+        layout="vertical"
+        :model="formState"
+        @finish="mutation.mutate"
+      >
+        <a-form-item name="account" :rules="[{ required: true }]">
+          <a-input v-model:value="formState.account" :prefix="h(IconUser)" />
         </a-form-item>
-        <a-form-item
-          label="所有者ID"
-          name="ownerUserId"
-          :rules="[{ required: true }]"
-        >
-          <a-input v-model:value="formState.ownerUserId" />
+        <a-form-item name="ownerUserId" :rules="[{ required: true }]">
+          <a-input
+            v-model:value="formState.ownerUserId"
+            :prefix="h(IconPassword)"
+          />
         </a-form-item>
-        <a-form-item label="密码" name="password" :rules="[{ required: true }]">
-          <a-input-password v-model:value="formState.password" />
+        <a-form-item name="password" :rules="[{ required: true }]">
+          <a-input-password
+            v-model:value="formState.password"
+            :prefix="h(IconLock)"
+          />
+        </a-form-item>
+        <a-form-item>
+          <a-space style="width: 100%; justify-content: space-between">
+            <a-checkbox>保持登录状态</a-checkbox>
+            <a-button size="small" type="link"> 忘记密码 </a-button>
+          </a-space>
         </a-form-item>
         <a-button
           block
@@ -46,6 +65,9 @@ const mutation = useMutation({
           登录
         </a-button>
       </a-form>
+      <p style="margin: 48px 0 0; color: rgba(0, 0, 0, 0.45); font-size: 12px">
+        ©2021-2023 北京新大陆时代科技有限公司 版权所有
+      </p>
     </a-card>
   </div>
 </template>

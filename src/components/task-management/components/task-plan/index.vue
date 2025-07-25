@@ -5,18 +5,29 @@ import { QUERIES } from '@/data/queries';
 import { compareSymbol, toolsType } from '@/models/task.type';
 import { useQuery } from '@tanstack/vue-query';
 import type { TableProps } from 'ant-design-vue';
+import type { Key } from 'ant-design-vue/es/_util/type';
 import dayjs, { Dayjs } from 'dayjs';
-import { computed, h } from 'vue';
+import { computed, h, ref } from 'vue';
+import TaskInfo from '../task-info/index.vue';
+import classes from './style.module.css';
 
-const props = withDefaults(defineProps<{ date: Dayjs }>(), {
+const props = withDefaults(defineProps<{ date: Dayjs; selected: Key[] }>(), {
   date: () => dayjs(),
+  selected: () => [],
 });
 
+const emit = defineEmits<{
+  (e: 'selected', value: Key[]): void;
+}>();
+
 const { farmConfig } = useContext();
+
+const open = ref(true);
 
 const params = computed(() => ({
   FarmId: farmConfig?.value?.id,
   QueryDate: props.date.format('YYYY-MM-DD hh:mm:ss'),
+  PageSize: 100,
 }));
 
 const columns: TableProps['columns'] = [
@@ -62,20 +73,41 @@ const query = useQuery({
 const rowSelection = computed(() => {
   return {
     hideSelectAll: true,
+    selectedRowKeys: props.selected,
+    onChange(selectedRowKeys) {
+      emit('selected', selectedRowKeys);
+    },
   } as TableProps['rowSelection'];
 });
+
+function onCancel() {
+  open.value = false;
+}
 </script>
 
 <template>
   <a-card title="计划任务" :body-style="{ padding: 0 }">
+    <task-info :open="open" @cancel="onCancel" />
+    <template #extra>
+      <a-button type="primary" @click="open = true">添加任务</a-button>
+    </template>
+    <div v-if="!!props.selected.length" :class="classes.alert">
+      <span> 选中 {{ props.selected.length }} 条目 </span>
+      <a-space>
+        <a-button danger size="small" type="text">删除任务</a-button>
+        <a-button size="small" type="text" @click="emit('selected', [])">
+          取消选中
+        </a-button>
+      </a-space>
+    </div>
     <a-table
       size="small"
+      row-key="id"
       :columns="columns"
       :loading="query.isFetching.value"
       :data-source="query.data.value.items"
       :row-selection="rowSelection"
       :pagination="{
-        current: query.data.value.page,
         pageSize: query.data.value.pageSize,
         total: query.data.value.total,
       }"

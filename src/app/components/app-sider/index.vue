@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import TaskManagement from '@/components/task-management/index.vue';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-vue';
 import DeviceManagement from '../../../components/device-management/index.vue';
 import PlantManagement from '../../../components/plant-management/index.vue';
@@ -17,6 +18,7 @@ const { activeKey, collapse, setCollapse } = useContext();
     <div :class="classes.body">
       <plant-management v-if="activeKey === 'plant'" />
       <device-management v-if="activeKey === 'device'" />
+      <task-management v-if="activeKey === 'task'" />
     </div>
   </aside>
 </template>

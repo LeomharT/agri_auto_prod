@@ -11,7 +11,7 @@ import classes from './style.module.css';
 const items = [
   { key: 'plant', label: '植物管理', icon: IconTree },
   { key: 'device', label: '设备管理', icon: IconRouter },
-  { key: 'job', label: '任务管理', icon: IconBriefcase },
+  { key: 'task', label: '任务管理', icon: IconBriefcase },
   { key: 'data', label: '数据管理', icon: IconDatabase },
 ] as const;
 

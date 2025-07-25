@@ -8,7 +8,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ABadge: typeof import('ant-design-vue/es')['Badge']
     AButton: typeof import('ant-design-vue/es')['Button']
+    ACalendar: typeof import('ant-design-vue/es')['Calendar']
     ACard: typeof import('ant-design-vue/es')['Card']
     ACollapse: typeof import('ant-design-vue/es')['Collapse']
     ACollapsePanel: typeof import('ant-design-vue/es')['CollapsePanel']
@@ -45,6 +47,9 @@ declare module 'vue' {
     PlantManagement: typeof import('./src/components/plant-management/index.vue')['default']
     SeedsInfo: typeof import('./src/components/plant-management/components/seeds-storehouse/components/seeds-info/index.vue')['default']
     SeedsStorehouse: typeof import('./src/components/plant-management/components/seeds-storehouse/index.vue')['default']
+    TaskCalendar: typeof import('./src/components/task-management/components/task-calendar/index.vue')['default']
+    TaskManagement: typeof import('./src/components/task-management/index.vue')['default']
+    TaskPlan: typeof import('./src/components/task-management/components/task-plan/index.vue')['default']
     ToolsManage: typeof import('./src/components/device-management/components/tools-manage/index.vue')['default']
     ToolsTask: typeof import('./src/components/device-management/components/tools-task/index.vue')['default']
   }

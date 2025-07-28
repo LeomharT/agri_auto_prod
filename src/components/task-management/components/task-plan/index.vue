@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { getTaskList } from '@/api/task';
+import { deleteTask, getTaskList } from '@/api/task';
 import useContext from '@/app/composables/useContext';
+import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import { compareSymbol, toolsType } from '@/models/task.type';
-import { useQuery } from '@tanstack/vue-query';
-import type { TableProps } from 'ant-design-vue';
+import { useMutation, useQuery } from '@tanstack/vue-query';
+import { App, type TableProps } from 'ant-design-vue';
 import type { Key } from 'ant-design-vue/es/_util/type';
 import dayjs, { Dayjs } from 'dayjs';
 import { computed, h, ref } from 'vue';
@@ -20,9 +21,11 @@ const emit = defineEmits<{
   (e: 'selected', value: Key[]): void;
 }>();
 
+const { message, modal } = App.useApp();
+
 const { farmConfig } = useContext();
 
-const open = ref(true);
+const open = ref(false);
 
 const params = computed(() => ({
   FarmId: farmConfig?.value?.id,
@@ -70,6 +73,14 @@ const query = useQuery({
   },
 });
 
+const mutation = useMutation({
+  mutationKey: [MUTATIONS.DELETE_TASK],
+  mutationFn: deleteTask,
+  onSuccess() {
+    message.success('任务删除成功');
+  },
+});
+
 const rowSelection = computed(() => {
   return {
     hideSelectAll: true,
@@ -83,6 +94,17 @@ const rowSelection = computed(() => {
 function onCancel() {
   open.value = false;
 }
+
+function onDelete(ids: number[]) {
+  modal.confirm({
+    title: '删除任务',
+    content: '您确定要删除所选的任务吗?',
+    onOk() {
+      mutation.mutate(ids);
+      query.refetch();
+    },
+  });
+}
 </script>
 
 <template>
@@ -94,7 +116,13 @@ function onCancel() {
     <div v-if="!!props.selected.length" :class="classes.alert">
       <span> 选中 {{ props.selected.length }} 条目 </span>
       <a-space>
-        <a-button danger size="small" type="text">删除任务</a-button>
+        <a-button
+          danger
+          size="small"
+          type="text"
+          @click="onDelete(props.selected as number[])"
+          >删除任务</a-button
+        >
         <a-button size="small" type="text" @click="emit('selected', [])">
           取消选中
         </a-button>

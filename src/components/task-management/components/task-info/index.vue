@@ -1,34 +1,96 @@
 <script setup lang="ts">
+import { addOrUpdateTask, getSensorDevicePropList } from '@/api/task';
+import useContext from '@/app/composables/useContext';
+import { MUTATIONS } from '@/data/mutations';
+import { QUERIES } from '@/data/queries';
 import { compareSymbol } from '@/models/task.type';
-import type { ModalProps } from 'ant-design-vue';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { App, type ModalProps } from 'ant-design-vue';
 import { useForm } from 'ant-design-vue/es/form';
-import { ref } from 'vue';
+import dayjs from 'dayjs';
+import { computed, ref } from 'vue';
 import classes from './style.module.css';
 
 const props = defineProps<ModalProps>();
 
+const queryClient = useQueryClient();
+
+const { message } = App.useApp();
+
+const { farmConfig } = useContext();
+
 const modalRef = ref({
   name: '',
   toolType: undefined,
-  deviceTaskCronType: undefined,
+  deviceKey: undefined,
+  thingsProp: undefined,
+  deviceTaskCronType: 1,
   compareValueX: undefined,
   compareValueY: undefined,
   compareType: 1,
+  onceExecuteTime: dayjs(),
+  setTime: dayjs(),
+  weekRange: [],
 });
 
 const rulesRef = ref({
   name: [{ required: true, message: '请输入任务名称' }],
   toolType: [{ required: true, message: '请选择工具类型' }],
+  deviceKey: [{ required: true, message: '请选择设备' }],
+  thingsProp: [{ required: true, message: '请选择数据源' }],
   deviceTaskCronType: [{ required: true, message: '请选择任务类型' }],
   compareValueX: [{ required: true, message: '请输入比较值X' }],
+  compareValueY: [{ required: false }],
   compareType: [{ required: true, message: '请输入比较值类型' }],
+  onceExecuteTime: [{ required: false }],
+  setTime: [{ required: false }],
+  weekRange: [{ required: false }],
 });
 
 const { validate, validateInfos } = useForm(modalRef, rulesRef);
 
+const query = useQuery({
+  queryKey: [QUERIES.TASK_DEVICE],
+  queryFn: () => getSensorDevicePropList(farmConfig!.value!.id),
+  enabled: computed(() => Boolean(farmConfig?.value?.id)),
+  initialData: [],
+});
+
+const mutation = useMutation({
+  mutationKey: [MUTATIONS.CREATE_TASK],
+  mutationFn: addOrUpdateTask,
+  onSuccess() {
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.TASK_LIST],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.TASK_CALENDAR],
+    });
+    message.success('任务信息更新成功');
+    onCancel();
+  },
+});
+
 function onOk() {
   validate().then((data) => {
-    console.log(data);
+    const _data = {
+      ...data,
+      onceExecuteTime: data.onceExecuteTime.format('YYYY-MM-DD HH:mm:ss'),
+      setTime: data.setTime.format('HH:mm:ss'),
+      farmId: farmConfig?.value?.id,
+    };
+    if (_data.deviceTaskCronType !== 1) {
+      delete _data.onceExecuteTime;
+    }
+    if (_data.deviceTaskCronType === 1) {
+      delete _data.setTime;
+      delete _data.weekRange;
+    }
+    if (_data.deviceTaskCronType === 2) {
+      delete _data.weekRange;
+    }
+
+    mutation.mutate(_data);
   });
 }
 
@@ -36,10 +98,15 @@ function onCancel() {
   modalRef.value = {
     name: '',
     toolType: undefined,
-    deviceTaskCronType: undefined,
+    deviceKey: undefined,
+    thingsProp: undefined,
+    deviceTaskCronType: 1,
     compareValueX: undefined,
     compareValueY: undefined,
     compareType: 1,
+    onceExecuteTime: dayjs(),
+    setTime: dayjs(),
+    weekRange: [],
   };
 
   props.onCancel?.call({}, {} as MouseEvent);
@@ -47,7 +114,13 @@ function onCancel() {
 </script>
 
 <template>
-  <a-modal :open="props.open" @ok="onOk" @cancel="onCancel" title="任务信息">
+  <a-modal
+    :open="props.open"
+    :confirm-loading="mutation.isPending.value"
+    @ok="onOk"
+    @cancel="onCancel"
+    title="任务信息"
+  >
     <a-form layout="vertical">
       <a-form-item v-bind="validateInfos.name" name="name" label="任务名称">
         <a-input v-model:value="modalRef.name" placeholder="请输入任务名称" />
@@ -68,6 +141,41 @@ function onCancel() {
         />
       </a-form-item>
       <a-form-item
+        v-bind="validateInfos.deviceKey"
+        name="deviceKey"
+        label="任务设备"
+      >
+        <a-select
+          v-model:value="modalRef.deviceKey"
+          placeholder="请选择设备"
+          :options="
+            query.data.value.reduce((prev, curr) => {
+              const key = prev.filter((item:typeof curr) => item.deviceKey === curr.deviceKey);
+              if(!key.length) prev.push(curr)
+              return prev;
+            }, [] as typeof query.data.value)
+          "
+          :field-names="{ label: 'deviceName', value: 'deviceKey' }"
+          @change="modalRef.thingsProp = undefined"
+        />
+      </a-form-item>
+      <a-form-item
+        v-bind="validateInfos.thingsProp"
+        name="thingsProp"
+        label="设备数据源"
+      >
+        <a-select
+          v-model:value="modalRef.thingsProp"
+          placeholder="请选择数据源"
+          :options="
+            query.data.value.filter(
+              (item) => item.deviceKey === modalRef.deviceKey
+            )
+          "
+          :field-names="{ label: 'propName', value: 'propKey' }"
+        />
+      </a-form-item>
+      <a-form-item
         v-bind="validateInfos.deviceTaskCronType"
         name="deviceTaskCronType"
         label="任务类型"
@@ -82,6 +190,51 @@ function onCancel() {
           ]"
         />
       </a-form-item>
+      <div :class="classes.date">
+        <a-form-item
+          v-if="modalRef.deviceTaskCronType === 1"
+          label="执行日期"
+          name="onceExecuteTime"
+          v-bind="validateInfos.onceExecuteTime"
+        >
+          <a-date-picker
+            v-model:value="modalRef.onceExecuteTime"
+            show-time
+            :allow-clear="false"
+            placeholder="请选择任务执行日期"
+          />
+        </a-form-item>
+        <a-form-item
+          v-if="
+            modalRef.deviceTaskCronType === 2 ||
+            modalRef.deviceTaskCronType === 3
+          "
+          label="执行日期"
+          name="setTime"
+          v-bind="validateInfos.setTime"
+        >
+          <a-time-picker
+            v-model:value="modalRef.setTime"
+            :allow-clear="false"
+            placeholder="请选择任务执行日期"
+          />
+        </a-form-item>
+        <a-form-item v-if="modalRef.deviceTaskCronType === 3">
+          <a-checkbox-group
+            v-model:value="modalRef.weekRange"
+            name="checkboxgroup"
+            :options="[
+              { value: 1, label: '周一' },
+              { value: 2, label: '周二' },
+              { value: 3, label: '周三' },
+              { value: 4, label: '周四' },
+              { value: 5, label: '周五' },
+              { value: 6, label: '周六' },
+              { value: 7, label: '周日' },
+            ]"
+          />
+        </a-form-item>
+      </div>
       <div :class="classes.compare">
         <a-form-item
           v-bind="validateInfos.compareValueX"

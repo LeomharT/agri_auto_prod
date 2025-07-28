@@ -24,17 +24,17 @@ const { farmConfig } = useContext();
 
 const modelRef = ref<{
   projectId?: number;
-  deviceKey?: number;
+  deviceId?: number;
   deviceBindType?: number;
 }>({
   projectId: undefined,
-  deviceKey: undefined,
+  deviceId: undefined,
   deviceBindType: undefined,
 });
 
 const rulesRef = ref({
   projectId: [{ required: true, message: '请选择行业云项目' }],
-  deviceKey: [{ required: true, message: '请选择行业云设备' }],
+  deviceId: [{ required: true, message: '请选择行业云设备' }],
   deviceBindType: [{ required: true, message: '请选择设备类型' }],
 });
 
@@ -83,7 +83,7 @@ function onCancel() {
 
 function onProjectChange(val: DefaultOptionType) {
   devices.refetch();
-  modelRef.value.deviceKey = undefined;
+  modelRef.value.deviceId = undefined;
 
   // Set submit value
   bindDevice.value.projectId = val.id;
@@ -109,7 +109,7 @@ watch(props, () => {
       modelRef.value = {
         projectId: props.initialData.projectId,
         deviceBindType: props.initialData.deviceBindType,
-        deviceKey: props.initialData.deviceId,
+        deviceId: props.initialData.deviceId,
       };
 
       onDeviceChange(props.initialData.deviceId);
@@ -142,12 +142,12 @@ watch(props, () => {
         />
       </a-form-item>
       <a-form-item
-        v-bind="validateInfos.deviceKey"
+        v-bind="validateInfos.deviceId"
         label="行业云设备"
-        name="deviceKey"
+        name="deviceId"
       >
         <a-select
-          v-model:value="modelRef.deviceKey"
+          v-model:value="modelRef.deviceId"
           placeholder="请选择行业云设备"
           :options="devices.data.value"
           :field-names="{ label: 'name', value: 'id' }"

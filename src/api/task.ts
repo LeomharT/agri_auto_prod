@@ -30,3 +30,31 @@ export async function getDailyTaskCountList(params: DailyTaskQuery) {
     `${prefix}/api/farmDeviceTask/getDailyTaskCountList?${search.toString()}`
   );
 }
+
+export async function getSensorDevicePropList(farmId: number) {
+  return fetchData<
+    {
+      deviceKey: string;
+      deviceName: string;
+      propKey: string;
+      propName: string;
+      propUnit: string;
+    }[]
+  >(`${prefix}/api/farmDevice/getSensorDevicePropList?farmId=${farmId}`);
+}
+
+export async function addOrUpdateTask(task: Task) {
+  return fetchData(`${prefix}/api/farmDeviceTask/addOrUpdate`, {
+    method: 'POST',
+    body: JSON.stringify(task),
+  });
+}
+
+export async function deleteTask(ids: number[]) {
+  return fetchData(`${prefix}/api/farmDeviceTask/delete`, {
+    method: 'DELETE',
+    body: JSON.stringify({
+      ids,
+    }),
+  });
+}

@@ -11,3 +11,8 @@
     width: 100%;
   }
 }
+
+.date {
+  display: flex;
+  flex-flow: column nowrap;
+}

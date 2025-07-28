@@ -1,8 +1,9 @@
 <script lang="ts" setup>
+import DataManagement from '@/components/data-management/index.vue';
+import DeviceManagement from '@/components/device-management/index.vue';
+import PlantManagement from '@/components/plant-management/index.vue';
 import TaskManagement from '@/components/task-management/index.vue';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-vue';
-import DeviceManagement from '../../../components/device-management/index.vue';
-import PlantManagement from '../../../components/plant-management/index.vue';
 import useContext from '../../composables/useContext';
 import classes from './style.module.css';
 
@@ -19,6 +20,7 @@ const { activeKey, collapse, setCollapse } = useContext();
       <plant-management v-if="activeKey === 'plant'" />
       <device-management v-if="activeKey === 'device'" />
       <task-management v-if="activeKey === 'task'" />
+      <data-management v-if="activeKey === 'data'" />
     </div>
   </aside>
 </template>

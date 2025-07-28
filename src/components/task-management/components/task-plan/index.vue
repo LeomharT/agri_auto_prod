@@ -4,7 +4,7 @@ import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import { compareSymbol, toolsType } from '@/models/task.type';
-import { useMutation, useQuery } from '@tanstack/vue-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type TableProps } from 'ant-design-vue';
 import type { Key } from 'ant-design-vue/es/_util/type';
 import dayjs, { Dayjs } from 'dayjs';
@@ -20,6 +20,8 @@ const props = withDefaults(defineProps<{ date: Dayjs; selected: Key[] }>(), {
 const emit = defineEmits<{
   (e: 'selected', value: Key[]): void;
 }>();
+
+const queryClient = useQueryClient();
 
 const { message, modal } = App.useApp();
 
@@ -78,6 +80,10 @@ const mutation = useMutation({
   mutationFn: deleteTask,
   onSuccess() {
     message.success('任务删除成功');
+    query.refetch();
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.TASK_CALENDAR],
+    });
   },
 });
 
@@ -101,7 +107,6 @@ function onDelete(ids: number[]) {
     content: '您确定要删除所选的任务吗?',
     onOk() {
       mutation.mutate(ids);
-      query.refetch();
     },
   });
 }

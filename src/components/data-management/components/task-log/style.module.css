@@ -1,0 +1,6 @@
+.filter {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding: 4px;
+}

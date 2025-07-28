@@ -7,4 +7,5 @@ export const QUERIES = {
   TASK_LIST: 'TASK_LIST',
   TASK_DEVICE: 'TASK_DEVICE',
   TASK_CALENDAR: 'TASK_CALENDAR',
+  TASK_LOG: 'TASK_LOG',
 } as const;

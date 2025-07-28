@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { getTaskList } from '@/api/task';
+import { getTaskRecordList } from '@/api/task';
 import useContext from '@/app/composables/useContext';
 import { QUERIES } from '@/data/queries';
 import { compareSymbol, toolsType } from '@/models/task.type';
 import { useQuery } from '@tanstack/vue-query';
 import type { TableProps } from 'ant-design-vue';
-import { computed, h } from 'vue';
+import dayjs, { Dayjs } from 'dayjs';
+import { computed, h, ref } from 'vue';
 import classes from './style.module.css';
 const { farmConfig } = useContext();
 
@@ -37,13 +38,22 @@ const columns: TableProps['columns'] = [
   { key: 'nextExecuteTime', dataIndex: 'nextExecuteTime', title: '执行时间' },
 ];
 
-const params = computed(() => ({
-  FarmId: farmConfig?.value?.id,
-}));
+const params = ref({
+  Name: '',
+  ToolType: undefined,
+  DateRange: [dayjs().subtract(1, 'week'), dayjs()] as [Dayjs, Dayjs],
+  PageSize: 100,
+});
 
 const query = useQuery({
-  queryKey: [QUERIES.TASK_LIST],
-  queryFn: () => getTaskList(params.value),
+  queryKey: [QUERIES.TASK_LOG],
+  queryFn: () =>
+    getTaskRecordList(
+      computed(() => ({
+        ...params.value,
+        FarmId: farmConfig?.value?.id,
+      })).value
+    ),
   enabled: computed(() => Boolean(farmConfig?.value?.id)),
   initialData: {
     items: [],
@@ -52,22 +62,56 @@ const query = useQuery({
     total: 8,
   },
 });
+
+function onReset() {
+  params.value.DateRange = [dayjs().subtract(1, 'week'), dayjs()];
+  params.value.Name = '';
+  params.value.ToolType = undefined;
+
+  query.refetch();
+}
 </script>
 <template>
   <a-card title="任务日志" :body-style="{ padding: 0 }">
-    <div :class="classes.filter">
-      <a-form layout="inline">
-        <a-form-item>
-          <a-input placeholder="请输入任务名称" />
-        </a-form-item>
-        <a-form-item>
-          <a-select placeholder="请选择工具" />
-        </a-form-item>
-        <a-form-item>
-          <a-date-picker placeholder="请选择时间" />
-        </a-form-item>
-      </a-form>
-    </div>
+    <a-form
+      layout="inline"
+      :model="params"
+      :class="classes.filter"
+      @finish="query.refetch()"
+    >
+      <a-form-item name="Name">
+        <a-input
+          v-model:value="params.Name"
+          style="width: 100px"
+          type="text"
+          placeholder="请输入任务名称"
+        />
+      </a-form-item>
+      <a-form-item name="ToolType">
+        <a-select
+          v-model:value="params.ToolType"
+          style="width: 100px"
+          placeholder="请选择工具"
+          :allow-clear="false"
+          :options="[
+            { value: 1, label: '种植' },
+            { value: 2, label: '浇水' },
+            { value: 3, label: '除草' },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item name="DateRange">
+        <a-range-picker
+          v-model:value="params.DateRange"
+          style="width: 200px"
+          :allow-clear="false"
+        />
+      </a-form-item>
+      <a-space>
+        <a-button type="primary" html-type="submit"> 搜索 </a-button>
+        <a-button html-type="reset" @click="onReset"> 重置 </a-button>
+      </a-space>
+    </a-form>
     <a-table
       size="small"
       :columns="columns"

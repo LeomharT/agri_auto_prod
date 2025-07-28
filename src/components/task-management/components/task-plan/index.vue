@@ -31,7 +31,7 @@ const open = ref(false);
 
 const params = computed(() => ({
   FarmId: farmConfig?.value?.id,
-  QueryDate: props.date.format('YYYY-MM-DD hh:mm:ss'),
+  QueryDate: props.date.format('YYYY-MM-DD HH:mm:ss'),
   PageSize: 100,
 }));
 
@@ -71,7 +71,7 @@ const query = useQuery({
     items: [],
     page: 1,
     pageSize: 20,
-    total: 8,
+    total: 0,
   },
 });
 

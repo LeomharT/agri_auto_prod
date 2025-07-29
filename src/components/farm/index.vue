@@ -23,7 +23,7 @@ import classes from './style.module.css';
           <ground-block type="seed" />
         </a-tooltip>
         <a-tooltip title="Seeds种子" v-if="i > 15 && i <= 18">
-          <ground-block type="seed" />
+          <ground-block type="mound" />
         </a-tooltip>
       </div>
     </div>

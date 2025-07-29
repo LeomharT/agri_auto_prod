@@ -15,13 +15,14 @@
 
   display: grid;
   gap: 1px;
+  grid-auto-flow: column;
 
-  grid-template-columns: repeat(3, 130px);
-  grid-template-rows: repeat(6, 130px);
+  grid-template-columns: repeat(6, 130px);
+  grid-template-rows: repeat(3, 130px);
 
   perspective: 400px;
   transform-style: preserve-3d;
-  transform: translate(292px, -140px) rotateX(60deg) rotateZ(-45deg);
+  transform: translate(92px, 55px) rotateX(-60deg) rotateZ(45deg);
 }
 
 .blocks {
@@ -30,8 +31,8 @@
 
 .debug {
   position: absolute;
-  right: 16px;
-  top: 64px;
+  right: 0px;
+  bottom: -120px;
   z-index: 99;
   width: 520px;
 }

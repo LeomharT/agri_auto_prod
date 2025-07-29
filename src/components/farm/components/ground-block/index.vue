@@ -4,7 +4,15 @@ import classes from './style.module.css';
 const { message } = App.useApp();
 
 const props = defineProps<{
-  type: 'water' | 'seed' | 'grass' | 'add';
+  type:
+    | 'water'
+    | 'seed'
+    | 'grass'
+    | 'add'
+    | 'mound'
+    | 'moundWet'
+    | 'soil'
+    | 'wet';
 }>();
 
 const blockImg = {
@@ -12,6 +20,10 @@ const blockImg = {
   seed: '/imgs/ground/pic_seed@2x.png',
   grass: '/imgs/ground/pic_grass@2x.png',
   add: '/imgs/ground/pic_add@2x.png',
+  mound: '/imgs/ground/pic_mound@2x.png',
+  moundWet: '/imgs/ground/pic_mound_wet@2x.png',
+  soil: '/imgs/ground/pic_soil@2x.png',
+  wet: '/imgs/ground/pic_wet@2x.png',
 };
 
 function onDragOver(e: DragEvent) {

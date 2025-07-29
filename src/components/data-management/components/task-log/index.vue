@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { exportTaskLog, getTaskRecordList } from '@/api/data';
 import useContext from '@/app/composables/useContext';
+import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import { compareSymbol, toolsType } from '@/models/task.type';
-import { useQuery } from '@tanstack/vue-query';
-import type { TableProps } from 'ant-design-vue';
+import { useMutation, useQuery } from '@tanstack/vue-query';
+import { App, type TableProps } from 'ant-design-vue';
 import type { Key } from 'ant-design-vue/es/_util/type';
 import dayjs, { Dayjs } from 'dayjs';
 import { computed, h, ref } from 'vue';
 import classes from './style.module.css';
 const { farmConfig } = useContext();
+
+const { message } = App.useApp();
 
 const columns: TableProps['columns'] = [
   { key: 'name', dataIndex: 'name', title: '任务事件' },
@@ -75,13 +78,23 @@ const rowSelection = computed(() => {
   } as TableProps['rowSelection'];
 });
 
+const mutation = useMutation({
+  mutationKey: [MUTATIONS.EXPORT_TASK_LOG],
+  mutationFn: () =>
+    exportTaskLog(
+      computed(() => ({
+        ...params.value,
+        FarmId: farmConfig?.value?.id,
+      })).value
+    ),
+  onSuccess() {
+    message.success({ key: 'DOWNLOADING', content: '日志导出成功' });
+  },
+});
+
 async function onExport() {
-  await exportTaskLog(
-    computed(() => ({
-      ...params.value,
-      FarmId: farmConfig?.value?.id,
-    })).value
-  );
+  message.loading({ key: 'DOWNLOADING', content: '日志导出中' });
+  mutation.mutate();
 }
 
 function onSubmit() {
@@ -103,7 +116,9 @@ function onReset() {
 <template>
   <a-card title="任务日志" :body-style="{ padding: 0 }">
     <template #extra>
-      <a-button @click="onExport">导出日志</a-button>
+      <a-button :loading="mutation.isPending.value" @click="onExport">
+        导出日志
+      </a-button>
     </template>
     <a-form
       layout="inline"

@@ -47,7 +47,7 @@ export function exportTaskLog(_params: any) {
     params.delete('ToolType');
   }
 
-  return fetchData(
+  return fetchData<{ data: string }>(
     `${prefix}/api/farmDeviceTask/getRecordExport?${params.toString()}`
   );
 }

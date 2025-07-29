@@ -1,13 +1,23 @@
 <script lang="ts" setup>
-import Ground from '../../../components/ground/index.vue';
+import { getFarmCropList } from '@/api/plant';
+import Farm from '@/components/farm/index.vue';
+import { QUERIES } from '@/data/queries';
+import { useQuery } from '@tanstack/vue-query';
+import { computed } from 'vue';
 import useContext from '../../composables/useContext';
 import classes from './style.module.css';
 
-const { collapse } = useContext();
+const { collapse, farmConfig } = useContext();
+
+const query = useQuery({
+  queryKey: [QUERIES.FARM_CROP_LIST],
+  queryFn: () => getFarmCropList(farmConfig?.value?.id),
+  enabled: computed(() => Boolean(farmConfig?.value?.id)),
+});
 </script>
 
 <template>
   <main id="app-content" :class="classes.content" :data-collapse="collapse">
-    <ground />
+    <farm />
   </main>
 </template>

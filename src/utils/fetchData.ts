@@ -1,5 +1,6 @@
 import { message, Modal } from 'ant-design-vue';
 import { logout } from '../api/user';
+import { downloadFile } from './downloadFile';
 
 type Response<T> = {
   data: T;
@@ -36,6 +37,11 @@ export default async function fetchData<T extends object>(
         ...init?.headers,
       },
     });
+
+    if (res.headers.get('content-type')?.includes('application/stream;')) {
+      await downloadFile(res);
+      return { data: 'success' } as T;
+    }
 
     const json: Response<T> = await res.json();
 

@@ -22,3 +22,7 @@ export async function deleteCropSeed(id: number) {
     method: 'DELETE',
   });
 }
+
+export async function getFarmCropList(id?: number) {
+  return fetchData(`${prefix}/api/farmCrop/getFarmCropList?farmId=${id}`);
+}

@@ -47,6 +47,7 @@ declare module 'vue' {
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     ATypographyTitle: typeof import('ant-design-vue/es')['TypographyTitle']
     AUpload: typeof import('ant-design-vue/es')['Upload']
+    DataHistory: typeof import('./src/components/data-management/components/data-history/index.vue')['default']
     DataManagement: typeof import('./src/components/data-management/index.vue')['default']
     DeviceBind: typeof import('./src/components/device-management/components/device-bind/index.vue')['default']
     DeviceManage: typeof import('./src/components/device-management/components/device-manage/index.vue')['default']

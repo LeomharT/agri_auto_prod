@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { addOrUpdateCropSeed, deleteCropSeed } from '@/api/plantManagement';
+import { addOrUpdateCropSeed, deleteCropSeed } from '@/api/plant';
 import { uploadFile } from '@/api/upload';
 import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';

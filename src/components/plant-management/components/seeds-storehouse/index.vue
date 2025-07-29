@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getAllCropSeedList } from '@/api/plantManagement';
+import { getAllCropSeedList } from '@/api/plant';
 import useContext from '@/app/composables/useContext';
 import { QUERIES } from '@/data/queries';
 import type { Seed } from '@/models/seed.type';

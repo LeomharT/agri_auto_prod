@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { getTaskRecordList } from '@/api/task';
+import { exportTaskLog, getTaskRecordList } from '@/api/data';
 import useContext from '@/app/composables/useContext';
 import { QUERIES } from '@/data/queries';
 import { compareSymbol, toolsType } from '@/models/task.type';
 import { useQuery } from '@tanstack/vue-query';
 import type { TableProps } from 'ant-design-vue';
+import type { Key } from 'ant-design-vue/es/_util/type';
 import dayjs, { Dayjs } from 'dayjs';
 import { computed, h, ref } from 'vue';
 import classes from './style.module.css';
@@ -35,7 +36,7 @@ const columns: TableProps['columns'] = [
       );
     },
   },
-  { key: 'nextExecuteTime', dataIndex: 'nextExecuteTime', title: '执行时间' },
+  { key: 'executeTime', dataIndex: 'executeTime', title: '执行时间' },
 ];
 
 const params = ref({
@@ -63,21 +64,52 @@ const query = useQuery({
   },
 });
 
+const selectedRowKeys = ref<Key[]>([]);
+
+const rowSelection = computed(() => {
+  return {
+    selectedRowKeys: selectedRowKeys.value,
+    onChange(_selectedRowKeys) {
+      selectedRowKeys.value = _selectedRowKeys;
+    },
+  } as TableProps['rowSelection'];
+});
+
+async function onExport() {
+  await exportTaskLog(
+    computed(() => ({
+      ...params.value,
+      FarmId: farmConfig?.value?.id,
+    })).value
+  );
+}
+
+function onSubmit() {
+  selectedRowKeys.value = [];
+
+  query.refetch();
+}
+
 function onReset() {
   params.value.DateRange = [dayjs().subtract(1, 'week'), dayjs()];
   params.value.Name = '';
   params.value.ToolType = undefined;
+
+  selectedRowKeys.value = [];
 
   query.refetch();
 }
 </script>
 <template>
   <a-card title="任务日志" :body-style="{ padding: 0 }">
+    <template #extra>
+      <a-button @click="onExport">导出日志</a-button>
+    </template>
     <a-form
       layout="inline"
       :model="params"
       :class="classes.filter"
-      @finish="query.refetch()"
+      @finish="onSubmit"
     >
       <a-form-item name="Name">
         <a-input
@@ -113,10 +145,12 @@ function onReset() {
       </a-space>
     </a-form>
     <a-table
+      row-key="id"
       size="small"
       :columns="columns"
       :loading="query.isFetching.value"
       :data-source="query.data.value.items"
+      :row-selection="rowSelection"
       :pagination="{
         pageSize: query.data.value.pageSize,
         total: query.data.value.total,

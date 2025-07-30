@@ -1,13 +1,19 @@
 <script lang="ts" setup>
+import { deleteAllCrop, deleteCrop } from '@/api/farm';
 import { getCropGroups } from '@/api/plant';
 import useContext from '@/app/composables/useContext';
+import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
-import { useQuery } from '@tanstack/vue-query';
-import type { TreeProps } from 'ant-design-vue';
-import { computed, ref, watchEffect } from 'vue';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { App, type TreeProps } from 'ant-design-vue';
+import { computed, ref } from 'vue';
 import classes from './style.module.css';
 
 const { farmConfig } = useContext();
+
+const queryClient = useQueryClient();
+
+const { message, modal } = App.useApp();
 
 const query = useQuery({
   queryKey: [QUERIES.SEED_GROUP_LIST],
@@ -16,7 +22,39 @@ const query = useQuery({
   initialData: [] as TreeProps['treeData'],
 });
 
-const searchValue = ref('');
+const search = ref('');
+
+const _delete = useMutation({
+  mutationKey: [MUTATIONS.DELETE_PLANT],
+  mutationFn: deleteCrop,
+  onSuccess() {
+    // Message
+    message.success({ content: '植物删除成功' });
+    // Refetch queries
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.FARM_CROP_LIST],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.SEED_GROUP_LIST],
+    });
+  },
+});
+
+const _deleteAll = useMutation({
+  mutationKey: [MUTATIONS.DELETE_ALL_PLANT],
+  mutationFn: deleteAllCrop,
+  onSuccess() {
+    // Message
+    message.success({ content: '植物删除成功' });
+    // Refetch queries
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.FARM_CROP_LIST],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.SEED_GROUP_LIST],
+    });
+  },
+});
 
 function onSearch(val: string) {
   console.log(val);
@@ -26,20 +64,32 @@ function onEdit(e: MouseEvent) {
   e.stopPropagation();
 }
 
-function onDelete(e: MouseEvent) {
+function onDelete(e: MouseEvent, id: number) {
   e.stopPropagation();
+
+  modal.confirm({
+    title: '删除植物',
+    content: '您确定要删除当前的植物吗?',
+    onOk: () => _delete.mutate(id),
+  });
 }
 
-watchEffect(() => {
-  console.log(query.data.value);
-});
+function onDeleteSeed(e: MouseEvent, seedId: number) {
+  e.stopPropagation();
+
+  modal.confirm({
+    title: '删除植物',
+    content: '您确定要删除当前的植物吗?',
+    onOk: () => _deleteAll.mutate(seedId),
+  });
+}
 </script>
 
 <template>
   <a-card title="植物管理">
     <a-flex vertical :gap="16">
       <a-input-search
-        v-model:value="searchValue"
+        v-model:value="search"
         placeholder="请输入种子或植物名称"
         @search="onSearch"
       />
@@ -50,22 +100,33 @@ watchEffect(() => {
         default-expand-all
         :tree-data="query.data.value"
         :field-names="{
-          key: 'id',
+          key: 'key',
           title: 'name',
           children: 'cropList',
         }"
       >
-        <template #title="{ name, cropList }">
+        <template #title="{ name, cropList, id, seedId }">
           <div :class="classes.item">
-            <span>{{ name }}</span>
+            <span v-if="name.indexOf(search) > -1">
+              {{ name.substring(0, name.indexOf(search)) }}
+              <span style="color: #f50">{{ search }}</span>
+              {{ name.substring(name.indexOf(search) + search.length) }}
+            </span>
+            <span v-else>{{ name }} </span>
             <a-space v-if="!!cropList">
-              <a-button danger size="small" @click="onDelete">
+              <a-button
+                danger
+                size="small"
+                @click="(e) => onDeleteSeed(e, seedId)"
+              >
                 删除所有植物
               </a-button>
             </a-space>
             <a-space v-else>
               <a-button size="small" @click="onEdit"> 编辑 </a-button>
-              <a-button danger size="small" @click="onDelete"> 删除 </a-button>
+              <a-button danger size="small" @click="(e) => onDelete(e, id)">
+                删除
+              </a-button>
             </a-space>
           </div>
         </template>

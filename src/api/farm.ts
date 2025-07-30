@@ -20,3 +20,9 @@ export async function deleteCrop(id: number) {
     method: 'DELETE',
   });
 }
+
+export async function deleteAllCrop(seedId: number) {
+  return fetchData(`${prefix}/api/farmCrop/deleteAllCrop?seedId=${seedId}`, {
+    method: 'DELETE',
+  });
+}

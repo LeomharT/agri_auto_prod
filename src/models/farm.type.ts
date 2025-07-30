@@ -9,3 +9,18 @@ export interface FarmConfig {
   rowCount: number;
   columnCount: number;
 }
+
+export interface PlantProps {
+  id: number;
+  name: string;
+  farmId: number;
+  seedId: number;
+  seedSlot: number;
+  growStatus: number;
+  positionX: number;
+  positionY: number;
+  positionZ: number;
+  soilPositionX: number;
+  soilPositionY: number;
+  type: string;
+}

@@ -1,7 +1,14 @@
 <script lang="ts" setup>
+import type { PlantProps } from '@/models/farm.type';
 import { App } from 'ant-design-vue';
 import classes from './style.module.css';
+
 const { message } = App.useApp();
+
+type PlantEmitProps = Pick<
+  PlantProps,
+  'positionX' | 'positionY' | 'name' | 'type' | 'seedId'
+>;
 
 const props = defineProps<{
   type:
@@ -15,6 +22,11 @@ const props = defineProps<{
     | 'wet';
   x: number;
   y: number;
+}>();
+
+const emit = defineEmits<{
+  (e: 'drop', args: Partial<PlantEmitProps>): void;
+  (e: 'click', args: Partial<PlantEmitProps>): void;
 }>();
 
 const blockImg = {
@@ -56,13 +68,35 @@ function onDragLeave(e: DragEvent) {
 
 function onDrop(e: DragEvent) {
   e.preventDefault();
-
   onDragLeave(e);
 
-  const data = e.dataTransfer?.getData('type');
+  const name = e.dataTransfer?.getData('name');
+  const seedId = e.dataTransfer?.getData('seedId');
 
-  if (data) {
-    message.success(`你种植了${data}, X:${props.x},Y:${props.y}`);
+  if (props.type === 'soil') {
+    emit('drop', {
+      name,
+      positionX: props.x,
+      positionY: props.y,
+      seedId: Number.parseInt(seedId!),
+    });
+  } else {
+    message.error('只能在没有作物的土地上种植');
+  }
+}
+
+function onClick(e: MouseEvent) {
+  e.preventDefault();
+
+  if (props.type === 'soil') {
+    message.warning('土地上没有种植作物');
+  } else {
+    emit('click', {
+      positionX: props.x,
+      positionY: props.y,
+      type: props.type,
+      name: '',
+    });
   }
 }
 </script>
@@ -71,6 +105,7 @@ function onDrop(e: DragEvent) {
     <div
       :class="classes.block"
       dropzone="move"
+      @click="onClick"
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"

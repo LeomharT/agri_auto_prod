@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getFarmCropList } from '@/api/plant';
+import { getFarmCropList } from '@/api/farm';
 import Farm from '@/components/farm/index.vue';
 import { QUERIES } from '@/data/queries';
 import { useQuery } from '@tanstack/vue-query';

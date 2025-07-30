@@ -35,7 +35,8 @@ function handleOnDragStart(e: DragEvent, record: Seed) {
   e.dataTransfer?.setDragImage(img, 20, 20);
 
   // Set drag data
-  e.dataTransfer?.setData('type', record.name);
+  e.dataTransfer?.setData('name', record.name);
+  e.dataTransfer?.setData('seedId', record.id.toString());
 }
 
 function scrollShadow(el: HTMLDivElement) {

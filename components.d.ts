@@ -57,6 +57,8 @@ declare module 'vue' {
     Ground: typeof import('./src/components/ground/index.vue')['default']
     GroundBlock: typeof import('./src/components/farm/components/ground-block/index.vue')['default']
     Login: typeof import('./src/components/login/index.vue')['default']
+    MoundBlock: typeof import('./src/components/farm/components/mound-block/index.vue')['default']
+    PlantInfo: typeof import('./src/components/farm/components/plant-info/index.vue')['default']
     PlantManage: typeof import('./src/components/plant-management/components/plant-manage/index.vue')['default']
     PlantManagement: typeof import('./src/components/plant-management/index.vue')['default']
     SeedsInfo: typeof import('./src/components/plant-management/components/seeds-storehouse/components/seeds-info/index.vue')['default']

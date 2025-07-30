@@ -4,11 +4,6 @@ import { App } from 'ant-design-vue';
 import { ref, watch, type Ref } from 'vue';
 import classes from './style.module.css';
 
-type PlantEmitProps = Pick<
-  PlantProps,
-  'positionX' | 'positionY' | 'name' | 'type' | 'seedId' | 'id'
->;
-
 const blockImg = {
   water: '/imgs/ground/pic_water@2x.png',
   seed: '/imgs/ground/pic_seed@2x.png',
@@ -38,8 +33,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'drop', args: Partial<PlantEmitProps>): void;
-  (e: 'click', args: Partial<PlantEmitProps>): void;
+  (e: 'drop', args: Partial<PlantProps>): void;
+  (e: 'click', args: Partial<PlantProps>): void;
 }>();
 
 /** Mound type */
@@ -111,6 +106,7 @@ function onClick(e: MouseEvent) {
       positionY: props.y,
       type: type.value,
       name: plant.value?.name,
+      plantStatus: plant.value?.plantStatus,
     });
   }
 }
@@ -118,7 +114,11 @@ function onClick(e: MouseEvent) {
 watch(
   () => props.palnt,
   (value) => {
-    if (!value) return;
+    if (!value) {
+      plant.value = undefined;
+      type.value = 'soil';
+      return;
+    }
 
     plant.value = value;
 

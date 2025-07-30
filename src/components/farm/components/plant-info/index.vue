@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { addOrUpdateCrop } from '@/api/farm';
+import { addOrUpdateCrop, deleteCrop } from '@/api/farm';
 import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
 import { IconTrash } from '@tabler/icons-vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { Form, message, type ModalProps } from 'ant-design-vue';
+import { App, Form, message, type ModalProps } from 'ant-design-vue';
 import { ref, watch } from 'vue';
 
 const props = defineProps<
@@ -14,6 +14,8 @@ const props = defineProps<
     initialValue: Partial<PlantProps>;
   }
 >();
+
+const { modal } = App.useApp();
 
 const queryClient = useQueryClient();
 
@@ -47,6 +49,21 @@ const mutation = useMutation({
     message.success('种子种植成功');
     // Close modal
     props.onCancel?.call({}, {} as MouseEvent);
+    // Refetch queries
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.FARM_CROP_LIST],
+    });
+  },
+});
+
+const _delete = useMutation({
+  mutationKey: [MUTATIONS.DELETE_PLANT],
+  mutationFn: deleteCrop,
+  onSuccess() {
+    // Message
+    message.success({ content: '植物删除成功' });
+    // Close
+    onCancel({} as MouseEvent);
     // Refetch queries
     queryClient.invalidateQueries({
       queryKey: [QUERIES.FARM_CROP_LIST],
@@ -92,6 +109,16 @@ function onCancel(e: MouseEvent) {
   };
 }
 
+function onDelete() {
+  modal.confirm({
+    title: '删除植物',
+    content: '您确定要删除当前的植物吗?',
+    onOk: () => {
+      _delete.mutate(props.initialValue.id!);
+    },
+  });
+}
+
 watch(
   () => props.open,
   (value) => {
@@ -131,6 +158,7 @@ watch(
             v-model:value="modalRef.growStatus"
             placeholder="请选择种子状态"
             style="width: 200px"
+            :disabled="!Boolean(props.initialValue.plantStatus === 2)"
             :options="[
               { value: 1, label: '种子期' },
               { value: 2, label: '生长期' },
@@ -185,7 +213,13 @@ watch(
         </a-space>
       </a-space>
     </a-form>
-    <a-button v-if="props.initialValue.id" type="dashed" block danger>
+    <a-button
+      v-if="props.initialValue.id"
+      block
+      danger
+      type="dashed"
+      @click="onDelete"
+    >
       <template #icon>
         <icon-trash size="16px" style="transform: translate(-2px, 2px)" />
       </template>

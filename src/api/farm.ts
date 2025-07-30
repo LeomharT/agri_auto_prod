@@ -14,3 +14,9 @@ export async function addOrUpdateCrop(data: Partial<PlantProps>) {
     body: JSON.stringify(data),
   });
 }
+
+export async function deleteCrop(id: number) {
+  return fetchData(`${prefix}/api/farmCrop/deleteCrop?id=${id}`, {
+    method: 'DELETE',
+  });
+}

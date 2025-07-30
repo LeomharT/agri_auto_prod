@@ -9,23 +9,6 @@ import classes from './style.module.css';
 
 const { farmConfig } = useContext();
 
-const treeData: TreeProps['treeData'] = [
-  {
-    title: '甜菜组',
-    key: '0-0',
-    children: [
-      {
-        title: '甜菜1号',
-        key: '0-0-0',
-      },
-      {
-        title: '甜菜2号',
-        key: '0-0-1',
-      },
-    ],
-  },
-];
-
 const query = useQuery({
   queryKey: [QUERIES.SEED_CROP_LIST],
   queryFn: () => getCropGroups(farmConfig?.value.id!),
@@ -72,7 +55,7 @@ watchEffect(() => {
           children: 'cropList',
         }"
       >
-        <template #title="{ name, selected, cropList }">
+        <template #title="{ name, cropList }">
           <div :class="classes.item">
             <span>{{ name }}</span>
             <a-space v-if="!!cropList">

@@ -10,7 +10,7 @@ import classes from './style.module.css';
 const { farmConfig } = useContext();
 
 const query = useQuery({
-  queryKey: [QUERIES.SEED_CROP_LIST],
+  queryKey: [QUERIES.SEED_GROUP_LIST],
   queryFn: () => getCropGroups(farmConfig?.value.id!),
   enabled: computed(() => Boolean(farmConfig?.value?.id)),
   initialData: [] as TreeProps['treeData'],

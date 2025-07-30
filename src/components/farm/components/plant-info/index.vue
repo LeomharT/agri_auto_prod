@@ -53,6 +53,9 @@ const mutation = useMutation({
     queryClient.invalidateQueries({
       queryKey: [QUERIES.FARM_CROP_LIST],
     });
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.SEED_GROUP_LIST],
+    });
   },
 });
 
@@ -67,6 +70,9 @@ const _delete = useMutation({
     // Refetch queries
     queryClient.invalidateQueries({
       queryKey: [QUERIES.FARM_CROP_LIST],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.SEED_GROUP_LIST],
     });
   },
 });

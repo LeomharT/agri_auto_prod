@@ -31,6 +31,13 @@ export async function getTaskRecordList(_params: any) {
 
 export function dataGroupQuery(_params: any) {
   const params = new URLSearchParams(_params);
+
+  if (_params.DateRange) {
+    params.set('StartTime', _params.DateRange[0].format('YYYY-MM-DD'));
+    params.set('EndTime', _params.DateRange[1].format('YYYY-MM-DD'));
+    params.delete('DateRange');
+  }
+
   return fetchData(`${prefix}/api/data/dataGroupQuery?${params.toString()}`);
 }
 
@@ -50,4 +57,16 @@ export function exportTaskLog(_params: any) {
   return fetchData<{ data: string }>(
     `${prefix}/api/farmDeviceTask/getRecordExport?${params.toString()}`
   );
+}
+
+export function exportDataHistory(_params: any) {
+  const params = new URLSearchParams(_params);
+
+  if (_params.DateRange) {
+    params.set('StartTime', _params.DateRange[0].format('YYYY-MM-DD'));
+    params.set('EndTime', _params.DateRange[1].format('YYYY-MM-DD'));
+    params.delete('DateRange');
+  }
+
+  return fetchData(`${prefix}/api/data/getExport?${params.toString()}`);
 }

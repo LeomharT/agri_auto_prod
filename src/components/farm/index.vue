@@ -15,9 +15,7 @@ function yIndex(i: number) {
   <div :class="classes.board">
     <div :class="classes.ground">
       <div v-for="i in 3 * 6" :class="classes.blocks" :key="i">
-        <a-tooltip :title="`x:${xIndex(i)}, y:${yIndex(i)}`">
-          <ground-block type="soil" />
-        </a-tooltip>
+        <ground-block type="soil" :x="xIndex(i)" :y="yIndex(i)" />
       </div>
     </div>
   </div>

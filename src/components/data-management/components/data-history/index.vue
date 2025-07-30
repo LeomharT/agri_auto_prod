@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { dataGroupQuery } from '@/api/data';
+import { dataGroupQuery, exportDataHistory } from '@/api/data';
 import { getSensorDevicePropList } from '@/api/task';
 import useContext from '@/app/composables/useContext';
+import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
-import { useQuery } from '@tanstack/vue-query';
-import { Empty } from 'ant-design-vue';
+import { useMutation, useQuery } from '@tanstack/vue-query';
+import { App, Empty } from 'ant-design-vue';
 import dayjs, { Dayjs } from 'dayjs';
 import { computed, ref } from 'vue';
 import classes from './style.module.css';
 
 const { farmConfig } = useContext();
+
+const { message } = App.useApp();
 
 const params = ref({
   DeviceKey: undefined,
@@ -30,8 +33,15 @@ const query = useQuery({
   enabled: false,
 });
 
-function onSubmit(data: typeof params.value) {
-  console.log(data);
+const mutation = useMutation({
+  mutationKey: [MUTATIONS.EXPORT_DATA_HISTORY],
+  mutationFn: () => exportDataHistory(params.value),
+  onSuccess() {
+    message.success({ key: 'EXPORTING', content: '日志导出成功' });
+  },
+});
+
+function onSubmit() {
   query.refetch();
 }
 
@@ -42,11 +52,20 @@ function onReset() {
     DateRange: [dayjs().subtract(1, 'week'), dayjs()],
   };
 }
+
+function onExport() {
+  if (params.value.DeviceKey && params.value.ThingsProp) {
+    message.loading({ key: 'EXPORTING', content: '日志导出中' });
+    mutation.mutate();
+  } else {
+    message.warning({ content: '请选择设备和数据来源' });
+  }
+}
 </script>
 <template>
   <a-card title="历史数据" :body-style="{ padding: 0 }">
     <template #extra>
-      <a-button>导出数据</a-button>
+      <a-button @click="onExport">导出数据</a-button>
     </template>
     <a-form
       layout="inline"
@@ -84,7 +103,15 @@ function onReset() {
         />
       </a-form-item>
       <a-form-item name="DateRange" :rules="[{ required: true }]">
-        <a-range-picker v-model:value="params.DateRange" style="width: 150px" />
+        <a-range-picker
+          v-model:value="params.DateRange"
+          style="width: 150px"
+          :disabled-date="
+            (current) => {
+              return current.isAfter(dayjs());
+            }
+          "
+        />
       </a-form-item>
       <a-space>
         <a-button type="primary" html-type="submit">搜索</a-button>

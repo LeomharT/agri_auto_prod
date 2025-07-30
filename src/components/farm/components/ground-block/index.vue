@@ -13,6 +13,8 @@ const props = defineProps<{
     | 'moundWet'
     | 'soil'
     | 'wet';
+  x: number;
+  y: number;
 }>();
 
 const blockImg = {
@@ -34,7 +36,7 @@ function onDragOver(e: DragEvent) {
 
     const img = e.target.querySelector('img');
     if (img) {
-      img.style.opacity = '0.85';
+      img.style.opacity = '0.7';
     }
   }
 }
@@ -60,18 +62,20 @@ function onDrop(e: DragEvent) {
   const data = e.dataTransfer?.getData('type');
 
   if (data) {
-    message.success(`你种植了${data}`);
+    message.success(`你种植了${data}, X:${props.x},Y:${props.y}`);
   }
 }
 </script>
 <template>
-  <div
-    :class="classes.block"
-    dropzone="move"
-    @drop="onDrop"
-    @dragover="onDragOver"
-    @dragleave="onDragLeave"
-  >
-    <img :src="blockImg[props.type]" />
-  </div>
+  <a-tooltip :title="`x:${x}, y:${y}`">
+    <div
+      :class="classes.block"
+      dropzone="move"
+      @drop="onDrop"
+      @dragover="onDragOver"
+      @dragleave="onDragLeave"
+    >
+      <img :src="blockImg[props.type]" />
+    </div>
+  </a-tooltip>
 </template>

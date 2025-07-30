@@ -13,14 +13,18 @@ export interface FarmConfig {
 export interface PlantProps {
   id: number;
   name: string;
-  farmId: number;
   seedId: number;
+  seedImgUrl: string;
   seedSlot: number;
+  farmId: number;
   growStatus: number;
   positionX: number;
   positionY: number;
   positionZ: number;
   soilPositionX: number;
   soilPositionY: number;
+  plantStatus: number;
+  plantTime: string;
+  remark: string;
   type: string;
 }

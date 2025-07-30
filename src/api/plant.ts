@@ -23,6 +23,6 @@ export async function deleteCropSeed(id: number) {
   });
 }
 
-export async function getSeedCropList(seedId: number) {
-  return fetchData(`${prefix}/api/farmCrop/getSeedCropList`);
+export async function getCropGroups(id: number) {
+  return fetchData<any>(`${prefix}/api/farmCrop/getCropGroups?farmId=${id}`);
 }

@@ -4,6 +4,7 @@ import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
+import { IconTrash } from '@tabler/icons-vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { Form, message, type ModalProps } from 'ant-design-vue';
 import { ref, watch } from 'vue';
@@ -70,8 +71,25 @@ function onOk() {
       soilPositionY: Math.floor(yCoord),
     };
 
+    if (props.initialValue.id) {
+      data['id'] = props.initialValue.id;
+    }
+
     mutation.mutate(data);
   });
+}
+
+function onCancel(e: MouseEvent) {
+  props.onCancel?.call({}, e);
+
+  modalRef.value = {
+    name: '',
+    seedId: undefined,
+    growStatus: 1,
+    seedSlot: 1,
+    positionX: undefined,
+    positionY: undefined,
+  };
 }
 
 watch(
@@ -93,7 +111,7 @@ watch(
     :open="props.open"
     :confirm-loading="mutation.isPending.value"
     @ok="onOk"
-    @cancel="props.onCancel"
+    @cancel="onCancel"
   >
     <a-form layout="vertical">
       <a-form-item label="植物名称" v-bind="validateInfos.name">
@@ -167,5 +185,11 @@ watch(
         </a-space>
       </a-space>
     </a-form>
+    <a-button v-if="props.initialValue.id" type="dashed" block danger>
+      <template #icon>
+        <icon-trash size="16px" style="transform: translate(-2px, 2px)" />
+      </template>
+      删除
+    </a-button>
   </a-modal>
 </template>

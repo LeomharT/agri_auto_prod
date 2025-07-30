@@ -1,9 +1,13 @@
 <script lang="ts" setup>
+import { getCropGroups } from '@/api/plant';
+import useContext from '@/app/composables/useContext';
 import { QUERIES } from '@/data/queries';
 import { useQuery } from '@tanstack/vue-query';
 import type { TreeProps } from 'ant-design-vue';
-import { ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import classes from './style.module.css';
+
+const { farmConfig } = useContext();
 
 const treeData: TreeProps['treeData'] = [
   {
@@ -24,6 +28,9 @@ const treeData: TreeProps['treeData'] = [
 
 const query = useQuery({
   queryKey: [QUERIES.SEED_CROP_LIST],
+  queryFn: () => getCropGroups(farmConfig?.value.id!),
+  enabled: computed(() => Boolean(farmConfig?.value?.id)),
+  initialData: [] as TreeProps['treeData'],
 });
 
 const searchValue = ref('');
@@ -39,6 +46,10 @@ function onEdit(e: MouseEvent) {
 function onDelete(e: MouseEvent) {
   e.stopPropagation();
 }
+
+watchEffect(() => {
+  console.log(query.data.value);
+});
 </script>
 
 <template>
@@ -54,12 +65,17 @@ function onDelete(e: MouseEvent) {
         block-node
         auto-expand-parent
         default-expand-all
-        :tree-data="treeData"
+        :tree-data="query.data.value"
+        :field-names="{
+          key: 'id',
+          title: 'name',
+          children: 'cropList',
+        }"
       >
-        <template #title="{ title, selected, children }">
+        <template #title="{ name, selected, cropList }">
           <div :class="classes.item">
-            <span>{{ title }}</span>
-            <a-space v-if="!!children">
+            <span>{{ name }}</span>
+            <a-space v-if="!!cropList">
               <a-button danger size="small" @click="onDelete">
                 删除所有植物
               </a-button>

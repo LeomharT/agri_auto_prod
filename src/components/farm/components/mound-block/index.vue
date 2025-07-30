@@ -1,33 +1,13 @@
 <script lang="ts" setup>
 import type { PlantProps } from '@/models/farm.type';
 import { App } from 'ant-design-vue';
+import { ref, watch, type Ref } from 'vue';
 import classes from './style.module.css';
-
-const { message } = App.useApp();
 
 type PlantEmitProps = Pick<
   PlantProps,
-  'positionX' | 'positionY' | 'name' | 'type' | 'seedId'
+  'positionX' | 'positionY' | 'name' | 'type' | 'seedId' | 'id'
 >;
-
-const props = defineProps<{
-  type:
-    | 'water'
-    | 'seed'
-    | 'grass'
-    | 'add'
-    | 'mound'
-    | 'moundWet'
-    | 'soil'
-    | 'wet';
-  x: number;
-  y: number;
-}>();
-
-const emit = defineEmits<{
-  (e: 'drop', args: Partial<PlantEmitProps>): void;
-  (e: 'click', args: Partial<PlantEmitProps>): void;
-}>();
 
 const blockImg = {
   water: '/imgs/ground/pic_water@2x.png',
@@ -39,6 +19,39 @@ const blockImg = {
   soil: '/imgs/ground/pic_soil@2x.png',
   wet: '/imgs/ground/pic_wet@2x.png',
 };
+
+const moundTypes = [
+  'water',
+  'seed',
+  'grass',
+  'add',
+  'mound',
+  'moundWet',
+  'soil',
+  'wet',
+] as const;
+
+const props = defineProps<{
+  x: number;
+  y: number;
+  palnt?: PlantProps;
+}>();
+
+const emit = defineEmits<{
+  (e: 'drop', args: Partial<PlantEmitProps>): void;
+  (e: 'click', args: Partial<PlantEmitProps>): void;
+}>();
+
+/** Mound type */
+const type: Ref<(typeof moundTypes)[number]> = ref('soil');
+
+/** Plants infos */
+const plant: Ref<PlantProps | undefined> = ref(undefined);
+
+/** Tooltip content on hover */
+// const tooltipContent = ref('');
+
+const { message } = App.useApp();
 
 function onDragOver(e: DragEvent) {
   e.preventDefault();
@@ -73,7 +86,7 @@ function onDrop(e: DragEvent) {
   const name = e.dataTransfer?.getData('name');
   const seedId = e.dataTransfer?.getData('seedId');
 
-  if (props.type === 'soil') {
+  if (type.value === 'soil') {
     emit('drop', {
       name,
       positionX: props.x,
@@ -88,29 +101,55 @@ function onDrop(e: DragEvent) {
 function onClick(e: MouseEvent) {
   e.preventDefault();
 
-  if (props.type === 'soil') {
+  if (type.value === 'soil') {
     message.warning('土地上没有种植作物');
   } else {
     emit('click', {
+      id: plant.value?.id,
+      seedId: plant.value?.seedId,
       positionX: props.x,
       positionY: props.y,
-      type: props.type,
-      name: '',
+      type: type.value,
+      name: plant.value?.name,
     });
   }
 }
+
+watch(
+  () => props.palnt,
+  (value) => {
+    if (!value) return;
+
+    plant.value = value;
+
+    if (value.plantStatus === 1) {
+      type.value = 'add';
+    }
+
+    if (value.plantStatus === 2) {
+      // Seed
+      if (value.growStatus === 1) {
+        type.value = 'seed';
+      }
+      // Growing
+      if (value.growStatus === 2) {
+        type.value = 'grass';
+      }
+    }
+  }
+);
 </script>
 <template>
   <a-tooltip :title="`x:${x}, y:${y}`">
     <div
-      :class="classes.block"
       dropzone="move"
+      :class="classes.block"
       @click="onClick"
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
     >
-      <img :src="blockImg[props.type]" />
+      <img :src="blockImg[type]" />
     </div>
   </a-tooltip>
 </template>

@@ -207,7 +207,7 @@ watchEffect(() => {
       v-if="Boolean(props.initialData)"
       danger
       block
-      type="default"
+      type="dashed"
       @click="onDelete(props.initialData!)"
     >
       <template #icon>

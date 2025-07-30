@@ -3,7 +3,9 @@ import fetchData from '../utils/fetchData';
 const prefix: string = import.meta.env.VITE_SERVER_HOST;
 
 export async function getFarmCropList(id?: number) {
-  return fetchData(`${prefix}/api/farmCrop/getFarmCropList?farmId=${id}`);
+  return fetchData<PlantProps[]>(
+    `${prefix}/api/farmCrop/getFarmCropList?farmId=${id}`
+  );
 }
 
 export async function addOrUpdateCrop(data: Partial<PlantProps>) {

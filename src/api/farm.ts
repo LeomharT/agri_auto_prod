@@ -2,10 +2,16 @@ import type { PlantProps } from '@/models/farm.type';
 import fetchData from '../utils/fetchData';
 const prefix: string = import.meta.env.VITE_SERVER_HOST;
 
+/** 获取农场植物列表 */
 export async function getFarmCropList(id?: number) {
   return fetchData<PlantProps[]>(
     `${prefix}/api/farmCrop/getFarmCropList?farmId=${id}`
   );
+}
+
+/** 获取植物详情 */
+export async function getCropItem(id: number) {
+  return fetchData<PlantProps>(`${prefix}/api/farmCrop/getCropItem?id=${id}`);
 }
 
 export async function addOrUpdateCrop(data: Partial<PlantProps>) {

@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import { deleteAllCrop, deleteCrop } from '@/api/farm';
+import { deleteAllCrop, deleteCrop, getCropItem } from '@/api/farm';
 import { getCropGroups } from '@/api/plant';
 import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
+import type { PlantProps } from '@/models/farm.type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type TreeProps } from 'ant-design-vue';
 import { computed, ref } from 'vue';
+import PlantInfo from '../plant-info/index.vue';
 import classes from './style.module.css';
 
 const { farmConfig } = useContext();
@@ -14,6 +16,10 @@ const { farmConfig } = useContext();
 const queryClient = useQueryClient();
 
 const { message, modal } = App.useApp();
+
+const open = ref(false);
+
+const plant = ref<Partial<PlantProps>>({});
 
 const query = useQuery({
   queryKey: [QUERIES.SEED_GROUP_LIST],
@@ -23,6 +29,15 @@ const query = useQuery({
 });
 
 const search = ref('');
+
+const mutation = useMutation({
+  mutationKey: [MUTATIONS.PLANT_DETAIL],
+  mutationFn: getCropItem,
+  onSuccess(data) {
+    plant.value = data;
+    open.value = true;
+  },
+});
 
 const _delete = useMutation({
   mutationKey: [MUTATIONS.DELETE_PLANT],
@@ -60,8 +75,10 @@ function onSearch(val: string) {
   console.log(val);
 }
 
-function onEdit(e: MouseEvent) {
+function onEdit(e: MouseEvent, id: number) {
   e.stopPropagation();
+
+  mutation.mutate(id);
 }
 
 function onDelete(e: MouseEvent, id: number) {
@@ -83,10 +100,16 @@ function onDeleteSeed(e: MouseEvent, seedId: number) {
     onOk: () => _deleteAll.mutate(seedId),
   });
 }
+
+function onCancel() {
+  open.value = false;
+  plant.value = {};
+}
 </script>
 
 <template>
   <a-card title="植物管理">
+    <plant-info :open="open" :initial-value="plant" @cancel="onCancel" />
     <a-flex vertical :gap="16">
       <a-input-search
         v-model:value="search"
@@ -116,15 +139,29 @@ function onDeleteSeed(e: MouseEvent, seedId: number) {
             <a-space v-if="!!cropList">
               <a-button
                 danger
+                type="link"
                 size="small"
                 @click="(e) => onDeleteSeed(e, seedId)"
               >
                 删除所有植物
               </a-button>
             </a-space>
-            <a-space v-else>
-              <a-button size="small" @click="onEdit"> 编辑 </a-button>
-              <a-button danger size="small" @click="(e) => onDelete(e, id)">
+            <a-space :size="0" v-else>
+              <a-button
+                type="link"
+                size="small"
+                style="color: #00b96b"
+                :loading="mutation.isPending.value"
+                @click="(e) => onEdit(e, id)"
+              >
+                编辑
+              </a-button>
+              <a-button
+                danger
+                type="link"
+                size="small"
+                @click="(e) => onDelete(e, id)"
+              >
                 删除
               </a-button>
             </a-space>

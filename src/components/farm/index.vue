@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { getFarmCropList } from '@/api/farm';
 import useContext from '@/app/composables/useContext';
+import PlantInfo from '@/components/plant-management/components/plant-info/index.vue';
 import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
 import { useQuery } from '@tanstack/vue-query';
 import { computed, ref } from 'vue';
 import MoundBlock from './components/mound-block/index.vue';
-import PlantInfo from './components/plant-info/index.vue';
 import classes from './style.module.css';
 
 const { farmConfig } = useContext();

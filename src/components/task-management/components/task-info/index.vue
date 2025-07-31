@@ -1,23 +1,31 @@
 <script setup lang="ts">
 import { addOrUpdateTask, getSensorDevicePropList } from '@/api/task';
 import useContext from '@/app/composables/useContext';
+import useEventEmitter from '@/app/composables/useEventEmitter';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import { compareSymbol } from '@/models/task.type';
+import { IconPlus } from '@tabler/icons-vue';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type ModalProps } from 'ant-design-vue';
 import { useForm } from 'ant-design-vue/es/form';
 import dayjs from 'dayjs';
-import { computed, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, toRaw, unref } from 'vue';
 import classes from './style.module.css';
 
 const props = defineProps<ModalProps>();
+
+const emit = defineEmits<{
+  (e: 'confirm'): void;
+}>();
 
 const queryClient = useQueryClient();
 
 const { message } = App.useApp();
 
-const { farmConfig } = useContext();
+const { farmConfig, setPicking } = useContext();
+
+const { on, off } = useEventEmitter();
 
 const modalRef = ref({
   name: '',
@@ -31,6 +39,7 @@ const modalRef = ref({
   onceExecuteTime: dayjs(),
   setTime: dayjs(),
   weekRange: [],
+  positionList: [],
 });
 
 const rulesRef = ref({
@@ -45,6 +54,7 @@ const rulesRef = ref({
   onceExecuteTime: [{ required: false }],
   setTime: [{ required: false }],
   weekRange: [{ required: false }],
+  positionList: [{ required: true, message: '请选择执行区域', type: 'array' }],
 });
 
 const { validate, validateInfos } = useForm(modalRef, rulesRef);
@@ -69,6 +79,20 @@ const mutation = useMutation({
     message.success('任务信息更新成功');
     onCancel();
   },
+});
+
+const deviceItems = computed(() => {
+  return query.data.value.reduce((prev, curr) => {
+    const key = prev.filter((item) => item.deviceKey === curr.deviceKey);
+    if (!key.length) prev.push(curr);
+    return prev;
+  }, [] as typeof query.data.value);
+});
+
+const thingsItems = computed(() => {
+  return query.data.value.filter(
+    (item) => item.deviceKey === modalRef.value.deviceKey
+  );
 });
 
 function onOk() {
@@ -107,23 +131,66 @@ function onCancel() {
     onceExecuteTime: dayjs(),
     setTime: dayjs(),
     weekRange: [],
+    positionList: [],
   };
 
   props.onCancel?.call({}, {} as MouseEvent);
 }
+
+function onPicking(e: MouseEvent) {
+  props.onCancel?.call({}, e);
+  setPicking(true);
+}
+
+function onDelete(index: number) {
+  modalRef.value.positionList.splice(index, 1);
+}
+
+onMounted(() => {
+  on('PICK_CONFIRM', (_selected) => {
+    const selected = toRaw(unref(_selected));
+    modalRef.value.positionList = selected;
+    emit('confirm');
+  });
+});
+
+onUnmounted(() => {
+  off('PICK_CONFIRM');
+});
 </script>
 
 <template>
   <a-modal
+    title="任务信息"
     :open="props.open"
     :confirm-loading="mutation.isPending.value"
     @ok="onOk"
     @cancel="onCancel"
-    title="任务信息"
   >
     <a-form layout="vertical">
       <a-form-item v-bind="validateInfos.name" name="name" label="任务名称">
         <a-input v-model:value="modalRef.name" placeholder="请输入任务名称" />
+      </a-form-item>
+      <a-form-item
+        v-bind="validateInfos.positionList"
+        name="positionList"
+        label="执行区域"
+      >
+        <div :class="classes.area">
+          <a-tag
+            v-for="({ no }, index) in modalRef.positionList"
+            :class="classes.tags"
+            closable
+            @close.prevent="onDelete(index)"
+          >
+            {{ no }}
+          </a-tag>
+          <a-button style="width: 55px" type="primary" @click="onPicking">
+            <template #icon>
+              <icon-plus />
+            </template>
+          </a-button>
+        </div>
       </a-form-item>
       <a-form-item
         v-bind="validateInfos.toolType"
@@ -140,41 +207,37 @@ function onCancel() {
           ]"
         />
       </a-form-item>
-      <a-form-item
-        v-bind="validateInfos.deviceKey"
-        name="deviceKey"
-        label="任务设备"
-      >
-        <a-select
-          v-model:value="modalRef.deviceKey"
-          placeholder="请选择设备"
-          :options="
-            query.data.value.reduce((prev, curr) => {
-              const key = prev.filter((item:typeof curr) => item.deviceKey === curr.deviceKey);
-              if(!key.length) prev.push(curr)
-              return prev;
-            }, [] as typeof query.data.value)
-          "
-          :field-names="{ label: 'deviceName', value: 'deviceKey' }"
-          @change="modalRef.thingsProp = undefined"
-        />
-      </a-form-item>
-      <a-form-item
-        v-bind="validateInfos.thingsProp"
-        name="thingsProp"
-        label="设备数据源"
-      >
-        <a-select
-          v-model:value="modalRef.thingsProp"
-          placeholder="请选择数据源"
-          :options="
-            query.data.value.filter(
-              (item) => item.deviceKey === modalRef.deviceKey
-            )
-          "
-          :field-names="{ label: 'propName', value: 'propKey' }"
-        />
-      </a-form-item>
+      <a-row :gutter="16">
+        <a-col :span="12">
+          <a-form-item
+            v-bind="validateInfos.deviceKey"
+            name="deviceKey"
+            label="任务设备"
+          >
+            <a-select
+              v-model:value="modalRef.deviceKey"
+              placeholder="请选择设备"
+              :options="deviceItems"
+              :field-names="{ label: 'deviceName', value: 'deviceKey' }"
+              @change="modalRef.thingsProp = undefined"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item
+            v-bind="validateInfos.thingsProp"
+            name="thingsProp"
+            label="设备数据源"
+          >
+            <a-select
+              v-model:value="modalRef.thingsProp"
+              placeholder="请选择数据源"
+              :options="thingsItems"
+              :field-names="{ label: 'propName', value: 'propKey' }"
+            />
+          </a-form-item>
+        </a-col>
+      </a-row>
       <a-form-item
         v-bind="validateInfos.deviceTaskCronType"
         name="deviceTaskCronType"

@@ -97,6 +97,10 @@ const rowSelection = computed(() => {
   } as TableProps['rowSelection'];
 });
 
+function onOpen() {
+  open.value = true;
+}
+
 function onCancel() {
   open.value = false;
 }
@@ -114,9 +118,9 @@ function onDelete(ids: number[]) {
 
 <template>
   <a-card title="计划任务" :body-style="{ padding: 0 }">
-    <task-info :open="open" @cancel="onCancel" />
+    <task-info :open="open" @confirm="onOpen" @cancel="onCancel" />
     <template #extra>
-      <a-button type="primary" @click="open = true">添加任务</a-button>
+      <a-button type="primary" @click="onOpen">添加任务</a-button>
     </template>
     <div v-if="!!props.selected.length" :class="classes.alert">
       <span> 选中 {{ props.selected.length }} 条目 </span>
@@ -126,8 +130,9 @@ function onDelete(ids: number[]) {
           size="small"
           type="text"
           @click="onDelete(props.selected as number[])"
-          >删除任务</a-button
         >
+          删除任务
+        </a-button>
         <a-button size="small" type="text" @click="emit('selected', [])">
           取消选中
         </a-button>

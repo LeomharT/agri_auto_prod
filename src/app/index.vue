@@ -10,13 +10,18 @@ import { getFarmConfig } from '../api/user';
 import login from '../components/login/index.vue';
 import { QUERIES } from '../data/queries';
 import AppContent from './components/app-content/index.vue';
+import AppFloat from './components/app-float/index.vue';
 import AppHeader from './components/app-header/index.vue';
 import AppSider from './components/app-sider/index.vue';
 import { APP_CONTEXT } from './contex';
 
-const activeKey = ref('plant');
+const activeKey = ref('task');
 
 const collapse = ref(false);
+
+const picking = ref(false);
+
+const selected = ref<any[]>([]);
 
 const token = useLocalStorage('token', '');
 
@@ -26,6 +31,18 @@ function setActiveKey(val: string) {
 
 function setCollapse(val: boolean) {
   collapse.value = val;
+}
+
+function setPicking(val: boolean) {
+  picking.value = val;
+}
+
+function setSelected(val: any[] | ((prev: any[]) => any[])) {
+  if (val instanceof Array) {
+    selected.value = val;
+  } else {
+    selected.value = val(selected.value);
+  }
 }
 
 // User farm config
@@ -54,6 +71,14 @@ provide(
   APP_CONTEXT.FARM_CONFIG,
   computed(() => query.data.value)
 );
+provide(APP_CONTEXT.PICKING, {
+  picking,
+  setPicking,
+});
+provide(APP_CONTEXT.SELECTED, {
+  selected,
+  setSelected,
+});
 </script>
 
 <template>
@@ -65,13 +90,14 @@ provide(
       },
     }"
   >
-    <VueQueryDevtools />
+    <VueQueryDevtools button-position="bottom-left" />
     <ant-app>
       <login v-if="!token" />
       <div v-else>
         <app-header />
         <app-content />
         <app-sider />
+        <app-float />
       </div>
     </ant-app>
   </a-config-provider>

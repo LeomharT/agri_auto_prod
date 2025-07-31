@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import useContext from '@/app/composables/useContext';
 import type { PlantProps } from '@/models/farm.type';
 import { App } from 'ant-design-vue';
-import { ref, watch, type Ref } from 'vue';
+import { computed, ref, watch, type Ref } from 'vue';
 import classes from './style.module.css';
 
 const blockImg = {
@@ -29,6 +30,7 @@ const moundTypes = [
 const props = defineProps<{
   x: number;
   y: number;
+  no: number;
   palnt?: PlantProps;
 }>();
 
@@ -47,6 +49,12 @@ const plant: Ref<PlantProps | undefined> = ref(undefined);
 // const tooltipContent = ref('');
 
 const { message } = App.useApp();
+
+const { farmConfig, picking, setSelected, selected } = useContext();
+
+const isSelected = computed(() => {
+  return !!selected.value.filter((item) => item.no === props.no).length;
+});
 
 function onDragOver(e: DragEvent) {
   e.preventDefault();
@@ -84,8 +92,8 @@ function onDrop(e: DragEvent) {
   if (type.value === 'soil') {
     emit('drop', {
       name,
-      positionX: props.x,
-      positionY: props.y,
+      soilPositionX: props.x,
+      soilPositionY: props.y,
       seedId: Number.parseInt(seedId!),
     });
   } else {
@@ -93,21 +101,56 @@ function onDrop(e: DragEvent) {
   }
 }
 
-function onClick(e: MouseEvent) {
-  e.preventDefault();
+function onPicking() {
+  const index = selected.value.findIndex((item) => item.no === props.no);
 
+  if (index !== -1) {
+    setSelected((prev) => {
+      prev.splice(index, 1);
+      return prev;
+    });
+  } else {
+    const [xCoord, yCoord] = [
+      (farmConfig!.value.width / farmConfig!.value.rowCount) * props.x,
+      (farmConfig!.value.length / farmConfig!.value.columnCount) * props.y,
+    ];
+
+    setSelected(
+      selected.value.concat({
+        no: props.no,
+        positionX: Math.floor(xCoord),
+        positionY: Math.floor(yCoord),
+        positionZ: 0,
+        soilPositionX: props.x,
+        soilPositionY: props.y,
+      })
+    );
+  }
+}
+
+function onEditing() {
   if (type.value === 'soil') {
     message.warning('土地上没有种植作物');
   } else {
     emit('click', {
       id: plant.value?.id,
       seedId: plant.value?.seedId,
-      positionX: props.x,
-      positionY: props.y,
+      soilPositionX: props.x,
+      soilPositionY: props.y,
       type: type.value,
       name: plant.value?.name,
       plantStatus: plant.value?.plantStatus,
     });
+  }
+}
+
+function onClick(e: MouseEvent) {
+  e.preventDefault();
+
+  if (picking.value) {
+    onPicking();
+  } else {
+    onEditing();
   }
 }
 
@@ -140,8 +183,9 @@ watch(
 );
 </script>
 <template>
-  <a-tooltip :title="`x:${x}, y:${y}`">
+  <a-tooltip :title="`x:${x}, y:${y} - index:${props.no}`">
     <div
+      v-bind:data-selected="picking && isSelected"
       dropzone="move"
       :class="classes.block"
       @click="onClick"

@@ -26,8 +26,8 @@ const modalRef = ref<Partial<PlantProps>>({
   seedId: undefined,
   growStatus: 1,
   seedSlot: 1,
-  positionX: undefined,
-  positionY: undefined,
+  soilPositionX: undefined,
+  soilPositionY: undefined,
 });
 
 const rulesRef = ref({
@@ -35,8 +35,8 @@ const rulesRef = ref({
   seedId: [{ required: true, message: '请输入种子ID' }],
   growStatus: [{ required: true, message: '请选择种子状态' }],
   seedSlot: [{ required: true, message: '请选择种子插槽' }],
-  positionX: [{ required: true, message: '请选择X的坐标' }],
-  positionY: [{ required: true, message: '请选择Y的坐标' }],
+  soilPositionX: [{ required: true, message: '请选择X的坐标' }],
+  soilPositionY: [{ required: true, message: '请选择Y的坐标' }],
 });
 
 const { validate, validateInfos } = Form.useForm(modalRef, rulesRef);
@@ -82,16 +82,16 @@ function onOk() {
     const config = farmConfig;
 
     const xCoord =
-      (config!.value.width / config!.value.rowCount) * _data.positionX;
+      (config!.value.width / config!.value.rowCount) * _data.soilPositionX;
 
     const yCoord =
-      (config!.value.length / config!.value.columnCount) * _data.positionY;
+      (config!.value.length / config!.value.columnCount) * _data.soilPositionY;
 
     const data = {
       ..._data,
       farmId: config?.value.id,
-      soilPositionX: Math.floor(xCoord),
-      soilPositionY: Math.floor(yCoord),
+      positionX: Math.floor(xCoord),
+      positionY: Math.floor(yCoord),
     };
 
     if (props.initialValue.id) {
@@ -110,8 +110,8 @@ function onCancel(e: MouseEvent) {
     seedId: undefined,
     growStatus: 1,
     seedSlot: 1,
-    positionX: undefined,
-    positionY: undefined,
+    soilPositionX: undefined,
+    soilPositionY: undefined,
   };
 }
 
@@ -188,9 +188,9 @@ watch(
       <a-space size="large">
         <a-space align="start">
           <p style="margin-top: 6px">X :</p>
-          <a-form-item v-bind="validateInfos.x">
+          <a-form-item v-bind="validateInfos.soilPositionX">
             <a-select
-              v-model:value="modalRef.positionX"
+              v-model:value="modalRef.soilPositionX"
               style="width: 100px"
               :options="[
                 { value: 0, label: '1' },
@@ -202,9 +202,9 @@ watch(
         </a-space>
         <a-space align="start">
           <p style="margin-top: 6px">Y :</p>
-          <a-form-item v-bind="validateInfos.y">
+          <a-form-item v-bind="validateInfos.soilPositionY">
             <a-select
-              v-model:value="modalRef.positionY"
+              v-model:value="modalRef.soilPositionY"
               style="width: 100px"
               :options="[
                 { value: 0, label: '1' },

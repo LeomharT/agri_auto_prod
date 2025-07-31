@@ -16,3 +16,20 @@
   display: flex;
   flex-flow: column nowrap;
 }
+
+.area {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 8px;
+}
+
+.tags {
+  width: 50px;
+  height: 32px;
+  font-size: 18px;
+  margin: 0;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+}

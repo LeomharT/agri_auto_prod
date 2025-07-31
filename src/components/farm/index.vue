@@ -55,12 +55,14 @@ function onCancel() {
     <div :class="classes.ground">
       <div v-for="i in 3 * 6" :class="classes.blocks" :key="i">
         <mound-block
+          :no="i"
           :x="xIndex(i)"
           :y="yIndex(i)"
           :palnt="
             query.data.value.filter(
               (item) =>
-                item.positionX === xIndex(i) && item.positionY === yIndex(i)
+                item.soilPositionX === xIndex(i) &&
+                item.soilPositionY === yIndex(i)
             )[0]
           "
           @click="onPlantClick"

@@ -44,9 +44,16 @@ export async function getSensorDevicePropList(farmId: number) {
 }
 
 export async function addOrUpdateTask(task: Task) {
+  const data: any = task;
+
+  if (data.dateRange) {
+    data['beginDate'] = data.dateRange[0].format('YYYY-MM-DD');
+    data['endDate'] = data.dateRange[1].format('YYYY-MM-DD');
+  }
+
   return fetchData(`${prefix}/api/farmDeviceTask/addOrUpdate`, {
     method: 'POST',
-    body: JSON.stringify(task),
+    body: JSON.stringify(data),
   });
 }
 

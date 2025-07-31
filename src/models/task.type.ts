@@ -1,3 +1,5 @@
+import type { Dayjs } from 'dayjs';
+
 export const CompareType = {
   /// 小于
   LessThan: 1,
@@ -50,4 +52,5 @@ export interface Task {
   weekDays: string;
   toolType: (typeof ToolHeadTypeEnum)[keyof typeof ToolHeadTypeEnum];
   weekRange: number[];
+  dateRange: [Dayjs, Dayjs];
 }

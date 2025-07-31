@@ -9,7 +9,7 @@ import { IconPlus } from '@tabler/icons-vue';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type ModalProps } from 'ant-design-vue';
 import { useForm } from 'ant-design-vue/es/form';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { computed, onMounted, onUnmounted, ref, toRaw, unref } from 'vue';
 import classes from './style.module.css';
 
@@ -40,6 +40,7 @@ const modalRef = ref({
   setTime: dayjs(),
   weekRange: [],
   positionList: [],
+  dateRange: [dayjs(), dayjs()] as [Dayjs, Dayjs],
 });
 
 const rulesRef = ref({
@@ -55,6 +56,7 @@ const rulesRef = ref({
   setTime: [{ required: false }],
   weekRange: [{ required: false }],
   positionList: [{ required: true, message: '请选择执行区域', type: 'array' }],
+  dateRange: [{ required: true, message: '请选择起始时间', type: 'array' }],
 });
 
 const { validate, validateInfos } = useForm(modalRef, rulesRef);
@@ -109,6 +111,7 @@ function onOk() {
     if (_data.deviceTaskCronType === 1) {
       delete _data.setTime;
       delete _data.weekRange;
+      delete _data.dateRange;
     }
     if (_data.deviceTaskCronType === 2) {
       delete _data.weekRange;
@@ -132,6 +135,7 @@ function onCancel() {
     setTime: dayjs(),
     weekRange: [],
     positionList: [],
+    dateRange: [dayjs(), dayjs()],
   };
 
   props.onCancel?.call({}, {} as MouseEvent);
@@ -267,21 +271,34 @@ onUnmounted(() => {
             placeholder="请选择任务执行日期"
           />
         </a-form-item>
-        <a-form-item
+        <a-space
           v-if="
             modalRef.deviceTaskCronType === 2 ||
             modalRef.deviceTaskCronType === 3
           "
-          label="执行日期"
-          name="setTime"
-          v-bind="validateInfos.setTime"
         >
-          <a-time-picker
-            v-model:value="modalRef.setTime"
-            :allow-clear="false"
-            placeholder="请选择任务执行日期"
-          />
-        </a-form-item>
+          <a-form-item
+            v-bind="validateInfos.setTime"
+            label="执行日期"
+            name="setTime"
+          >
+            <a-time-picker
+              v-model:value="modalRef.setTime"
+              :allow-clear="false"
+              placeholder="请选择任务执行日期"
+            />
+          </a-form-item>
+          <a-form-item
+            v-bind="validateInfos.dateRange"
+            name="dateRange"
+            label="起始日期"
+          >
+            <a-range-picker
+              v-model:value="modalRef.dateRange"
+              :allow-clear="false"
+            />
+          </a-form-item>
+        </a-space>
         <a-form-item v-if="modalRef.deviceTaskCronType === 3">
           <a-checkbox-group
             v-model:value="modalRef.weekRange"

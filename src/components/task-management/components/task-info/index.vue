@@ -23,7 +23,7 @@ const queryClient = useQueryClient();
 
 const { message } = App.useApp();
 
-const { farmConfig, setPicking } = useContext();
+const { farmConfig, setPicking, setSelected } = useContext();
 
 const { on, off } = useEventEmitter();
 
@@ -144,6 +144,10 @@ function onCancel() {
 function onPicking(e: MouseEvent) {
   props.onCancel?.call({}, e);
   setPicking(true);
+
+  if (modalRef.value.positionList.length) {
+    setSelected(modalRef.value.positionList);
+  }
 }
 
 function onDelete(index: number) {

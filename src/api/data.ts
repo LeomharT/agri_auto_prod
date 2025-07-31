@@ -38,7 +38,9 @@ export function dataGroupQuery(_params: any) {
     params.delete('DateRange');
   }
 
-  return fetchData(`${prefix}/api/data/dataGroupQuery?${params.toString()}`);
+  return fetchData<any[]>(
+    `${prefix}/api/data/dataGroupQuery?${params.toString()}`
+  );
 }
 
 export function exportTaskLog(_params: any) {

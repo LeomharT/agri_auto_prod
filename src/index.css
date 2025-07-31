@@ -1,6 +1,6 @@
 @import url('ant-design-vue/dist/reset.css');
 @import url('./variable.css');
-
+@import url('./apexchart.css');
 :root {
   overflow: hidden;
 }

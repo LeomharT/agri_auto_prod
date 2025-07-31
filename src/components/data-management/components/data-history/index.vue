@@ -5,10 +5,15 @@ import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import { useMutation, useQuery } from '@tanstack/vue-query';
-import { App, Empty } from 'ant-design-vue';
+import { App } from 'ant-design-vue';
+import ApexCharts, { type ApexOptions } from 'apexcharts';
 import dayjs, { Dayjs } from 'dayjs';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
 import classes from './style.module.css';
+
+const el = useTemplateRef('chart');
+
+const apexcharts = ref<ApexCharts>();
 
 const { farmConfig } = useContext();
 
@@ -31,6 +36,7 @@ const query = useQuery({
   queryKey: [QUERIES.DATA_HISTORY],
   queryFn: () => dataGroupQuery(params.value),
   enabled: false,
+  initialData: [],
 });
 
 const mutation = useMutation({
@@ -61,6 +67,67 @@ function onExport() {
     message.warning({ content: '请选择设备和数据来源' });
   }
 }
+
+watch(
+  () => query.data.value,
+  (value: any[]) => {
+    apexcharts.value?.updateOptions({
+      series: [
+        {
+          name: '数值',
+          data: value.map((item) => item.value),
+        },
+      ],
+      xaxis: {
+        categories: value.map((item) => item.staticsTime),
+      },
+    } as ApexOptions);
+  }
+);
+
+onMounted(() => {
+  apexcharts.value = new ApexCharts(
+    el.value as HTMLDivElement,
+    {
+      series: [
+        {
+          name: '数值',
+          data: [],
+        },
+      ],
+      chart: {
+        height: 350,
+        type: 'line',
+        zoom: {
+          enabled: false,
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'straight',
+      },
+      grid: {
+        row: {
+          colors: ['#f3f3f3', 'transparent'],
+          opacity: 0.5,
+        },
+      },
+      noData: {
+        text: '暂无数据',
+      },
+      xaxis: {
+        categories: [],
+      },
+    } as ApexOptions
+  );
+
+  apexcharts.value.render();
+});
 </script>
 <template>
   <a-card title="历史数据" :body-style="{ padding: 0 }">
@@ -118,8 +185,6 @@ function onExport() {
         <a-button html-type="reset" @click="onReset">重置</a-button>
       </a-space>
     </a-form>
-    <div :class="classes.graph">
-      <a-empty title="暂无数据" :image="Empty.PRESENTED_IMAGE_SIMPLE" />
-    </div>
+    <div ref="chart" :class="classes.graph"></div>
   </a-card>
 </template>

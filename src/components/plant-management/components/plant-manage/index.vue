@@ -6,7 +6,7 @@ import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import { App, type TreeProps } from 'ant-design-vue';
+import { App, Empty, type TreeProps } from 'ant-design-vue';
 import { computed, ref } from 'vue';
 import PlantInfo from '../plant-info/index.vue';
 import classes from './style.module.css';
@@ -169,5 +169,9 @@ function onCancel() {
         </template>
       </a-tree>
     </a-flex>
+    <a-empty
+      v-if="!query.data.value.length"
+      :image="Empty.PRESENTED_IMAGE_SIMPLE"
+    />
   </a-card>
 </template>

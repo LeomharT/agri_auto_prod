@@ -13,13 +13,13 @@ import AppContent from './components/app-content/index.vue';
 import AppFloat from './components/app-float/index.vue';
 import AppHeader from './components/app-header/index.vue';
 import AppSider from './components/app-sider/index.vue';
-import { APP_CONTEXT } from './contex';
+import { APP_CONTEXT, type PickingStatus } from './contex';
 
-const activeKey = ref('data');
+const activeKey = ref('device');
 
 const collapse = ref(false);
 
-const picking = ref(false);
+const picking = ref<PickingStatus>(false);
 
 const selected = ref<any[]>([]);
 
@@ -33,7 +33,7 @@ function setCollapse(val: boolean) {
   collapse.value = val;
 }
 
-function setPicking(val: boolean) {
+function setPicking(val: PickingStatus) {
   picking.value = val;
 }
 

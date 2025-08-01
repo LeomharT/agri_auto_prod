@@ -19,3 +19,23 @@ export function deleteBindDevice(id: number) {
     method: 'DELETE',
   });
 }
+
+export function installTool({ id, type }: { id: number; type: number }) {
+  return fetchData(`${prefix}/api/farmDevice/installTool`, {
+    method: 'POST',
+    body: JSON.stringify({
+      farmId: id,
+      toolType: type,
+    }),
+  });
+}
+
+export function unInstallTool({ id, type }: { id: number; type: number }) {
+  return fetchData(`${prefix}/api/farmDevice/unInstallTool`, {
+    method: 'POST',
+    body: JSON.stringify({
+      farmId: id,
+      toolType: type,
+    }),
+  });
+}

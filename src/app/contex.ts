@@ -7,3 +7,12 @@ export const APP_CONTEXT = readonly({
   PICKING: 'PICKING',
   SELECTED: 'SELECTED',
 });
+
+export type PickingStatus =
+  | boolean
+  | {
+      /** Allow multiple select */
+      multiple: boolean;
+      /** Only select field has seeds */
+      seeds: boolean;
+    };

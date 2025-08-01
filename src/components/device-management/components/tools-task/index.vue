@@ -12,7 +12,7 @@
     <a-typography-paragraph>设置目的坐标 (cm)</a-typography-paragraph>
     <a-form layout="inline">
       <a-form-item>
-        <a-select style="min-width: 150px" placeholder="请选任务" />
+        <a-select style="min-width: 150px" placeholder="请选执行区域" />
       </a-form-item>
       <a-form-item label="x">
         <a-input-number style="width: 50px" />

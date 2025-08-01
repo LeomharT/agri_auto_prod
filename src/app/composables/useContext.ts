@@ -1,6 +1,6 @@
 import { inject, type ComputedRef, type Ref } from 'vue';
 import type { FarmConfig } from '../../models/farm.type';
-import { APP_CONTEXT } from '../contex';
+import { APP_CONTEXT, type PickingStatus } from '../contex';
 
 export default function useContext() {
   const { activeKey, setActiveKey } = inject<{
@@ -14,8 +14,8 @@ export default function useContext() {
   }>(APP_CONTEXT.COLLAPSE)!;
 
   const { picking, setPicking } = inject<{
-    picking: Ref<boolean>;
-    setPicking: (val: boolean) => void;
+    picking: Ref<PickingStatus>;
+    setPicking: (val: PickingStatus) => void;
   }>(APP_CONTEXT.PICKING)!;
 
   const { selected, setSelected } = inject<{

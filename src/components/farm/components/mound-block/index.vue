@@ -104,6 +104,13 @@ function onDrop(e: DragEvent) {
 function onPicking() {
   const index = selected.value.findIndex((item) => item.no === props.no);
 
+  if (picking.value instanceof Object && picking.value.seeds) {
+    if (!props.palnt) {
+      message.warning('请选择有植物的土地块!');
+      return;
+    }
+  }
+
   if (index !== -1) {
     setSelected((prev) => {
       prev.splice(index, 1);
@@ -115,16 +122,29 @@ function onPicking() {
       (farmConfig!.value.length / farmConfig!.value.columnCount) * props.y,
     ];
 
-    setSelected(
-      selected.value.concat({
-        no: props.no,
-        positionX: Math.floor(xCoord),
-        positionY: Math.floor(yCoord),
-        positionZ: 0,
-        soilPositionX: props.x,
-        soilPositionY: props.y,
-      })
-    );
+    if (picking.value instanceof Object && !picking.value.multiple) {
+      setSelected([
+        {
+          no: props.no,
+          positionX: Math.floor(xCoord),
+          positionY: Math.floor(yCoord),
+          positionZ: 0,
+          soilPositionX: props.x,
+          soilPositionY: props.y,
+        },
+      ]);
+    } else {
+      setSelected(
+        selected.value.concat({
+          no: props.no,
+          positionX: Math.floor(xCoord),
+          positionY: Math.floor(yCoord),
+          positionZ: 0,
+          soilPositionX: props.x,
+          soilPositionY: props.y,
+        })
+      );
+    }
   }
 }
 
@@ -147,7 +167,7 @@ function onEditing() {
 function onClick(e: MouseEvent) {
   e.preventDefault();
 
-  if (picking.value) {
+  if (!!picking.value) {
     onPicking();
   } else {
     onEditing();

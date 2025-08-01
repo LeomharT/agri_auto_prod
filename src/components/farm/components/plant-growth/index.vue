@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import useContext from '@/app/composables/useContext';
 import { onMounted, onUnmounted, useTemplateRef } from 'vue';
 import classes from './style.module.css';
 
@@ -8,8 +7,6 @@ const props = defineProps<{
 }>();
 
 const el = useTemplateRef('plantImg');
-
-const { collapse } = useContext();
 
 function updatePosition() {
   if (!props.parent) return;

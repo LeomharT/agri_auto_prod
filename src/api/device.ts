@@ -1,5 +1,5 @@
 import type { PlantProps } from '@/models/farm.type';
-import type { Device } from '../models/device.type';
+import type { Device, SensorData } from '../models/device.type';
 import fetchData from '../utils/fetchData';
 const prefix = import.meta.env.VITE_SERVER_HOST;
 export function getBindDeviceList(id: number) {
@@ -46,4 +46,10 @@ export function executeTask(task: PlantProps) {
     method: 'POST',
     body: JSON.stringify(task),
   });
+}
+
+export function getSensorDeviceLastestData(id: number) {
+  return fetchData<SensorData[]>(
+    `${prefix}/api/farmDevice/getSensorDeviceLastestData?FarmId=${id}`
+  );
 }

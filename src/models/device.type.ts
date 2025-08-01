@@ -10,3 +10,11 @@ export interface Device {
   deviceStatus: number;
   speed: string;
 }
+
+export interface SensorData {
+  propName: string;
+  deviceKey: string;
+  propKey: string;
+  propUnit: string;
+  propValue: string;
+}

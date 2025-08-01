@@ -6,8 +6,11 @@
   overflow: hidden;
 
   display: flex;
+  flex-flow: column nowrap;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
+
+  position: relative;
 
   padding-top: calc(var(--content-padding) + var(--app-header-height));
   padding-right: calc(var(--content-padding) + var(--app-sider-width));

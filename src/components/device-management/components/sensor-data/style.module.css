@@ -1,0 +1,16 @@
+.card {
+  width: calc(100% - var(--app-sider-width) - var(--content-padding));
+  position: absolute;
+  left: 16px;
+  bottom: 20px;
+
+  &[data-collapse='true'] {
+    width: calc(100% - 32px);
+  }
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

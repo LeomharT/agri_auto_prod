@@ -166,7 +166,6 @@ watch(
             style="width: 200px"
             :disabled="!Boolean(props.initialValue.plantStatus === 2)"
             :options="[
-              { value: 0, label: '未知状态' },
               { value: 1, label: '种子期' },
               { value: 2, label: '生长期' },
               { value: 3, label: '收获期' },

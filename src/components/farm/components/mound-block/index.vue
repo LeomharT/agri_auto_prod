@@ -2,8 +2,10 @@
 import useContext from '@/app/composables/useContext';
 import type { PlantProps } from '@/models/farm.type';
 import { App } from 'ant-design-vue';
-import { computed, ref, watch, type Ref } from 'vue';
+import { computed, ref, useTemplateRef, watch, type Ref } from 'vue';
+import PlantGrowth from '../plant-growth/index.vue';
 import classes from './style.module.css';
+const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;
 
 const blockImg = {
   water: '/imgs/ground/pic_water@2x.png',
@@ -38,6 +40,8 @@ const emit = defineEmits<{
   (e: 'drop', args: Partial<PlantProps>): void;
   (e: 'click', args: Partial<PlantProps>): void;
 }>();
+
+const el = useTemplateRef('block');
 
 /** Mound type */
 const type: Ref<(typeof moundTypes)[number]> = ref('soil');
@@ -205,14 +209,47 @@ watch(
 );
 </script>
 <template>
-  <a-tooltip
-    :title="`x:${x}, y:${y} - index:${props.no} - name: ${
-      plant?.name ?? '空地'
-    }`"
-  >
+  <a-popover title="植物信息">
+    <template #content>
+      <a-descriptions bordered size="small">
+        <a-descriptions-item label="植物图片" :span="3">
+          <a-image
+            v-if="props.palnt?.seedImgUrl"
+            :src="filePrefix + props.palnt?.seedImgUrl"
+          />
+          <a-typography-paragraph v-else type="secondary" style="margin: 0">
+            暂无植物图片
+          </a-typography-paragraph>
+        </a-descriptions-item>
+        <a-descriptions-item label="植物名称" :span="2">
+          {{ props.palnt?.name ?? '空地' }}
+        </a-descriptions-item>
+        <a-descriptions-item label="植物状态" :span="1">
+          {{
+            props.palnt?.growStatus
+              ? {
+                  '1': '种子期',
+                  '2': '生长期',
+                  '3': '收获期',
+                }[props.palnt.growStatus]
+              : '暂无植物'
+          }}
+        </a-descriptions-item>
+        <a-descriptions-item label="X坐标">
+          {{ props.x }}
+        </a-descriptions-item>
+        <a-descriptions-item label="Y坐标">
+          {{ props.y }}
+        </a-descriptions-item>
+        <a-descriptions-item label="地块编号">
+          {{ props.no }}
+        </a-descriptions-item>
+      </a-descriptions>
+    </template>
     <div
       v-bind:data-selected="picking && isSelected"
       dropzone="move"
+      ref="block"
       :class="classes.block"
       @click="onClick"
       @drop="onDrop"
@@ -220,6 +257,9 @@ watch(
       @dragleave="onDragLeave"
     >
       <img :src="blockImg[type]" />
+      <teleport to="body">
+        <plant-growth v-if="props.palnt?.growStatus === 2" :parent="el" />
+      </teleport>
     </div>
-  </a-tooltip>
+  </a-popover>
 </template>

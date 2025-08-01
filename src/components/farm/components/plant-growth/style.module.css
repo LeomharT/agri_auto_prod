@@ -1,0 +1,8 @@
+.plant {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+  user-select: none;
+  pointer-events: none;
+}

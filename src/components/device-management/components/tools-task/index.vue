@@ -56,6 +56,13 @@ const mutation = useMutation({
   onSuccess() {
     message.success(toolsType[props.toolType as 1 | 2 | 3] + '任务执行成功');
     modalRef.value.seedId = undefined;
+
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.FARM_CROP_LIST],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [QUERIES.SEED_GROUP_LIST],
+    });
   },
 });
 

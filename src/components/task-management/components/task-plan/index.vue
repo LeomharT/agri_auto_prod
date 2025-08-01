@@ -80,6 +80,8 @@ const mutation = useMutation({
   mutationFn: deleteTask,
   onSuccess() {
     message.success('任务删除成功');
+    emit('selected', []);
+
     query.refetch();
     queryClient.invalidateQueries({
       queryKey: [QUERIES.TASK_CALENDAR],

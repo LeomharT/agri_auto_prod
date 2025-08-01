@@ -168,7 +168,6 @@ watch(
             :options="[
               { value: 1, label: '种子期' },
               { value: 2, label: '生长期' },
-              { value: 3, label: '收获期' },
             ]"
           />
         </a-form-item>

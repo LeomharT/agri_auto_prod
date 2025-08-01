@@ -209,7 +209,7 @@ onUnmounted(() => {
           v-model:value="modalRef.toolType"
           placeholder="请选择工具类型"
           :options="[
-            { value: 1, label: '种植' },
+            // { value: 1, label: '种植' },
             { value: 2, label: '浇水' },
             { value: 3, label: '除草' },
           ]"

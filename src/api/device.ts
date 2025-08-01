@@ -1,3 +1,4 @@
+import type { PlantProps } from '@/models/farm.type';
 import type { Device } from '../models/device.type';
 import fetchData from '../utils/fetchData';
 const prefix = import.meta.env.VITE_SERVER_HOST;
@@ -37,5 +38,12 @@ export function unInstallTool({ id, type }: { id: number; type: number }) {
       farmId: id,
       toolType: type,
     }),
+  });
+}
+
+export function executeTask(task: PlantProps) {
+  return fetchData(`${prefix}/api/farmDevice/executeTask`, {
+    method: 'POST',
+    body: JSON.stringify(task),
   });
 }

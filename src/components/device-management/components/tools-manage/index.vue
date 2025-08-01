@@ -13,6 +13,12 @@ const { modal, message } = App.useApp();
 
 const activeKey = ref(['1', '2', '3']);
 
+const tools = [
+  { title: '种植工具', toolType: 1, seeds: true },
+  { title: '喷淋工具', toolType: 2, seeds: false },
+  { title: '除草工具', toolType: 3, seeds: false },
+];
+
 const install = useMutation({
   mutationKey: [MUTATIONS.INSTALL_TOOL],
   mutationFn: installTool,
@@ -63,44 +69,26 @@ function onUnInstall(e: MouseEvent, type: number) {
 <template>
   <a-card title="工具管理" :body-style="{ padding: 0 }">
     <a-collapse v-model:activeKey="activeKey" style="border: none">
-      <a-collapse-panel key="1" header="种植工具">
+      <a-collapse-panel
+        v-for="tool in tools"
+        :key="tool.toolType.toString()"
+        :header="tool.title"
+      >
         <template #extra>
           <a-space>
-            <a-button size="small" @click="(e) => onInstall(e, 1)">
+            <a-button size="small" @click="(e) => onInstall(e, tool.toolType)">
               安装工具
             </a-button>
-            <a-button danger size="small" @click="(e) => onUnInstall(e, 1)">
+            <a-button
+              danger
+              size="small"
+              @click="(e) => onUnInstall(e, tool.toolType)"
+            >
               卸载工具
             </a-button>
           </a-space>
         </template>
-        <tools-task />
-      </a-collapse-panel>
-      <a-collapse-panel key="2" header="喷淋工具">
-        <template #extra>
-          <a-space>
-            <a-button size="small" @click="(e) => onInstall(e, 2)">
-              安装工具
-            </a-button>
-            <a-button danger size="small" @click="(e) => onUnInstall(e, 2)">
-              卸载工具
-            </a-button>
-          </a-space>
-        </template>
-        <tools-task />
-      </a-collapse-panel>
-      <a-collapse-panel key="3" header="除草工具">
-        <template #extra>
-          <a-space>
-            <a-button size="small" @click="(e) => onInstall(e, 3)">
-              安装工具
-            </a-button>
-            <a-button danger size="small" @click="(e) => onUnInstall(e, 3)">
-              卸载工具
-            </a-button>
-          </a-space>
-        </template>
-        <tools-task />
+        <tools-task :tool-type="tool.toolType" :seeds="tool.seeds" />
       </a-collapse-panel>
     </a-collapse>
   </a-card>

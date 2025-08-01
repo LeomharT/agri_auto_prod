@@ -104,6 +104,7 @@ function onDrop(e: DragEvent) {
 function onPicking() {
   const index = selected.value.findIndex((item) => item.no === props.no);
 
+  // Only select fields has plants
   if (picking.value instanceof Object && picking.value.seeds) {
     if (!props.palnt) {
       message.warning('请选择有植物的土地块!');
@@ -160,6 +161,7 @@ function onEditing() {
       type: type.value,
       name: plant.value?.name,
       plantStatus: plant.value?.plantStatus,
+      growStatus: plant.value?.growStatus,
     });
   }
 }
@@ -196,14 +198,18 @@ watch(
       }
       // Growing
       if (value.growStatus === 2) {
-        type.value = 'grass';
+        type.value = 'mound';
       }
     }
   }
 );
 </script>
 <template>
-  <a-tooltip :title="`x:${x}, y:${y} - index:${props.no}`">
+  <a-tooltip
+    :title="`x:${x}, y:${y} - index:${props.no} - name: ${
+      plant?.name ?? '空地'
+    }`"
+  >
     <div
       v-bind:data-selected="picking && isSelected"
       dropzone="move"

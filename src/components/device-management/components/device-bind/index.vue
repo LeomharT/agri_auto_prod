@@ -57,6 +57,8 @@ const mutation = useMutation({
   mutationFn: addOrUpdateBindDevice,
   onSuccess() {
     queryClient.invalidateQueries({ queryKey: [QUERIES.BIND_DEVICES] });
+    queryClient.invalidateQueries({ queryKey: [QUERIES.SENSOR_DATA] });
+
     message.success('设备信息更新成功');
     onCancel();
   },

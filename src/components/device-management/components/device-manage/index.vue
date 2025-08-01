@@ -38,6 +38,7 @@ const mutation = useMutation({
   mutationFn: deleteBindDevice,
   onSuccess() {
     queryClient.invalidateQueries({ queryKey: [QUERIES.BIND_DEVICES] });
+    queryClient.invalidateQueries({ queryKey: [QUERIES.SENSOR_DATA] });
     message.success('设备删除成功');
     onCancel();
   },

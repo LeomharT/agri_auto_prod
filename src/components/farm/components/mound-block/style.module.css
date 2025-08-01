@@ -3,6 +3,9 @@
   height: 100%;
   user-select: none;
 
+  /* ⚠️⚠️⚠️ Do not change this ⚠️⚠️⚠️ */
+  position: static;
+
   &[data-selected='true'] {
     background: #52c41a;
     & > img {

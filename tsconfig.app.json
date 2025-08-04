@@ -6,6 +6,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "allowJs": true,
 
     /* Linting */
     "strict": true,

@@ -53,3 +53,11 @@ export function getSensorDeviceLastestData(id: number) {
     `${prefix}/api/farmDevice/getSensorDeviceLastestData?FarmId=${id}`
   );
 }
+
+export function getMonitorConfig(id: number) {
+  return fetchData<{
+    monitorUrl: string;
+    monitorPicFileId: string;
+    monitorIsOnline: boolean;
+  }>(`${prefix}/api/monitor/getMonitorConfig?farmId=${id}`);
+}

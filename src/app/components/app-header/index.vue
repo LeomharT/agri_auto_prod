@@ -21,7 +21,6 @@ const { farmConfig, activeKey, setActiveKey } = useContext();
 
 <template>
   <header :class="classes.header">
-    <img :class="classes.logo" src="/imgs/NL-era@2x.png" />
     <a-space>
       <a-tabs
         v-model:activeKey="activeKey"
@@ -53,5 +52,6 @@ const { farmConfig, activeKey, setActiveKey } = useContext();
         </div>
       </a-dropdown>
     </a-space>
+    <img :class="classes.logo" src="/imgs/NL-era@2x.png" />
   </header>
 </template>

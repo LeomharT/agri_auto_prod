@@ -211,40 +211,23 @@ watch(
 <template>
   <a-popover title="植物信息">
     <template #content>
-      <a-descriptions bordered size="small">
-        <a-descriptions-item label="植物图片" :span="3">
-          <a-image
-            v-if="props.palnt?.seedImgUrl"
-            :src="filePrefix + props.palnt?.seedImgUrl"
-          />
-          <a-typography-paragraph v-else type="secondary" style="margin: 0">
-            暂无植物图片
-          </a-typography-paragraph>
-        </a-descriptions-item>
-        <a-descriptions-item label="植物名称" :span="2">
-          {{ props.palnt?.name ?? '空地' }}
-        </a-descriptions-item>
-        <a-descriptions-item label="植物状态" :span="1">
-          {{
-            props.palnt?.growStatus
-              ? {
-                  '1': '种子期',
-                  '2': '生长期',
-                  '3': '收获期',
-                }[props.palnt.growStatus]
-              : '暂无植物'
-          }}
-        </a-descriptions-item>
-        <a-descriptions-item label="X坐标">
-          {{ props.x }}
-        </a-descriptions-item>
-        <a-descriptions-item label="Y坐标">
-          {{ props.y }}
-        </a-descriptions-item>
-        <a-descriptions-item label="地块编号">
-          {{ props.no }}
-        </a-descriptions-item>
-      </a-descriptions>
+      <a-space direction="vertical">
+        <a-image
+          v-if="props.palnt?.seedImgUrl"
+          :src="filePrefix + props.palnt?.seedImgUrl"
+        />
+        <a-typography-paragraph v-else type="secondary" style="margin: 0">
+          暂无植物图片
+        </a-typography-paragraph>
+        <a-space>
+          <a-typography-text type="secondary">
+            {{ props.no }}.
+          </a-typography-text>
+          <a-typography-text>
+            {{ props.palnt?.name ?? '空地' }}
+          </a-typography-text>
+        </a-space>
+      </a-space>
     </template>
     <div
       v-bind:data-selected="picking && isSelected"

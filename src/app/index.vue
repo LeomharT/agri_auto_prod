@@ -15,7 +15,7 @@ import AppHeader from './components/app-header/index.vue';
 import AppSider from './components/app-sider/index.vue';
 import { APP_CONTEXT, type PickingStatus } from './contex';
 
-const activeKey = ref('plant');
+const activeKey = ref('device');
 
 const collapse = ref(false);
 
@@ -90,7 +90,7 @@ provide(APP_CONTEXT.SELECTED, {
       },
     }"
   >
-    <VueQueryDevtools button-position="bottom-left" />
+    <VueQueryDevtools button-position="bottom-right" />
     <ant-app>
       <login v-if="!token" />
       <div v-else>

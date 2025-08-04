@@ -7,6 +7,10 @@ import { App } from 'ant-design-vue';
 import { ref } from 'vue';
 import ToolsTask from '../tools-task/index.vue';
 
+const emit = defineEmits<{
+  (e: 'siwtch'): void;
+}>();
+
 const { farmConfig } = useContext();
 
 const { modal, message } = App.useApp();
@@ -68,6 +72,9 @@ function onUnInstall(e: MouseEvent, type: number) {
 
 <template>
   <a-card title="工具管理" :body-style="{ padding: 0 }">
+    <template #extra>
+      <a-button type="primary" @click="emit('siwtch')">监控视频</a-button>
+    </template>
     <a-collapse v-model:activeKey="activeKey" style="border: none">
       <a-collapse-panel
         v-for="tool in tools"

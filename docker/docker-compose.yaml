@@ -1,0 +1,29 @@
+version: "3"
+services:
+  app-name:
+    container_name: app-name
+    image: image.server:8082/iotcloud/app-name:image-version
+    restart: on-failure
+    privileged: true
+    environment:
+      appname: app-name
+    ports:
+      - 31209:80
+    volumes:
+      - ./log:/var/log/nginx
+      - ./js:/usr/share/nginx/html/js
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    networks:
+      mynetwork:
+        ipv4_address: 172.85.0.4
+networks:
+  mynetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.85.0.1/16
+          gateway: 172.85.0.1

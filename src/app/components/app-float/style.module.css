@@ -1,0 +1,13 @@
+.confirm {
+  width: 56px;
+  height: 56px;
+
+  transition: right 0.3s ease 0s;
+
+  right: var(--app-sider-width);
+  bottom: 224px;
+
+  &[data-collapse='true'] {
+    right: 24px;
+  }
+}

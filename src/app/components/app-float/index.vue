@@ -2,7 +2,9 @@
 import useContext from '@/app/composables/useContext';
 import useEventEmitter from '@/app/composables/useEventEmitter';
 import { IconCheck } from '@tabler/icons-vue';
-const { picking, setPicking, setSelected, selected } = useContext();
+import classes from './style.module.css';
+
+const { collapse, picking, setPicking, setSelected, selected } = useContext();
 
 const { trigger } = useEventEmitter();
 
@@ -22,7 +24,8 @@ function onPickConfirm() {
     shape="circle"
     type="primary"
     tooltip="确认选择"
-    style="width: 48px; height: 48px"
+    :class="classes.confirm"
+    :data-collapse="collapse"
     @click="onPickConfirm"
   >
     <template #icon>

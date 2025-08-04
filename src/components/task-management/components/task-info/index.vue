@@ -193,7 +193,12 @@ onUnmounted(() => {
           >
             {{ no }}
           </a-tag>
-          <a-button style="width: 55px" type="primary" @click="onPicking">
+          <a-button
+            ghost
+            type="primary"
+            :class="classes.button"
+            @click="onPicking"
+          >
             <template #icon>
               <icon-plus />
             </template>

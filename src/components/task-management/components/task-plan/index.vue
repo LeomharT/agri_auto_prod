@@ -25,7 +25,7 @@ const queryClient = useQueryClient();
 
 const { message, modal } = App.useApp();
 
-const { farmConfig } = useContext();
+const { farmConfig, picking } = useContext();
 
 const open = ref(false);
 
@@ -122,7 +122,9 @@ function onDelete(ids: number[]) {
   <a-card title="计划任务" :body-style="{ padding: 0 }">
     <task-info :open="open" @confirm="onOpen" @cancel="onCancel" />
     <template #extra>
-      <a-button type="primary" @click="onOpen">添加任务</a-button>
+      <a-button type="primary" :disabled="!!picking" @click="onOpen">
+        添加任务
+      </a-button>
     </template>
     <div v-if="!!props.selected.length" :class="classes.alert">
       <span> 选中 {{ props.selected.length }} 条目 </span>

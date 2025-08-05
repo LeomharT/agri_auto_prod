@@ -6,10 +6,12 @@ import {
   IconChevronLeft,
   IconPlayerPauseFilled,
   IconPlayerPlayFilled,
+  IconSettings,
 } from '@tabler/icons-vue';
 import { useQuery } from '@tanstack/vue-query';
 import { App, Empty } from 'ant-design-vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import MonitorSettings from '../monitor-settings/index.vue';
 import VideoPlayer from './VideoPlayer.vue';
 import classes from './style.module.css';
 import videoPlayer from './videoPlayer';
@@ -21,6 +23,8 @@ const emit = defineEmits<{
 const { message } = App.useApp();
 
 const { farmConfig } = useContext();
+
+const open = ref(false);
 
 const player = ref<any>();
 
@@ -55,6 +59,10 @@ function onPause() {
   }
 }
 
+function onCancel() {
+  open.value = false;
+}
+
 onMounted(() => {
   let needImport = true;
 
@@ -74,8 +82,14 @@ onUnmounted(() => {
 </script>
 <template>
   <a-card :body-style="{ padding: 0 }">
+    <monitor-settings :open="open" @cancel="onCancel" />
     <template #extra>
-      <a-button>设置</a-button>
+      <a-button @click="open = true">
+        <a-flex align="center" gap="small">
+          <icon-settings size="18px" />
+          设置
+        </a-flex>
+      </a-button>
     </template>
     <template #title>
       <a-space>

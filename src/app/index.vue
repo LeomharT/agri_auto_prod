@@ -15,7 +15,7 @@ import AppHeader from './components/app-header/index.vue';
 import AppSider from './components/app-sider/index.vue';
 import { APP_CONTEXT, type PickingStatus } from './contex';
 
-const activeKey = ref('plant');
+const activeKey = ref('device');
 
 const collapse = ref(false);
 

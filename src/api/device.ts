@@ -1,5 +1,5 @@
 import type { PlantProps } from '@/models/farm.type';
-import type { Device, SensorData } from '../models/device.type';
+import type { DaHuaConfig, Device, SensorData } from '../models/device.type';
 import fetchData from '../utils/fetchData';
 const prefix = import.meta.env.VITE_SERVER_HOST;
 export function getBindDeviceList(id: number) {
@@ -60,4 +60,17 @@ export function getMonitorConfig(id: number) {
     monitorPicFileId: string;
     monitorIsOnline: boolean;
   }>(`${prefix}/api/monitor/getMonitorConfig?farmId=${id}`);
+}
+
+export function getUserConfig(id: number) {
+  return fetchData<DaHuaConfig>(
+    `${prefix}/api/userSysConfig/getUserConfig?farmId=${id}`
+  );
+}
+
+export function updateUserConfig(data: Partial<DaHuaConfig>) {
+  return fetchData(`${prefix}/api/userSysConfig/updateUserConfig`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
 }

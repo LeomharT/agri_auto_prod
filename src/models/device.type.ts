@@ -18,3 +18,14 @@ export interface SensorData {
   propUnit: string;
   propValue: string;
 }
+
+export interface DaHuaConfig {
+  id: number;
+  farmId: number;
+  daHuaProductId: string;
+  daHuaAccessKey: string;
+  daHuaAccessSecrect: string;
+  daHuaMonitorSn: string;
+  daHuaMonitorPassword: string;
+  daHuaMonitorCategory: string;
+}

@@ -4,7 +4,7 @@ import DeviceManage from './components/device-manage/index.vue';
 import Monitor from './components/monitor/index.vue';
 import ToolsManage from './components/tools-manage/index.vue';
 
-const isMonitor = ref<boolean>(true);
+const isMonitor = ref<boolean>(false);
 
 function switchPanel() {
   isMonitor.value = !isMonitor.value;

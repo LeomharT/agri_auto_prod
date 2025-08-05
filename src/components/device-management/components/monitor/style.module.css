@@ -1,5 +1,20 @@
+@keyframes spining {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .player {
   position: relative;
+
+  &[data-playing='false'] {
+    > button {
+      visibility: visible;
+    }
+  }
 
   &:hover {
     > button {
@@ -7,6 +22,7 @@
     }
   }
 }
+
 .btn {
   visibility: hidden;
   position: absolute;
@@ -23,5 +39,13 @@
 
   & :global(.ant-wave) {
     display: none !important;
+  }
+}
+
+.loader {
+  pointer-events: none;
+
+  & > svg {
+    animation: spining 2s linear infinite;
   }
 }

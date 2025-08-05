@@ -10,6 +10,7 @@ import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import {
   IconChevronLeft,
+  IconLoader2,
   IconPlayerPauseFilled,
   IconPlayerPlayFilled,
   IconSettings,
@@ -72,11 +73,13 @@ const mutationUpload = useMutation({
   },
 });
 
-function onPlay() {
+async function onPlay() {
   if (!query.data.value?.monitorUrl) {
     message.error('未获取到视频地址');
     return;
   }
+
+  await query.refetch();
 
   try {
     player.value.play();
@@ -159,7 +162,7 @@ onUnmounted(() => {
         <span style="font-size: 16px"> 监控画面 </span>
       </a-space>
     </template>
-    <div :class="classes.player">
+    <div :class="classes.player" :data-playing="isPlaying">
       <video-player
         ref="player"
         id="player"
@@ -167,8 +170,20 @@ onUnmounted(() => {
         :isEncrypt="false"
         :videoURL="query.data.value?.monitorUrl ?? ''"
       />
-      <a-button v-if="!isPlaying" :class="classes.btn" ghost @click="onPlay">
+      <a-button
+        v-if="!isPlaying && !query.isFetching.value"
+        :class="classes.btn"
+        ghost
+        @click="onPlay"
+      >
         <icon-player-play-filled />
+      </a-button>
+      <a-button
+        v-if="!isPlaying && query.isFetching.value"
+        ghost
+        :class="`${classes.btn} ${classes.loader}`"
+      >
+        <icon-loader2 />
       </a-button>
       <a-button v-if="isPlaying" :class="classes.btn" ghost @click="onPause">
         <icon-player-pause-filled />

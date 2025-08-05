@@ -4,7 +4,7 @@
 
   display: flex;
   flex-flow: row nowrap;
-  justify-content: center;
+  justify-content: end;
   align-items: center;
 
   background-image: url('/imgs/bg_login@2x.png');
@@ -14,6 +14,7 @@
 
 .form {
   width: 420px;
+  margin-right: 128px;
 }
 
 .logo {

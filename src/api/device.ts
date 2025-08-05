@@ -74,3 +74,33 @@ export function updateUserConfig(data: Partial<DaHuaConfig>) {
     body: JSON.stringify(data),
   });
 }
+
+export function takePhoto(id?: number) {
+  return fetchData<{
+    fileId: string;
+    fileUrl: string;
+  }>(`${prefix}/api/monitor/takePhoto`, {
+    method: 'POST',
+    body: JSON.stringify({
+      farmId: id,
+    }),
+  });
+}
+
+export function removePhoto(fileId: string) {
+  return fetchData(`${prefix}/api/monitor/removePhoto`, {
+    method: 'POST',
+    body: JSON.stringify({
+      monitorPicFileId: fileId,
+    }),
+  });
+}
+
+export function savePhoto(fileId: string) {
+  return fetchData(`${prefix}/api/monitor/savePhoto`, {
+    method: 'POST',
+    body: JSON.stringify({
+      monitorPicFileId: fileId,
+    }),
+  });
+}

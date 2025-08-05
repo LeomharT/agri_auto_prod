@@ -16,6 +16,8 @@ const mutation = useMutation({
   mutationFn: login,
   onSuccess(data) {
     localStorage.setItem('token', data.accessToken);
+    localStorage.setItem('userId', data.userId);
+
     window.location.reload();
   },
 });

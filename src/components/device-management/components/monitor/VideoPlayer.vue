@@ -58,7 +58,11 @@
       kind-channel-id="0"
       width="1920"
       height="1080"
-      :style="{ visibility: isPlay ? 'visible' : 'hidden' }"
+      :style="{
+        visibility: isPlay ? 'visible' : 'hidden',
+        position: 'absolute',
+        top: 0,
+      }"
     ></video>
     <video
       :ref="(el) => setItemRef(el, `download-video-${props.id}`)"
@@ -76,7 +80,7 @@
       kind-channel-id="0"
       width="1920"
       height="1080"
-      style="visibility: hidden"
+      style="visibility: hidden; display: none"
     ></video>
     <img :src="loading" v-if="isLoading" />
   </div>
@@ -739,6 +743,7 @@ defineExpose({
   width: 100%;
   height: 100%;
   position: relative;
+  background-color: rgba(0, 0, 0, 0.65);
   & .video-player-canvas {
     position: absolute;
     top: 0;

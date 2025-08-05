@@ -66,6 +66,7 @@ declare module 'vue' {
     PlantInfo: typeof import('./src/components/plant-management/components/plant-info/index.vue')['default']
     PlantManage: typeof import('./src/components/plant-management/components/plant-manage/index.vue')['default']
     PlantManagement: typeof import('./src/components/plant-management/index.vue')['default']
+    Player: typeof import('./src/components/device-management/components/monitor/components/player/index.vue')['default']
     SeedsInfo: typeof import('./src/components/plant-management/components/seeds-storehouse/components/seeds-info/index.vue')['default']
     SeedsStorehouse: typeof import('./src/components/plant-management/components/seeds-storehouse/index.vue')['default']
     SensorData: typeof import('./src/components/device-management/components/sensor-data/index.vue')['default']

@@ -8,7 +8,7 @@ import {
   IconPlayerPlayFilled,
 } from '@tabler/icons-vue';
 import { useQuery } from '@tanstack/vue-query';
-import { Empty } from 'ant-design-vue';
+import { App, Empty } from 'ant-design-vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import VideoPlayer from './VideoPlayer.vue';
 import classes from './style.module.css';
@@ -17,6 +17,8 @@ import videoPlayer from './videoPlayer';
 const emit = defineEmits<{
   (e: 'back'): void;
 }>();
+
+const { message } = App.useApp();
 
 const { farmConfig } = useContext();
 
@@ -31,6 +33,11 @@ const query = useQuery({
 });
 
 function onPlay() {
+  if (!query.data.value?.monitorUrl) {
+    message.error('未获取到视频地址');
+    return;
+  }
+
   try {
     player.value.play();
     isPlaying.value = true;

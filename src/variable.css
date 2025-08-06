@@ -1,4 +1,14 @@
 #app {
   --app-header-height: 64px;
   --app-sider-width: 620px;
+
+  /* --app-content-background: linear-gradient(#ffffff, #f5f5f5 28%); */
+  --app-content-background: #d9e2e9;
+  --app-header-background: #e8eff4;
+
+  --ant-card-title-background: #e8eff4;
+}
+
+.ant-card-head {
+  background-color: var(--ant-card-title-background) !important;
 }

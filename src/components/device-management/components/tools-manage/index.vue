@@ -75,7 +75,7 @@ function onUnInstall(e: MouseEvent, type: number) {
     <template #extra>
       <a-button type="primary" @click="emit('siwtch')">监控视频</a-button>
     </template>
-    <a-collapse v-model:activeKey="activeKey" style="border: none">
+    <a-collapse v-model:activeKey="activeKey" style="border: none" accordion>
       <a-collapse-panel
         v-for="tool in tools"
         :key="tool.toolType.toString()"
@@ -83,11 +83,16 @@ function onUnInstall(e: MouseEvent, type: number) {
       >
         <template #extra>
           <a-space>
-            <a-button size="small" @click="(e) => onInstall(e, tool.toolType)">
+            <a-button
+              size="small"
+              type="text"
+              @click="(e) => onInstall(e, tool.toolType)"
+            >
               安装工具
             </a-button>
             <a-button
               danger
+              type="text"
               size="small"
               @click="(e) => onUnInstall(e, tool.toolType)"
             >

@@ -1,0 +1,6 @@
+.info {
+  & label,
+  & p {
+    user-select: none;
+  }
+}

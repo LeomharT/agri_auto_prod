@@ -7,7 +7,7 @@ import { IconPlus } from '@tabler/icons-vue';
 import { useQuery } from '@tanstack/vue-query';
 import { Empty } from 'ant-design-vue';
 import { computed, h, onMounted, ref, useTemplateRef } from 'vue';
-import SeedsInfo from './components/seeds-info/index.vue';
+import SeedsInfo from '../seeds-info/index.vue';
 import classes from './style.module.css';
 const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;
 

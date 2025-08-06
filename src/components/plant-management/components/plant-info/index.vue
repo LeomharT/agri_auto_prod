@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { useDraggable } from '@vueuse/core';
 import { App, Form, message, type ModalProps } from 'ant-design-vue';
 import { computed, ref, watch, watchEffect, type CSSProperties } from 'vue';
+import classes from './style.module.css';
 
 const props = defineProps<
   ModalProps & {
@@ -202,14 +203,19 @@ watch(isDragging, () => {
     @cancel="onCancel"
   >
     <template #title>
-      <div ref="modalTitleRef" style="width: 100%; cursor: move">植物信息</div>
+      <div
+        ref="modalTitleRef"
+        style="width: 100%; cursor: move; user-select: none"
+      >
+        植物信息
+      </div>
     </template>
     <template #modalRender="{ originVNode }">
       <div :style="transformStyle">
         <component :is="originVNode" />
       </div>
     </template>
-    <a-form layout="vertical">
+    <a-form layout="vertical" :class="classes.info">
       <a-form-item label="植物名称" v-bind="validateInfos.name">
         <a-input v-model:value="modalRef.name" placeholder="请输入植物名称" />
       </a-form-item>

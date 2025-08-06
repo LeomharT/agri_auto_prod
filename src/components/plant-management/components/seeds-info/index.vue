@@ -16,7 +16,7 @@ import {
 } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface';
 import { defineProps, ref, watchEffect } from 'vue';
-const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;
+const prefix = import.meta.env.VITE_SERVER_HOST;
 
 type FormInput = {
   name: string;
@@ -55,7 +55,7 @@ const upload = useMutation({
     modelRef.value.imageUrl = data.fileUrl;
     if (fileList.value?.length) {
       fileList.value[0].status = 'done';
-      fileList.value[0].url = `${filePrefix}${data.fileUrl}`;
+      fileList.value[0].url = `${prefix}${data.fileUrl}`;
     }
   },
   onError() {
@@ -169,7 +169,7 @@ watchEffect(() => {
       {
         uid: '1',
         name: props.initialData.name,
-        url: filePrefix + props.initialData.imageUrl,
+        url: prefix + props.initialData.imageUrl,
         status: 'done',
       },
     ];

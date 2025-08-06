@@ -120,6 +120,7 @@ onMounted(() => {
       noData: {
         text: '暂无数据',
       },
+      colors: ['#00b96b'],
       xaxis: {
         categories: [],
       },

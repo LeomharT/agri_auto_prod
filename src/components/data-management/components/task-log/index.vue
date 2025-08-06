@@ -30,6 +30,7 @@ const columns: TableProps['columns'] = [
     dataIndex: 'compareValueX',
     title: '触发规则',
     customRender(opt) {
+      if (opt.record.compareType === 0) return '手动触发';
       return h(
         'span',
         {},

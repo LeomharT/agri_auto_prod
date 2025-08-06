@@ -6,14 +6,34 @@ import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
 import { IconTrash } from '@tabler/icons-vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
+import { useDraggable } from '@vueuse/core';
 import { App, Form, message, type ModalProps } from 'ant-design-vue';
-import { ref, watch } from 'vue';
+import { computed, ref, watch, watchEffect, type CSSProperties } from 'vue';
 
 const props = defineProps<
   ModalProps & {
     initialValue: Partial<PlantProps>;
   }
 >();
+
+const modalTitleRef = ref<HTMLElement>();
+
+const { x, y, isDragging } = useDraggable(modalTitleRef);
+
+const startX = ref<number>(0);
+const startY = ref<number>(0);
+const startedDrag = ref(false);
+const transformX = ref(0);
+const transformY = ref(0);
+const preTransformX = ref(0);
+const preTransformY = ref(0);
+const dragRect = ref({ left: 0, right: 0, top: 0, bottom: 0 });
+
+const transformStyle = computed<CSSProperties>(() => {
+  return {
+    transform: `translate(${transformX.value}px, ${transformY.value}px)`,
+  };
+});
 
 const { modal } = App.useApp();
 
@@ -133,19 +153,62 @@ watch(
         ...modalRef.value,
         ...props.initialValue,
       };
+
+      transformX.value = 0;
+      transformY.value = 0;
     }
   }
 );
+
+watch([x, y], () => {
+  if (!startedDrag.value) {
+    startX.value = x.value;
+    startY.value = y.value;
+    const bodyRect = document.body.getBoundingClientRect();
+    const titleRect = modalTitleRef.value!.getBoundingClientRect();
+    dragRect.value.right = bodyRect.width - titleRect.width;
+    dragRect.value.bottom = bodyRect.height - titleRect.height;
+    preTransformX.value = transformX.value;
+    preTransformY.value = transformY.value;
+  }
+  startedDrag.value = true;
+});
+
+watchEffect(() => {
+  if (startedDrag.value) {
+    transformX.value =
+      preTransformX.value +
+      Math.min(Math.max(dragRect.value.left, x.value), dragRect.value.right) -
+      startX.value;
+    transformY.value =
+      preTransformY.value +
+      Math.min(Math.max(dragRect.value.top, y.value), dragRect.value.bottom) -
+      startY.value;
+  }
+});
+
+watch(isDragging, () => {
+  if (!isDragging) {
+    startedDrag.value = false;
+  }
+});
 </script>
 
 <template>
   <a-modal
-    title="植物信息"
     :open="props.open"
     :confirm-loading="mutation.isPending.value"
     @ok="onOk"
     @cancel="onCancel"
   >
+    <template #title>
+      <div ref="modalTitleRef" style="width: 100%; cursor: move">植物信息</div>
+    </template>
+    <template #modalRender="{ originVNode }">
+      <div :style="transformStyle">
+        <component :is="originVNode" />
+      </div>
+    </template>
     <a-form layout="vertical">
       <a-form-item label="植物名称" v-bind="validateInfos.name">
         <a-input v-model:value="modalRef.name" placeholder="请输入植物名称" />

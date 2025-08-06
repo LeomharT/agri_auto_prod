@@ -7,6 +7,11 @@ import PlantGrowth from '../plant-growth/index.vue';
 import classes from './style.module.css';
 const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;
 
+const COLORS = {
+  HOVER: '#52c41a',
+  DANGER: '#ff4d4f',
+};
+
 const blockImg = {
   water: '/imgs/ground/pic_water@2x.png',
   seed: '/imgs/ground/pic_seed@2x.png',
@@ -64,7 +69,11 @@ function onDragOver(e: DragEvent) {
   e.preventDefault();
 
   if (e.target instanceof HTMLDivElement) {
-    e.target.style.background = '#52c41a';
+    if (type.value === 'soil') {
+      e.target.style.background = COLORS.HOVER;
+    } else {
+      e.target.style.background = COLORS.DANGER;
+    }
 
     const img = e.target.querySelector('img');
     if (img) {

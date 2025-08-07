@@ -5,6 +5,7 @@ import { MUTATIONS } from '@/data/mutations';
 import { useMutation } from '@tanstack/vue-query';
 import { App } from 'ant-design-vue';
 import { ref } from 'vue';
+import RobotArm from '../robot-arm/index.vue';
 import ToolsTask from '../tools-task/index.vue';
 
 const emit = defineEmits<{
@@ -75,6 +76,7 @@ function onUnInstall(e: MouseEvent, type: number) {
     <template #extra>
       <a-button type="primary" @click="emit('siwtch')">监控视频</a-button>
     </template>
+    <robot-arm />
     <a-collapse v-model:activeKey="activeKey" style="border: none" accordion>
       <a-collapse-panel
         v-for="tool in tools"

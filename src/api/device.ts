@@ -104,3 +104,15 @@ export function savePhoto(fileId: string) {
     }),
   });
 }
+
+export function moveArm(body: {
+  farmId: number;
+  destinationX: number;
+  destinationY: number;
+  destinationZ: number;
+}) {
+  return fetchData(`${prefix}/api/farmDevice/moveArm`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}

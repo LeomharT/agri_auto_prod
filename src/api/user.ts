@@ -22,6 +22,13 @@ export function login({
   });
 }
 
+export function adminLogin(body: { appId: string; appSecret: string }) {
+  return fetchData<any>(`${prefix}/api/auth/adminLogin`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}
+
 export function logout() {
   localStorage.clear();
   window.location.href = '/';

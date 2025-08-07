@@ -1,11 +1,11 @@
 <script lang="ts" setup>
+import { getFileURL } from '@/api/upload';
 import useContext from '@/app/composables/useContext';
 import type { PlantProps } from '@/models/farm.type';
 import { App } from 'ant-design-vue';
 import { computed, ref, useTemplateRef, watch, type Ref } from 'vue';
 import PlantGrowth from '../plant-growth/index.vue';
 import classes from './style.module.css';
-const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;
 
 const COLORS = {
   HOVER: '#52c41a',
@@ -223,7 +223,7 @@ watch(
       <a-space direction="vertical">
         <a-image
           v-if="props.palnt?.seedImgUrl"
-          :src="filePrefix + props.palnt?.seedImgUrl"
+          :src="getFileURL(props.palnt?.seedImgUrl)"
         />
         <a-typography-paragraph v-else type="secondary" style="margin: 0">
           暂无植物图片

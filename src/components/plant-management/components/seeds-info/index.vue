@@ -192,6 +192,7 @@ watchEffect(() => {
         <a-upload
           v-bind:file-list="fileList"
           list-type="picture-card"
+          accept=".png,.jpeg,.jpg,.webp,.svg"
           :custom-request="onUpload"
           @update:file-list="onUpdateList"
         >

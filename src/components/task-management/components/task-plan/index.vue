@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { deleteTask, getTaskList } from '@/api/task';
+import { deleteTask, getTaskItem, getTaskList } from '@/api/task';
 import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
-import { compareSymbol, toolsType } from '@/models/task.type';
+import { compareSymbol, toolsType, type Task } from '@/models/task.type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type TableProps } from 'ant-design-vue';
 import type { Key } from 'ant-design-vue/es/_util/type';
 import dayjs, { Dayjs } from 'dayjs';
-import { computed, h, ref } from 'vue';
+import { computed, ref } from 'vue';
 import TaskInfo from '../task-info/index.vue';
 import classes from './style.module.css';
 
@@ -29,6 +29,8 @@ const { farmConfig, picking } = useContext();
 
 const open = ref(false);
 
+const task = ref<Task>();
+
 const params = computed(() => ({
   FarmId: farmConfig?.value?.id,
   QueryDate: props.date.format('YYYY-MM-DD HH:mm:ss'),
@@ -37,30 +39,11 @@ const params = computed(() => ({
 
 const columns: TableProps['columns'] = [
   { key: 'name', dataIndex: 'name', title: '任务事件' },
-  {
-    key: 'toolType',
-    dataIndex: 'toolType',
-    title: '工具',
-    customRender(opt) {
-      return h('span', {}, `${toolsType[opt.text as '1' | '2' | '3']}`);
-    },
-  },
+  { key: 'toolType', dataIndex: 'toolType', title: '工具' },
   { key: 'thingsPropName', dataIndex: 'thingsPropName', title: '数据源' },
-  {
-    key: 'compareValueX',
-    dataIndex: 'compareValueX',
-    title: '触发规则',
-    customRender(opt) {
-      return h(
-        'span',
-        {},
-        `${opt.record?.compareValueY ? `${opt.record?.compareValueY}%` : ''}
-        ${compareSymbol[opt.record.compareType - 1]}
-        ${opt.record?.compareValueX}%`
-      );
-    },
-  },
+  { key: 'compareValueX', dataIndex: 'compareValueX', title: '触发规则' },
   { key: 'nextExecuteTime', dataIndex: 'nextExecuteTime', title: '执行时间' },
+  { key: 'options', title: '操作' },
 ];
 
 const query = useQuery({
@@ -89,6 +72,15 @@ const mutation = useMutation({
   },
 });
 
+const mutationTask = useMutation({
+  mutationKey: [MUTATIONS.TASK_DETAIL],
+  mutationFn: getTaskItem,
+  onSuccess(data) {
+    task.value = data;
+    onOpen();
+  },
+});
+
 const rowSelection = computed(() => {
   return {
     hideSelectAll: true,
@@ -105,6 +97,7 @@ function onOpen() {
 
 function onCancel() {
   open.value = false;
+  task.value = undefined;
 }
 
 function onDelete(ids: number[]) {
@@ -120,7 +113,12 @@ function onDelete(ids: number[]) {
 
 <template>
   <a-card title="计划任务" :body-style="{ padding: 0 }">
-    <task-info :open="open" @confirm="onOpen" @cancel="onCancel" />
+    <task-info
+      :open="open"
+      :initial-value="task"
+      @confirm="onOpen"
+      @cancel="onCancel"
+    />
     <template #extra>
       <a-button type="primary" :disabled="!!picking" @click="onOpen">
         添加任务
@@ -153,6 +151,29 @@ function onDelete(ids: number[]) {
         pageSize: query.data.value.pageSize,
         total: query.data.value.total,
       }"
-    />
+    >
+      <template #bodyCell="{ text, column, record }">
+        <span v-if="column.key === 'toolType'">
+          {{ toolsType[text as '1' | '2' | '3'] }}
+        </span>
+        <span v-if="column.key === 'compareValueX'">
+          {{
+            `${record?.compareValueY ? `${record?.compareValueY}%` : ''}
+             ${compareSymbol[record.compareType - 1]}
+             ${record?.compareValueX}%`
+          }}
+        </span>
+        <a-button
+          v-if="column.key === 'options'"
+          size="small"
+          type="link"
+          style="color: #00b96b"
+          :loading="mutationTask.isPending.value"
+          @click="mutationTask.mutate(record.id)"
+        >
+          编辑
+        </a-button>
+      </template>
+    </a-table>
   </a-card>
 </template>

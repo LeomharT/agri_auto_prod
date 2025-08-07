@@ -47,10 +47,12 @@ export interface Task {
   compareValueY: number;
   cron: string;
   nextExecuteTime: string;
+  onceExecuteTime: string;
   plantTaskStatus: number;
   setTime: string;
   weekDays: string;
   toolType: (typeof ToolHeadTypeEnum)[keyof typeof ToolHeadTypeEnum];
   weekRange: number[];
   dateRange: [Dayjs, Dayjs];
+  positionList: any[];
 }

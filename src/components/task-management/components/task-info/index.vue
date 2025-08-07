@@ -4,16 +4,28 @@ import useContext from '@/app/composables/useContext';
 import useEventEmitter from '@/app/composables/useEventEmitter';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
-import { compareSymbol } from '@/models/task.type';
+import { compareSymbol, type Task } from '@/models/task.type';
 import { IconPlus } from '@tabler/icons-vue';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type ModalProps } from 'ant-design-vue';
 import { useForm } from 'ant-design-vue/es/form';
 import dayjs, { Dayjs } from 'dayjs';
-import { computed, onMounted, onUnmounted, ref, toRaw, unref } from 'vue';
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  ref,
+  toRaw,
+  unref,
+  watch,
+} from 'vue';
 import classes from './style.module.css';
 
-const props = defineProps<ModalProps>();
+const props = defineProps<
+  ModalProps & {
+    initialValue?: Task;
+  }
+>();
 
 const emit = defineEmits<{
   (e: 'confirm'): void;
@@ -117,6 +129,11 @@ function onOk() {
       delete _data.weekRange;
     }
 
+    // Update if has initial value
+    if (props.initialValue) {
+      _data.id = props.initialValue.id;
+    }
+
     mutation.mutate(_data);
   });
 }
@@ -156,16 +173,46 @@ function onDelete(index: number) {
   modalRef.value.positionList.splice(index, 1);
 }
 
+function getIndex(x: number, y: number) {
+  return y * 3 + x + 1;
+}
+
+function onPickConfirm(_selected: never[]) {
+  const selected = toRaw(unref(_selected));
+  modalRef.value.positionList = selected;
+  emit('confirm');
+}
+
+watch(
+  () => props.open,
+  (value) => {
+    if (value && props.initialValue) {
+      const defaultValue: any = {
+        ...props.initialValue,
+        positionList: props.initialValue.positionList.map((item) => ({
+          ...item,
+          no: getIndex(item.soilPositionX, item.soilPositionY),
+        })),
+        setTime: dayjs(
+          dayjs().format('YYYY-MM-DD') + props.initialValue.setTime
+        ),
+        onceExecuteTime: dayjs(props.initialValue.onceExecuteTime),
+      };
+
+      modalRef.value = {
+        ...modalRef.value,
+        ...defaultValue,
+      };
+    }
+  }
+);
+
 onMounted(() => {
-  on('PICK_CONFIRM', (_selected) => {
-    const selected = toRaw(unref(_selected));
-    modalRef.value.positionList = selected;
-    emit('confirm');
-  });
+  on('PICK_CONFIRM', onPickConfirm);
 });
 
 onUnmounted(() => {
-  off('PICK_CONFIRM');
+  off('PICK_CONFIRM', onPickConfirm);
 });
 </script>
 

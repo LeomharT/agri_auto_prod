@@ -65,3 +65,7 @@ export async function deleteTask(ids: number[]) {
     }),
   });
 }
+
+export async function getTaskItem(id: number) {
+  return fetchData<Task>(`${prefix}/api/farmDeviceTask/getItem?id=${id}`);
+}

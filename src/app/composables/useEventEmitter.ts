@@ -8,10 +8,14 @@ export default function useEventEmitter() {
     events[event].push(listener);
   }
 
-  function off(event: string) {
+  function off(event: string, listener: (...args: any) => void) {
     if (!events[event]) return;
 
-    delete events[event];
+    const index = events[event].findIndex((fn) => fn === listener);
+
+    if (index !== -1) {
+      events[event].splice(index, 1);
+    }
   }
 
   function trigger(event: string, ...args: any) {

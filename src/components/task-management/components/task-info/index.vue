@@ -142,6 +142,8 @@ function onCancel() {
 }
 
 function onPicking(e: MouseEvent) {
+  message.info('请选择需要执行的土地');
+
   props.onCancel?.call({}, e);
   setPicking(true);
 
@@ -251,6 +253,44 @@ onUnmounted(() => {
           </a-form-item>
         </a-col>
       </a-row>
+      <div :class="classes.compare">
+        <a-form-item
+          v-bind="validateInfos.compareValueX"
+          name="compareValueX"
+          label="比较值X"
+        >
+          <a-input-number
+            v-model:value="modalRef.compareValueX"
+            placeholder="请输入比较值X"
+          />
+        </a-form-item>
+        <a-form-item
+          v-bind="validateInfos.compareType"
+          name="compareType"
+          label="比较类型"
+        >
+          <a-select
+            v-model:value="modalRef.compareType"
+            placeholder="请选择比较类型"
+            :options="
+              compareSymbol.map((item, index) => ({
+                label: item,
+                value: index + 1,
+              }))
+            "
+          />
+        </a-form-item>
+        <a-form-item
+          v-bind="validateInfos.compareValueY"
+          name="compareValueY"
+          label="比较值Y"
+        >
+          <a-input-number
+            v-model:value="modalRef.compareValueY"
+            placeholder="请输入比较值Y"
+          />
+        </a-form-item>
+      </div>
       <a-form-item
         v-bind="validateInfos.deviceTaskCronType"
         name="deviceTaskCronType"
@@ -321,44 +361,6 @@ onUnmounted(() => {
               { value: 6, label: '周六' },
               { value: 7, label: '周日' },
             ]"
-          />
-        </a-form-item>
-      </div>
-      <div :class="classes.compare">
-        <a-form-item
-          v-bind="validateInfos.compareValueX"
-          name="compareValueX"
-          label="比较值X"
-        >
-          <a-input-number
-            v-model:value="modalRef.compareValueX"
-            placeholder="请输入比较值X"
-          />
-        </a-form-item>
-        <a-form-item
-          v-bind="validateInfos.compareType"
-          name="compareType"
-          label="比较类型"
-        >
-          <a-select
-            v-model:value="modalRef.compareType"
-            placeholder="请选择比较类型"
-            :options="
-              compareSymbol.map((item, index) => ({
-                label: item,
-                value: index + 1,
-              }))
-            "
-          />
-        </a-form-item>
-        <a-form-item
-          v-bind="validateInfos.compareValueY"
-          name="compareValueY"
-          label="比较值Y"
-        >
-          <a-input-number
-            v-model:value="modalRef.compareValueY"
-            placeholder="请输入比较值Y"
           />
         </a-form-item>
       </div>

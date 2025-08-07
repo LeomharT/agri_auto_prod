@@ -14,6 +14,8 @@ const { farmConfig } = useContext();
 
 const { message } = App.useApp();
 
+const current = ref(1);
+
 const columns: TableProps['columns'] = [
   { key: 'name', dataIndex: 'name', title: '任务事件' },
   {
@@ -57,13 +59,14 @@ const query = useQuery({
       computed(() => ({
         ...params.value,
         FarmId: farmConfig?.value?.id,
+        PageIndex: current.value,
       })).value
     ),
   enabled: computed(() => Boolean(farmConfig?.value?.id)),
   initialData: {
     items: [],
     page: 1,
-    pageSize: 20,
+    pageSize: 10,
     total: 8,
   },
 });
@@ -170,6 +173,11 @@ function onReset() {
       :pagination="{
         pageSize: query.data.value.pageSize,
         total: query.data.value.total,
+        current: current,
+        onChange(page) {
+          current = page;
+          query.refetch();
+        },
       }"
     />
   </a-card>

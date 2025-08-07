@@ -11,13 +11,12 @@ import { QUERIES } from '@/data/queries';
 import {
   IconChevronLeft,
   IconLoader2,
-  IconPlayerPauseFilled,
   IconPlayerPlayFilled,
   IconSettings,
 } from '@tabler/icons-vue';
 import { useMutation, useQuery } from '@tanstack/vue-query';
 import { App, Empty } from 'ant-design-vue';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import MonitorSettings from '../monitor-settings/index.vue';
 import VideoPlayer from './VideoPlayer.vue';
 import classes from './style.module.css';
@@ -79,20 +78,9 @@ async function onPlay() {
     return;
   }
 
-  await query.refetch();
-
   try {
     player.value.play();
     isPlaying.value = true;
-  } catch {
-    isPlaying.value = false;
-  }
-}
-
-function onPause() {
-  try {
-    player.value.close();
-    isPlaying.value = false;
   } catch {
     isPlaying.value = false;
   }
@@ -124,6 +112,15 @@ function deleteSnapShot() {
   });
 }
 
+watch(
+  () => query.data.value,
+  async () => {
+    await nextTick();
+
+    onPlay();
+  }
+);
+
 onMounted(() => {
   let needImport = true;
 
@@ -139,6 +136,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   player.value?.close();
+  player.value?.closeIVS();
+
+  player.value = null;
 });
 </script>
 <template>
@@ -184,9 +184,6 @@ onUnmounted(() => {
         :class="`${classes.btn} ${classes.loader}`"
       >
         <icon-loader2 />
-      </a-button>
-      <a-button v-if="isPlaying" :class="classes.btn" ghost @click="onPause">
-        <icon-player-pause-filled />
       </a-button>
     </div>
     <a-flex justify="space-between" gap="large" style="padding: 8px 8px 0 8px">

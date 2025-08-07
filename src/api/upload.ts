@@ -15,3 +15,8 @@ export async function uploadFile(file: File) {
     body: formData,
   });
 }
+
+export function getFileURL(fileId: string): string {
+  const userId = localStorage.getItem('userId');
+  return `${prefix}/api/file/source/?fileId=${fileId}&userId=${userId}`;
+}

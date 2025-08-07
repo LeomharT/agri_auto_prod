@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { addOrUpdateCropSeed, deleteCropSeed } from '@/api/plant';
-import { uploadFile } from '@/api/upload';
+import { getFileURL, uploadFile } from '@/api/upload';
 import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
@@ -16,7 +16,6 @@ import {
 } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface';
 import { defineProps, ref, watchEffect } from 'vue';
-const prefix = import.meta.env.VITE_SERVER_HOST;
 
 type FormInput = {
   name: string;
@@ -52,10 +51,10 @@ const upload = useMutation({
   mutationKey: [MUTATIONS.UPLOAD],
   mutationFn: uploadFile,
   onSuccess(data) {
-    modelRef.value.imageUrl = data.fileUrl;
+    modelRef.value.imageUrl = data.fileId;
     if (fileList.value?.length) {
       fileList.value[0].status = 'done';
-      fileList.value[0].url = `${prefix}${data.fileUrl}`;
+      fileList.value[0].url = getFileURL(data.fileId);
     }
   },
   onError() {
@@ -169,7 +168,7 @@ watchEffect(() => {
       {
         uid: '1',
         name: props.initialData.name,
-        url: prefix + props.initialData.imageUrl,
+        url: getFileURL(props.initialData.imageUrl),
         status: 'done',
       },
     ];
@@ -208,6 +207,7 @@ watchEffect(() => {
       danger
       block
       type="dashed"
+      :loading="_delete.isPending.value"
       @click="onDelete(props.initialData!)"
     >
       <template #icon>

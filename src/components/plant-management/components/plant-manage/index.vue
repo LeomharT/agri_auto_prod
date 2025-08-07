@@ -42,9 +42,16 @@ const mutation = useMutation({
 const _delete = useMutation({
   mutationKey: [MUTATIONS.DELETE_PLANT],
   mutationFn: deleteCrop,
+  onMutate() {
+    message.loading({
+      key: 'DELETEING',
+      content: '植物删除中',
+      duration: 10000,
+    });
+  },
   onSuccess() {
     // Message
-    message.success({ content: '植物删除成功' });
+    message.success({ key: 'DELETEING', content: '植物删除成功' });
     // Refetch queries
     queryClient.invalidateQueries({
       queryKey: [QUERIES.FARM_CROP_LIST],
@@ -58,9 +65,16 @@ const _delete = useMutation({
 const _deleteAll = useMutation({
   mutationKey: [MUTATIONS.DELETE_ALL_PLANT],
   mutationFn: deleteAllCrop,
+  onMutate() {
+    message.loading({
+      key: 'DELETEING',
+      content: '植物删除中',
+      duration: 10000,
+    });
+  },
   onSuccess() {
     // Message
-    message.success({ content: '植物删除成功' });
+    message.success({ key: 'DELETEING', content: '植物删除成功' });
     // Refetch queries
     queryClient.invalidateQueries({
       queryKey: [QUERIES.FARM_CROP_LIST],

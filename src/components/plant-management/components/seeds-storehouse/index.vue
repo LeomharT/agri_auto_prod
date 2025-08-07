@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { getAllCropSeedList } from '@/api/plant';
+import { getFileURL } from '@/api/upload';
 import useContext from '@/app/composables/useContext';
 import { QUERIES } from '@/data/queries';
 import type { Seed } from '@/models/seed.type';
@@ -31,7 +32,7 @@ function handleOnDragStart(e: DragEvent, record: Seed) {
 
   // Set drag image
   const img = new Image();
-  img.src = filePrefix + record.imageUrl;
+  img.src = getFileURL(record.imageUrl);
   e.dataTransfer?.setDragImage(img, 20, 20);
 
   // Set drag data
@@ -110,7 +111,7 @@ onMounted(() => {
               :class="classes.seed"
               :icon="
                 h('img', {
-                  src: filePrefix + seed.imageUrl,
+                  src: getFileURL(seed.imageUrl),
                   draggable: 'false',
                 })
               "

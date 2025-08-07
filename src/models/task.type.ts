@@ -55,4 +55,6 @@ export interface Task {
   weekRange: number[];
   dateRange: [Dayjs, Dayjs];
   positionList: any[];
+  beginDate: string;
+  endDate: string;
 }

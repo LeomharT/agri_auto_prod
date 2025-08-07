@@ -197,6 +197,10 @@ watch(
           dayjs().format('YYYY-MM-DD') + props.initialValue.setTime
         ),
         onceExecuteTime: dayjs(props.initialValue.onceExecuteTime),
+        dateRange: [
+          dayjs(props.initialValue.beginDate),
+          dayjs(props.initialValue.endDate),
+        ],
       };
 
       modalRef.value = {

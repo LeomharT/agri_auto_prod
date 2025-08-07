@@ -10,7 +10,6 @@ import { Empty } from 'ant-design-vue';
 import { computed, h, onMounted, ref, useTemplateRef } from 'vue';
 import SeedsInfo from '../seeds-info/index.vue';
 import classes from './style.module.css';
-const filePrefix = import.meta.env.VITE_FILE_SERVER_HOST;
 
 const listRef = useTemplateRef('list-ref');
 

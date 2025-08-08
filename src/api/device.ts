@@ -96,11 +96,18 @@ export function removePhoto(fileId: string) {
   });
 }
 
-export function savePhoto(fileId: string) {
+export function savePhoto({
+  farmId,
+  fileId,
+}: {
+  fileId: string;
+  farmId?: number;
+}) {
   return fetchData(`${prefix}/api/monitor/savePhoto`, {
     method: 'POST',
     body: JSON.stringify({
       monitorPicFileId: fileId,
+      farmId,
     }),
   });
 }

@@ -158,9 +158,13 @@ function onDelete(ids: number[]) {
         </span>
         <span v-if="column.key === 'compareValueX'">
           {{
-            `${record?.compareValueY ? `${record?.compareValueY}%` : ''}
+            `${
+              record?.compareValueY
+                ? `${record?.compareValueY}${record?.thingsPropUnit}`
+                : ''
+            }
              ${compareSymbol[record.compareType - 1]}
-             ${record?.compareValueX}%`
+             ${record?.compareValueX}${record?.thingsPropUnit}`
           }}
         </span>
         <a-button

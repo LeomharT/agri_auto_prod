@@ -6,6 +6,7 @@ import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
 import { useQuery } from '@tanstack/vue-query';
 import { computed, ref } from 'vue';
+import FieldTools from './components/field-tools/index.vue';
 import MoundBlock from './components/mound-block/index.vue';
 import classes from './style.module.css';
 
@@ -69,6 +70,7 @@ function onCancel() {
           @drop="onPlantDrop"
         />
       </div>
+      <field-tools />
     </div>
   </div>
 </template>

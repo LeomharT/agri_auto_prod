@@ -4,7 +4,7 @@ import useContext from '@/app/composables/useContext';
 import useEventEmitter from '@/app/composables/useEventEmitter';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
-import { compareSymbol, type Task } from '@/models/task.type';
+import { compareLabel, type Task } from '@/models/task.type';
 import { IconPlus } from '@tabler/icons-vue';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type ModalProps } from 'ant-design-vue';
@@ -306,6 +306,22 @@ onUnmounted(() => {
       </a-row>
       <div :class="classes.compare">
         <a-form-item
+          v-bind="validateInfos.compareType"
+          name="compareType"
+          label="比较类型"
+        >
+          <a-select
+            v-model:value="modalRef.compareType"
+            placeholder="请选择比较类型"
+            :options="
+              compareLabel.map((item, index) => ({
+                label: item,
+                value: index + 1,
+              }))
+            "
+          />
+        </a-form-item>
+        <a-form-item
           v-bind="validateInfos.compareValueX"
           name="compareValueX"
           label="比较值X"
@@ -316,22 +332,7 @@ onUnmounted(() => {
           />
         </a-form-item>
         <a-form-item
-          v-bind="validateInfos.compareType"
-          name="compareType"
-          label="比较类型"
-        >
-          <a-select
-            v-model:value="modalRef.compareType"
-            placeholder="请选择比较类型"
-            :options="
-              compareSymbol.map((item, index) => ({
-                label: item,
-                value: index + 1,
-              }))
-            "
-          />
-        </a-form-item>
-        <a-form-item
+          v-show="modalRef.compareType === 7"
           v-bind="validateInfos.compareValueY"
           name="compareValueY"
           label="比较值Y"

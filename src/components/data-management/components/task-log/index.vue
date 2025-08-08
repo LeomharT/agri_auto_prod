@@ -36,9 +36,13 @@ const columns: TableProps['columns'] = [
       return h(
         'span',
         {},
-        `${opt.record?.compareValueY ? `${opt.record?.compareValueY}%` : ''}
-        ${compareSymbol[opt.record.compareType - 1]}
-        ${opt.record?.compareValueX}%`
+        `${
+          opt.record?.compareValueY
+            ? `${opt.record?.compareValueY}${opt.record?.thingsPropUnit}`
+            : ''
+        }
+          ${compareSymbol[opt.record.compareType - 1]}
+          ${opt.record?.compareValueX}${opt.record?.thingsPropUnit}`
       );
     },
   },

@@ -66,7 +66,15 @@ const mutationDelete = useMutation({
 
 const mutationUpload = useMutation({
   mutationKey: [MUTATIONS.SAVE_PHOTO],
-  mutationFn: () => savePhoto(fileId.value),
+  mutationFn: () =>
+    savePhoto({ fileId: fileId.value, farmId: farmConfig?.value?.id }),
+  onMutate() {
+    message.loading({
+      key: 'UPLOADING',
+      content: '图片保存中',
+      duration: 100000,
+    });
+  },
   onSuccess() {
     message.success({ key: 'UPLOADING', content: '照片保存成功' });
   },
@@ -91,12 +99,6 @@ function onCancel() {
 }
 
 function uploadSnapShot() {
-  message.loading({
-    key: 'UPLOADING',
-    content: '图片保存中',
-    duration: 100000,
-  });
-
   modal.confirm({
     title: '上传截图',
     content: '您确定要上传截图吗',

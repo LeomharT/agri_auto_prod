@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { installTool, unInstallTool } from '@/api/device';
 import useContext from '@/app/composables/useContext';
+import useEventEmitter from '@/app/composables/useEventEmitter';
 import { MUTATIONS } from '@/data/mutations';
 import { useMutation } from '@tanstack/vue-query';
 import { App } from 'ant-design-vue';
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import RobotArm from '../robot-arm/index.vue';
 import ToolsTask from '../tools-task/index.vue';
 
@@ -16,7 +17,9 @@ const { farmConfig } = useContext();
 
 const { modal, message } = App.useApp();
 
-const activeKey = ref(['1', '2', '3']);
+const { on, off } = useEventEmitter();
+
+const activeKey = ref(['1']);
 
 const tools = [
   { title: '种植工具', toolType: 1, seeds: true },
@@ -69,6 +72,18 @@ function onUnInstall(e: MouseEvent, type: number) {
     },
   });
 }
+
+function onToolClick(type: number) {
+  activeKey.value = [type.toString()];
+}
+
+onMounted(() => {
+  on('TOOL_CLICK', onToolClick);
+});
+
+onUnmounted(() => {
+  off('TOOL_CLICK', onToolClick);
+});
 </script>
 
 <template>

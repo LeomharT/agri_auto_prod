@@ -54,6 +54,7 @@ function onCancel() {
   <div :class="classes.board">
     <plant-info :open="open" :initial-value="plant" @cancel="onCancel" />
     <div :class="classes.ground">
+      <field-tools />
       <div v-for="i in 3 * 6" :class="classes.blocks" :key="i">
         <mound-block
           :no="i"
@@ -70,7 +71,6 @@ function onCancel() {
           @drop="onPlantDrop"
         />
       </div>
-      <field-tools />
     </div>
   </div>
 </template>

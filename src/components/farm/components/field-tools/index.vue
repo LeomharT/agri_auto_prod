@@ -1,9 +1,48 @@
 <script lang="ts" setup>
+import useContext from '@/app/composables/useContext';
+import useEventEmitter from '@/app/composables/useEventEmitter';
 import classes from './style.module.css';
+
+const { activeKey, setActiveKey } = useContext();
+
+const { trigger } = useEventEmitter();
+
+const deactive = {
+  plant: '/imgs/tools/btn_plant.png',
+  water: '/imgs/tools/btn_water.png',
+  grass: '/imgs/tools/btn_grass.png',
+};
+
+const active = {
+  plant: '/imgs/tools/btn_plant_hover.png',
+  water: '/imgs/tools/btn_water_hover.png',
+  grass: '/imgs/tools/btn_grass_hover.png',
+};
+
+function onToolClick(type: number) {
+  setActiveKey('device');
+
+  trigger('TOOL_CLICK', type);
+}
 </script>
 
 <template>
   <div :class="classes.tools">
-    <div style="font-size: 24px; font-weight: bold">Hi 大家好</div>
+    <div :class="classes.sloat">
+      <img src="/imgs/tools/seed_hover.png" />
+    </div>
+    <div :class="classes.sloat" style="margin-right: 30px">
+      <img src="/imgs/tools/seed_hover.png" />
+    </div>
+
+    <div :class="classes.tool" @click="onToolClick(1)">
+      <img :src="activeKey === 'device' ? active.plant : deactive.plant" />
+    </div>
+    <div :class="classes.tool" @click="onToolClick(2)">
+      <img :src="activeKey === 'device' ? active.water : deactive.water" />
+    </div>
+    <div :class="classes.tool" @click="onToolClick(3)">
+      <img :src="activeKey === 'device' ? active.grass : deactive.grass" />
+    </div>
   </div>
 </template>

@@ -1,2 +1,29 @@
 .tools {
+  position: absolute;
+  bottom: 50%;
+  right: -150px;
+  transform: rotate(-92deg);
+
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 12px;
+}
+
+.tool {
+  font-size: 14px;
+  font-weight: bold;
+  user-select: none;
+
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.sloat {
 }

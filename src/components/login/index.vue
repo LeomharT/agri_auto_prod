@@ -79,7 +79,7 @@ const mutationAdmin = useMutation({
             </a-button>
           </a-form>
         </a-tab-pane>
-        <a-tab-pane key="2" tab="用户登录">
+        <a-tab-pane>
           <a-form
             layout="vertical"
             :model="formState"

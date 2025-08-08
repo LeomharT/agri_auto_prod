@@ -5,13 +5,15 @@ import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
+import { getPlantIndex } from '@/utils/getPlantIndex';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, Empty, type TreeProps } from 'ant-design-vue';
-import { computed, ref } from 'vue';
+import type { DataNode, EventDataNode } from 'ant-design-vue/es/tree';
+import { computed, ref, toRaw } from 'vue';
 import PlantInfo from '../plant-info/index.vue';
 import classes from './style.module.css';
 
-const { farmConfig, setEditingPlant } = useContext();
+const { farmConfig, setEditingPlant, setSelected, setPicking } = useContext();
 
 const queryClient = useQueryClient();
 
@@ -124,8 +126,45 @@ function onCancel() {
   setEditingPlant(undefined);
 }
 
-function onSelect(_: unknown, record: unknown) {
-  console.log(record);
+function onSelect(
+  _: unknown,
+  info: {
+    event: 'select';
+    selected: boolean;
+    node: EventDataNode;
+    selectedNodes: DataNode[];
+    nativeEvent: MouseEvent;
+  }
+) {
+  if (info.selectedNodes.length) {
+    setPicking({
+      multiple: false,
+      seeds: true,
+      hideConfirm: true,
+    });
+    if (info.selectedNodes[0].cropList) {
+      setSelected(
+        info.selectedNodes[0].cropList.map((item: any) => ({
+          no: getPlantIndex(item.soilPositionX, item.soilPositionY),
+          ...item[0],
+        }))
+      );
+    } else {
+      setSelected([
+        {
+          no: getPlantIndex(
+            info.selectedNodes[0].soilPositionX,
+            info.selectedNodes[0].soilPositionY
+          ),
+          ...info.selectedNodes[0],
+        },
+      ]);
+    }
+  } else {
+    setPicking(false);
+    setSelected([]);
+  }
+  console.log(toRaw(info.selectedNodes));
 }
 </script>
 

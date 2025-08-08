@@ -225,6 +225,8 @@ watch(
         <a-image
           v-if="props.palnt?.seedImgUrl"
           :src="getFileURL(props.palnt?.seedImgUrl)"
+          width="40px"
+          height="40px"
         />
         <a-typography-paragraph v-else type="secondary" style="margin: 0">
           暂无植物图片

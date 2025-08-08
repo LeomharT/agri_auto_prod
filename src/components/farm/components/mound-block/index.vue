@@ -91,7 +91,7 @@ function onDragLeave(e: DragEvent) {
 
     const img = e.target.querySelector('img');
     if (img) {
-      img.style.opacity = '1.0';
+      img.style.opacity = '';
     }
   }
 }
@@ -202,7 +202,7 @@ watch(
     plant.value = value;
 
     if (value.plantStatus === 1) {
-      type.value = 'add';
+      type.value = 'seed';
     }
 
     if (value.plantStatus === 2) {

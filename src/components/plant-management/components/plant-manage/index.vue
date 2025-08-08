@@ -61,6 +61,9 @@ const _delete = useMutation({
     queryClient.invalidateQueries({
       queryKey: [QUERIES.SEED_GROUP_LIST],
     });
+    // Clear selected
+    setSelected([]);
+    setPicking(false);
   },
 });
 
@@ -84,6 +87,9 @@ const _deleteAll = useMutation({
     queryClient.invalidateQueries({
       queryKey: [QUERIES.SEED_GROUP_LIST],
     });
+    // Clear selected
+    setSelected([]);
+    setPicking(false);
   },
 });
 

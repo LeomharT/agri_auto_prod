@@ -10,7 +10,7 @@ import FieldTools from './components/field-tools/index.vue';
 import MoundBlock from './components/mound-block/index.vue';
 import classes from './style.module.css';
 
-const { farmConfig, setEditingPlant } = useContext();
+const { farmConfig, picking, setEditingPlant } = useContext();
 
 const open = ref(false);
 
@@ -56,6 +56,14 @@ function onCancel() {
 
 <template>
   <div :class="classes.board">
+    <a-alert
+      v-if="picking"
+      :class="classes.alert"
+      message="Informational Notes"
+      description="Additional description and informations about copywriting."
+      type="info"
+      show-icon
+    />
     <plant-info :open="open" :initial-value="plant" @cancel="onCancel" />
     <div :class="classes.ground">
       <field-tools />

@@ -95,12 +95,6 @@ function onSelected(_: unknown, val: unknown) {
   modalRef.value.soilPositionX = plant.soilPositionX;
   modalRef.value.soilPositionY = plant.soilPositionY;
 
-  setPicking({
-    multiple: false,
-    seeds: true,
-    hideConfirm: true,
-  });
-
   setSelected([
     {
       ...plant,

@@ -13,7 +13,7 @@ import { computed, onUnmounted, ref } from 'vue';
 import PlantInfo from '../plant-info/index.vue';
 import classes from './style.module.css';
 
-const { farmConfig, setEditingPlant, setSelected, setPicking } = useContext();
+const { farmConfig, setEditingPlant, setSelected } = useContext();
 
 const queryClient = useQueryClient();
 
@@ -63,7 +63,6 @@ const _delete = useMutation({
     });
     // Clear selected
     setSelected([]);
-    setPicking(false);
   },
 });
 
@@ -89,7 +88,6 @@ const _deleteAll = useMutation({
     });
     // Clear selected
     setSelected([]);
-    setPicking(false);
   },
 });
 
@@ -143,11 +141,6 @@ function onSelect(
   }
 ) {
   if (info.selectedNodes.length) {
-    setPicking({
-      multiple: false,
-      seeds: true,
-      hideConfirm: true,
-    });
     if (info.selectedNodes[0].cropList) {
       setSelected(
         info.selectedNodes[0].cropList.map((item: any) => ({
@@ -167,14 +160,12 @@ function onSelect(
       ]);
     }
   } else {
-    setPicking(false);
     setSelected([]);
   }
 }
 
 onUnmounted(() => {
   setSelected([]);
-  setPicking(false);
 });
 </script>
 

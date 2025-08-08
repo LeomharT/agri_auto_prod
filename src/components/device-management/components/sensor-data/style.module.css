@@ -2,7 +2,7 @@
   width: calc(100% - var(--app-sider-width) - var(--content-padding));
   position: absolute;
   left: 16px;
-  bottom: 20px;
+  bottom: 16px;
 
   &[data-collapse='true'] {
     width: calc(100% - 32px);

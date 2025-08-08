@@ -18,19 +18,20 @@ function onPickConfirm() {
 </script>
 
 <template>
-  <a-float-button
-    v-if="picking"
-    v-show="!(picking instanceof Object && picking.hideConfirm)"
-    id="pick-confirm"
-    shape="circle"
-    type="primary"
-    tooltip="确认选择"
-    :class="classes.confirm"
-    :data-collapse="collapse"
-    @click="onPickConfirm"
-  >
-    <template #icon>
-      <icon-check style="margin-left: -3px" />
-    </template>
-  </a-float-button>
+  <a-tooltip title="确认选择" placement="left" open>
+    <a-float-button
+      v-if="picking"
+      v-show="!(picking instanceof Object && picking.hideConfirm)"
+      id="pick-confirm"
+      shape="circle"
+      type="primary"
+      :class="classes.confirm"
+      :data-collapse="collapse"
+      @click="onPickConfirm"
+    >
+      <template #icon>
+        <icon-check style="margin-left: -3px" />
+      </template>
+    </a-float-button>
+  </a-tooltip>
 </template>

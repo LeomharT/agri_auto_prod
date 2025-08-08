@@ -29,10 +29,10 @@ export const ToolHeadTypeEnum = {
 export const compareSymbol = ['<', '≤', '=', '>', '≥', '≠', '-'] as const;
 export const compareLabel = [
   '数值小于(X)',
-  '数值小于对于(X)',
-  '数值对于(X)',
+  '数值小于等于(X)',
+  '数值等于(X)',
   '数值大于(X)',
-  '数值大于对于(X)',
+  '数值大于等于(X)',
   '数值不等于(X)',
   '数值在(X)与(Y)之间',
 ] as const;

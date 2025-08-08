@@ -116,6 +116,9 @@ function onClear() {
 
   modalRef.value.soilPositionX = 0;
   modalRef.value.soilPositionY = 0;
+
+  setPicking(false);
+  setSelected([]);
 }
 
 function onPicking() {

@@ -9,7 +9,7 @@
   &[data-selected='true'] {
     background: #52c41a !important;
     & > img {
-      opacity: 0.7;
+      opacity: 0.7 !important;
     }
   }
 

@@ -9,7 +9,7 @@ import { getPlantIndex } from '@/utils/getPlantIndex';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, Empty, type TreeProps } from 'ant-design-vue';
 import type { DataNode, EventDataNode } from 'ant-design-vue/es/tree';
-import { computed, ref, toRaw } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import PlantInfo from '../plant-info/index.vue';
 import classes from './style.module.css';
 
@@ -164,8 +164,12 @@ function onSelect(
     setPicking(false);
     setSelected([]);
   }
-  console.log(toRaw(info.selectedNodes));
 }
+
+onUnmounted(() => {
+  setSelected([]);
+  setPicking(false);
+});
 </script>
 
 <template>

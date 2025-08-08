@@ -20,6 +20,7 @@ function onPickConfirm() {
 <template>
   <a-float-button
     v-if="picking"
+    v-show="!(picking instanceof Object && picking.hideConfirm)"
     id="pick-confirm"
     shape="circle"
     type="primary"

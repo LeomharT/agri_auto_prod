@@ -19,7 +19,7 @@ const { modal, message } = App.useApp();
 
 const { on, off } = useEventEmitter();
 
-const activeKey = ref(['1']);
+const activeKey = ref('1');
 
 const tools = [
   { title: '种植工具', toolType: 1, seeds: true },
@@ -74,7 +74,7 @@ function onUnInstall(e: MouseEvent, type: number) {
 }
 
 function onToolClick(type: number) {
-  activeKey.value = [type.toString()];
+  activeKey.value = type.toString();
 }
 
 onMounted(() => {
@@ -117,7 +117,12 @@ onUnmounted(() => {
             </a-button>
           </a-space>
         </template>
-        <tools-task :tool-type="tool.toolType" :seeds="tool.seeds" />
+        <tools-task
+          :active-key="activeKey ?? '0'"
+          :tool-type="tool.toolType"
+          :seeds="tool.seeds"
+          :allow-picking="tool.toolType !== 1"
+        />
       </a-collapse-panel>
     </a-collapse>
   </a-card>

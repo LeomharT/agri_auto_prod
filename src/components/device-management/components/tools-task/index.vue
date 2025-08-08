@@ -1,18 +1,22 @@
 <script lang="ts" setup>
 import { executeTask } from '@/api/device';
 import useContext from '@/app/composables/useContext';
+import useEventEmitter from '@/app/composables/useEventEmitter';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
 import { toolsType } from '@/models/task.type';
+import { getPlantIndex } from '@/utils/getPlantIndex';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { App, Form } from 'ant-design-vue';
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref, toRaw, unref, watch } from 'vue';
 import classes from './style.module.css';
 
 const props = defineProps<{
   toolType: number;
   seeds: boolean;
+  activeKey: string;
+  allowPicking?: boolean;
 }>();
 
 const queryClient = useQueryClient();
@@ -21,7 +25,11 @@ const data = ref<PlantProps[] | undefined>([]);
 
 const { message } = App.useApp();
 
-const { farmConfig } = useContext();
+const { on, off } = useEventEmitter();
+
+const { farmConfig, setSelected, setPicking } = useContext();
+
+const selected = ref<any[]>([]);
 
 const modalRef = ref({
   positionX: 0,
@@ -33,7 +41,7 @@ const modalRef = ref({
   speedY: 0,
   speedZ: 0,
   toolType: props.toolType,
-  seedId: undefined,
+  seedId: undefined as number | undefined,
 });
 
 const rulesRef = ref({
@@ -84,6 +92,53 @@ function onSelected(_: unknown, val: unknown) {
 
   modalRef.value.soilPositionX = plant.soilPositionX;
   modalRef.value.soilPositionY = plant.soilPositionY;
+
+  setPicking({
+    multiple: false,
+    seeds: true,
+    hideConfirm: true,
+  });
+
+  setSelected([
+    {
+      ...plant,
+      no: getPlantIndex(plant.soilPositionX, plant.soilPositionY),
+    },
+  ]);
+}
+
+function onClear() {
+  modalRef.value.positionX = 0;
+  modalRef.value.positionY = 0;
+  modalRef.value.positionZ = 0;
+
+  modalRef.value.soilPositionX = 0;
+  modalRef.value.soilPositionY = 0;
+}
+
+function onPicking() {
+  message.info('请选择需要执行的土地');
+
+  setPicking({
+    multiple: false,
+    seeds: false,
+  });
+}
+
+function onPickConfirm(_selected: never[]) {
+  selected.value = toRaw(unref(_selected));
+
+  if (selected.value.length) {
+    if (props.toolType !== 1) {
+      modalRef.value.seedId = 0;
+    }
+    modalRef.value = {
+      ...modalRef.value,
+      ...selected.value[0],
+    };
+  } else {
+    modalRef.value.seedId = undefined;
+  }
 }
 
 function getFarmCord(open: boolean) {
@@ -91,6 +146,27 @@ function getFarmCord(open: boolean) {
     data.value = queryClient.getQueryData([QUERIES.FARM_CROP_LIST]);
   }
 }
+
+function reset() {
+  modalRef.value.seedId = undefined;
+  onClear();
+
+  setPicking(false);
+  setSelected([]);
+
+  selected.value = [];
+}
+
+watch(() => props.activeKey, reset);
+
+onMounted(() => {
+  on('PICK_CONFIRM', onPickConfirm);
+});
+
+onUnmounted(() => {
+  reset();
+  off('PICK_CONFIRM', onPickConfirm);
+});
 </script>
 
 <template>
@@ -112,7 +188,7 @@ function getFarmCord(open: boolean) {
       <a-typography-paragraph :class="classes.label">
         设置目的坐标 (cm)
       </a-typography-paragraph>
-      <a-form-item v-bind="validateInfos.seedId">
+      <a-form-item v-if="!props.allowPicking" v-bind="validateInfos.seedId">
         <a-select
           v-model:value="modalRef.seedId"
           :options="data"
@@ -120,11 +196,21 @@ function getFarmCord(open: boolean) {
             label: 'name',
             value: 'id',
           }"
+          allow-clear
           style="min-width: 150px"
           placeholder="请选执行区域"
           @select="onSelected"
+          @clear="onClear"
           @dropdown-visible-change="getFarmCord"
         />
+      </a-form-item>
+      <a-form-item v-if="props.allowPicking" v-bind="validateInfos.seedId">
+        <a-space>
+          <a-tag v-for="i in selected" :class="classes.tags" closable>
+            {{ i.no }}
+          </a-tag>
+          <a-button @click="onPicking">选择区域</a-button>
+        </a-space>
       </a-form-item>
       <a-form-item label="x" v-bind="validateInfos.positionX">
         <a-input-number

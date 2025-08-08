@@ -6,6 +6,7 @@ export const APP_CONTEXT = readonly({
   COLLAPSE: 'COLLAPSE',
   PICKING: 'PICKING',
   SELECTED: 'SELECTED',
+  EDITING_PLANT: 'EDITING_PLANT',
 });
 
 export type PickingStatus =
@@ -15,4 +16,6 @@ export type PickingStatus =
       multiple: boolean;
       /** Only select field has seeds */
       seeds: boolean;
+      /** Is showing confirm button */
+      hideConfirm?: boolean;
     };

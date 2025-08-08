@@ -10,20 +10,12 @@
 }
 
 .tool {
-  font-size: 14px;
   font-weight: bold;
   user-select: none;
-
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
   cursor: pointer;
-}
-
-.sloat {
 }

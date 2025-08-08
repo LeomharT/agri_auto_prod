@@ -5,6 +5,7 @@ import useEventEmitter from '@/app/composables/useEventEmitter';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import { compareLabel, type Task } from '@/models/task.type';
+import { getPlantIndex } from '@/utils/getPlantIndex';
 import { IconPlus } from '@tabler/icons-vue';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { App, type ModalProps } from 'ant-design-vue';
@@ -173,10 +174,6 @@ function onDelete(index: number) {
   modalRef.value.positionList.splice(index, 1);
 }
 
-function getIndex(x: number, y: number) {
-  return y * 3 + x + 1;
-}
-
 function onPickConfirm(_selected: never[]) {
   const selected = toRaw(unref(_selected));
   modalRef.value.positionList = selected;
@@ -191,7 +188,7 @@ watch(
         ...props.initialValue,
         positionList: props.initialValue.positionList.map((item) => ({
           ...item,
-          no: getIndex(item.soilPositionX, item.soilPositionY),
+          no: getPlantIndex(item.soilPositionX, item.soilPositionY),
         })),
         setTime: dayjs(
           dayjs().format('YYYY-MM-DD') + props.initialValue.setTime

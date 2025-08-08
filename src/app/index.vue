@@ -23,6 +23,8 @@ const picking = ref<PickingStatus>(false);
 
 const selected = ref<any[]>([]);
 
+const editingPlant = ref<undefined | number>(undefined);
+
 const token = useLocalStorage('token', '');
 
 function setActiveKey(val: string) {
@@ -35,6 +37,10 @@ function setCollapse(val: boolean) {
 
 function setPicking(val: PickingStatus) {
   picking.value = val;
+}
+
+function setEditingPlant(no: number | undefined) {
+  editingPlant.value = no;
 }
 
 function setSelected(val: any[] | ((prev: any[]) => any[])) {
@@ -78,6 +84,10 @@ provide(APP_CONTEXT.PICKING, {
 provide(APP_CONTEXT.SELECTED, {
   selected,
   setSelected,
+});
+provide(APP_CONTEXT.EDITING_PLANT, {
+  editingPlant,
+  setEditingPlant,
 });
 </script>
 

@@ -59,7 +59,8 @@ const plant: Ref<PlantProps | undefined> = ref(undefined);
 
 const { message } = App.useApp();
 
-const { farmConfig, picking, setSelected, selected } = useContext();
+const { farmConfig, picking, setSelected, selected, editingPlant } =
+  useContext();
 
 const isSelected = computed(() => {
   return !!selected.value.filter((item) => item.no === props.no).length;
@@ -248,7 +249,13 @@ watch(
       @dragover="onDragOver"
       @dragleave="onDragLeave"
     >
-      <img :src="blockImg[type]" />
+      <img
+        :src="
+          editingPlant && editingPlant === props.palnt?.id
+            ? '/imgs/ground/pic_seed@2x.png'
+            : blockImg[type]
+        "
+      />
       <teleport to="body">
         <plant-growth v-if="props.palnt?.growStatus === 2" :parent="el" />
       </teleport>

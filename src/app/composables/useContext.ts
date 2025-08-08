@@ -23,6 +23,11 @@ export default function useContext() {
     setSelected: (val: any[] | ((prev: any[]) => any[])) => void;
   }>(APP_CONTEXT.SELECTED)!;
 
+  const { editingPlant, setEditingPlant } = inject<{
+    editingPlant: Ref<number | undefined>;
+    setEditingPlant: (val: number | undefined) => void;
+  }>(APP_CONTEXT.EDITING_PLANT)!;
+
   const farmConfig = inject<ComputedRef<FarmConfig>>(APP_CONTEXT.FARM_CONFIG);
 
   return {
@@ -35,5 +40,7 @@ export default function useContext() {
     setPicking,
     selected,
     setSelected,
+    editingPlant,
+    setEditingPlant,
   };
 }

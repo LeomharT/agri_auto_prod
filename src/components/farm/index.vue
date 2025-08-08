@@ -10,7 +10,7 @@ import FieldTools from './components/field-tools/index.vue';
 import MoundBlock from './components/mound-block/index.vue';
 import classes from './style.module.css';
 
-const { farmConfig } = useContext();
+const { farmConfig, setEditingPlant } = useContext();
 
 const open = ref(false);
 
@@ -43,10 +43,14 @@ function onPlantClick(args: Partial<PlantProps>) {
     ...args,
   };
   open.value = true;
+
+  setEditingPlant(args.id);
 }
 
 function onCancel() {
   open.value = false;
+
+  setEditingPlant(undefined);
 }
 </script>
 

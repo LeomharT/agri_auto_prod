@@ -11,7 +11,7 @@ import { computed, ref } from 'vue';
 import PlantInfo from '../plant-info/index.vue';
 import classes from './style.module.css';
 
-const { farmConfig } = useContext();
+const { farmConfig, setEditingPlant } = useContext();
 
 const queryClient = useQueryClient();
 
@@ -93,6 +93,8 @@ function onEdit(e: MouseEvent, id: number) {
   e.stopPropagation();
 
   mutation.mutate(id);
+
+  setEditingPlant(id);
 }
 
 function onDelete(e: MouseEvent, id: number) {
@@ -118,6 +120,12 @@ function onDeleteSeed(e: MouseEvent, seedId: number) {
 function onCancel() {
   open.value = false;
   plant.value = {};
+
+  setEditingPlant(undefined);
+}
+
+function onSelect(_: unknown, record: unknown) {
+  console.log(record);
 }
 </script>
 
@@ -141,6 +149,7 @@ function onCancel() {
           title: 'name',
           children: 'cropList',
         }"
+        @select="onSelect"
       >
         <template #title="{ name, cropList, id, seedId }">
           <div :class="classes.item">

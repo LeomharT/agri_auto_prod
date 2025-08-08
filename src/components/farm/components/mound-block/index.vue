@@ -87,7 +87,7 @@ function onDragLeave(e: DragEvent) {
   e.preventDefault();
 
   if (e.target instanceof HTMLDivElement) {
-    e.target.style.background = 'transparent';
+    e.target.style.background = '';
 
     const img = e.target.querySelector('img');
     if (img) {

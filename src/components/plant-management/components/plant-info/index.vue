@@ -69,7 +69,7 @@ const mutation = useMutation({
     // Message
     message.success('种子种植成功');
     // Close modal
-    props.onCancel?.call({}, {} as MouseEvent);
+    onCancel({} as MouseEvent);
     // Refetch queries
     queryClient.invalidateQueries({
       queryKey: [QUERIES.FARM_CROP_LIST],

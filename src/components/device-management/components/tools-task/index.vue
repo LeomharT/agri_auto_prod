@@ -71,6 +71,8 @@ const mutation = useMutation({
     queryClient.invalidateQueries({
       queryKey: [QUERIES.SEED_GROUP_LIST],
     });
+
+    setPicking(false);
   },
 });
 
@@ -141,6 +143,11 @@ function onPickConfirm(_selected: never[]) {
   }
 }
 
+function onRemove() {
+  modalRef.value.seedId = undefined;
+  selected.value = [];
+}
+
 function getFarmCord(open: boolean) {
   if (open) {
     data.value = queryClient.getQueryData([QUERIES.FARM_CROP_LIST]);
@@ -206,7 +213,12 @@ onUnmounted(() => {
       </a-form-item>
       <a-form-item v-if="props.allowPicking" v-bind="validateInfos.seedId">
         <a-space>
-          <a-tag v-for="i in selected" :class="classes.tags" closable>
+          <a-tag
+            v-for="i in selected"
+            :class="classes.tags"
+            closable
+            @close.prevent="onRemove"
+          >
             {{ i.no }}
           </a-tag>
           <a-button @click="onPicking">选择区域</a-button>

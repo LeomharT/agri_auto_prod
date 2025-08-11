@@ -218,22 +218,16 @@ watch(
 );
 </script>
 <template>
-  <a-popover title="植物信息">
+  <a-popover>
     <template #content>
-      <a-space direction="vertical">
+      <a-space direction="vertical" align="center">
         <a-image
           v-if="props.palnt?.seedImgUrl"
           :src="getFileURL(props.palnt?.seedImgUrl)"
           width="40px"
           height="40px"
         />
-        <a-typography-paragraph v-else type="secondary" style="margin: 0">
-          暂无植物图片
-        </a-typography-paragraph>
         <a-space>
-          <a-typography-text type="secondary">
-            {{ props.no }}.
-          </a-typography-text>
           <a-typography-text>
             {{ props.palnt?.name ?? '空地' }}
           </a-typography-text>

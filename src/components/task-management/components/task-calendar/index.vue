@@ -54,6 +54,7 @@ function onSelect(value: Dayjs | string) {
         v-model:value="value"
         mode="month"
         :fullscreen="false"
+        :class="classes.calendar"
         @select="onSelect"
         @panel-change="onChange"
       >

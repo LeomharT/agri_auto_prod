@@ -16,7 +16,7 @@ function switchPanel() {
       <device-manage />
       <tools-manage @siwtch="switchPanel" />
     </div>
-    <div v-if="isMonitor">
+    <div v-if="isMonitor" :class="classes.monitor">
       <monitor @back="switchPanel" />
     </div>
   </div>

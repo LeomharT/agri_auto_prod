@@ -83,7 +83,7 @@ const mutationTask = useMutation({
 
 const rowSelection = computed(() => {
   return {
-    hideSelectAll: true,
+    hideSelectAll: false,
     selectedRowKeys: props.selected,
     onChange(selectedRowKeys) {
       emit('selected', selectedRowKeys);

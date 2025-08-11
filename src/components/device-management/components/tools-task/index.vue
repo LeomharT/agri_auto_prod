@@ -73,6 +73,7 @@ const mutation = useMutation({
     });
 
     setPicking(false);
+    setSelected([]);
   },
 });
 

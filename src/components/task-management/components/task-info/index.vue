@@ -220,126 +220,16 @@ onUnmounted(() => {
 <template>
   <a-modal
     title="任务信息"
+    width="1000px"
     :open="props.open"
     :confirm-loading="mutation.isPending.value"
     @ok="onOk"
     @cancel="onCancel"
   >
-    <a-form layout="vertical">
+    <a-form layout="vertical" :class="classes.form">
       <a-form-item v-bind="validateInfos.name" name="name" label="任务名称">
         <a-input v-model:value="modalRef.name" placeholder="请输入任务名称" />
       </a-form-item>
-      <a-form-item
-        v-bind="validateInfos.positionList"
-        name="positionList"
-        label="执行区域"
-      >
-        <div :class="classes.area">
-          <a-tag
-            v-for="({ no }, index) in modalRef.positionList"
-            :class="classes.tags"
-            closable
-            @close.prevent="onDelete(index)"
-          >
-            {{ no }}
-          </a-tag>
-          <a-button
-            ghost
-            type="primary"
-            :class="classes.button"
-            @click="onPicking"
-          >
-            <template #icon>
-              <icon-plus />
-            </template>
-          </a-button>
-        </div>
-      </a-form-item>
-      <a-form-item
-        v-bind="validateInfos.toolType"
-        name="toolType"
-        label="工具类型"
-      >
-        <a-select
-          v-model:value="modalRef.toolType"
-          placeholder="请选择工具类型"
-          :options="[
-            // { value: 1, label: '种植' },
-            { value: 2, label: '浇水' },
-            { value: 3, label: '除草' },
-          ]"
-        />
-      </a-form-item>
-      <a-row :gutter="16">
-        <a-col :span="12">
-          <a-form-item
-            v-bind="validateInfos.deviceKey"
-            name="deviceKey"
-            label="任务设备"
-          >
-            <a-select
-              v-model:value="modalRef.deviceKey"
-              placeholder="请选择设备"
-              :options="deviceItems"
-              :field-names="{ label: 'deviceName', value: 'deviceKey' }"
-              @change="modalRef.thingsProp = undefined"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item
-            v-bind="validateInfos.thingsProp"
-            name="thingsProp"
-            label="设备数据源"
-          >
-            <a-select
-              v-model:value="modalRef.thingsProp"
-              placeholder="请选择数据源"
-              :options="thingsItems"
-              :field-names="{ label: 'propName', value: 'propKey' }"
-            />
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <div :class="classes.compare">
-        <a-form-item
-          v-bind="validateInfos.compareType"
-          name="compareType"
-          label="比较类型"
-        >
-          <a-select
-            v-model:value="modalRef.compareType"
-            placeholder="请选择比较类型"
-            :options="
-              compareLabel.map((item, index) => ({
-                label: item,
-                value: index + 1,
-              }))
-            "
-          />
-        </a-form-item>
-        <a-form-item
-          v-bind="validateInfos.compareValueX"
-          name="compareValueX"
-          label="比较值X"
-        >
-          <a-input-number
-            v-model:value="modalRef.compareValueX"
-            placeholder="请输入比较值X"
-          />
-        </a-form-item>
-        <a-form-item
-          v-show="modalRef.compareType === 7"
-          v-bind="validateInfos.compareValueY"
-          name="compareValueY"
-          label="比较值Y"
-        >
-          <a-input-number
-            v-model:value="modalRef.compareValueY"
-            placeholder="请输入比较值Y"
-          />
-        </a-form-item>
-      </div>
       <a-form-item
         v-bind="validateInfos.deviceTaskCronType"
         name="deviceTaskCronType"
@@ -413,6 +303,121 @@ onUnmounted(() => {
           />
         </a-form-item>
       </div>
+      <a-form-item
+        v-bind="validateInfos.positionList"
+        name="positionList"
+        label="执行区域"
+      >
+        <div :class="classes.area">
+          <a-tag
+            v-for="({ no }, index) in modalRef.positionList"
+            :class="classes.tags"
+            closable
+            @close.prevent="onDelete(index)"
+          >
+            {{ no }}
+          </a-tag>
+          <a-button
+            ghost
+            type="primary"
+            :class="classes.button"
+            @click="onPicking"
+          >
+            <template #icon>
+              <icon-plus />
+            </template>
+          </a-button>
+        </div>
+      </a-form-item>
+      <a-form-item
+        v-bind="validateInfos.toolType"
+        name="toolType"
+        label="工具类型"
+      >
+        <a-select
+          v-model:value="modalRef.toolType"
+          placeholder="请选择工具类型"
+          :options="[
+            // { value: 1, label: '种植' },
+            { value: 2, label: '浇水' },
+            { value: 3, label: '除草' },
+          ]"
+        />
+      </a-form-item>
+      <a-row :gutter="16">
+        <a-col :span="5">
+          <a-form-item
+            v-bind="validateInfos.deviceKey"
+            name="deviceKey"
+            label="任务设备"
+          >
+            <a-select
+              v-model:value="modalRef.deviceKey"
+              placeholder="请选择设备"
+              :options="deviceItems"
+              :field-names="{ label: 'deviceName', value: 'deviceKey' }"
+              @change="modalRef.thingsProp = undefined"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="5">
+          <a-form-item
+            v-bind="validateInfos.thingsProp"
+            name="thingsProp"
+            label="设备数据源"
+          >
+            <a-select
+              v-model:value="modalRef.thingsProp"
+              placeholder="请选择数据源"
+              :options="thingsItems"
+              :field-names="{ label: 'propName', value: 'propKey' }"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="4">
+          <a-form-item
+            v-bind="validateInfos.compareType"
+            name="compareType"
+            label="比较类型"
+          >
+            <a-select
+              v-model:value="modalRef.compareType"
+              placeholder="请选择比较类型"
+              :options="
+                compareLabel.map((item, index) => ({
+                  label: item,
+                  value: index + 1,
+                }))
+              "
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="5">
+          <a-form-item
+            v-bind="validateInfos.compareValueX"
+            name="compareValueX"
+            label="比较值X"
+          >
+            <a-input-number
+              v-model:value="modalRef.compareValueX"
+              placeholder="请输入比较值X"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="5">
+          <a-form-item
+            v-show="modalRef.compareType === 7"
+            v-bind="validateInfos.compareValueY"
+            name="compareValueY"
+            label="比较值Y"
+          >
+            <a-input-number
+              v-model:value="modalRef.compareValueY"
+              placeholder="请输入比较值Y"
+            />
+          </a-form-item>
+        </a-col>
+      </a-row>
     </a-form>
   </a-modal>
 </template>

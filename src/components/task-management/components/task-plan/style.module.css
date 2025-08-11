@@ -12,3 +12,7 @@
   align-items: center;
   justify-content: space-between;
 }
+
+.btn:not(:disabled) {
+  color: #00b96b;
+}

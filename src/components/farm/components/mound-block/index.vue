@@ -59,10 +59,15 @@ const plant: Ref<PlantProps | undefined> = ref(undefined);
 
 const { message } = App.useApp();
 
-const { farmConfig, picking, setSelected, selected } = useContext();
+const { farmConfig, picking, setSelected, selected, editingPlant } =
+  useContext();
 
 const isSelected = computed(() => {
   return !!selected.value.filter((item) => item.no === props.no).length;
+});
+
+const isEditing = computed(() => {
+  return plant?.value?.id && plant.value.id === editingPlant.value;
 });
 
 function onDragOver(e: DragEvent) {
@@ -235,7 +240,7 @@ watch(
       </a-space>
     </template>
     <div
-      v-bind:data-selected="isSelected"
+      v-bind:data-selected="isSelected || isEditing"
       v-bind:data-picking="!!picking"
       dropzone="move"
       ref="block"

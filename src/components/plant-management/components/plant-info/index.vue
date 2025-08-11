@@ -199,6 +199,8 @@ watch(isDragging, () => {
   <a-modal
     :open="props.open"
     :confirm-loading="mutation.isPending.value"
+    :mask="false"
+    style="right: -350px"
     @ok="onOk"
     @cancel="onCancel"
   >

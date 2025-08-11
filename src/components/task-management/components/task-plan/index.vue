@@ -43,6 +43,7 @@ const columns: TableProps['columns'] = [
   { key: 'thingsPropName', dataIndex: 'thingsPropName', title: '数据源' },
   { key: 'compareValueX', dataIndex: 'compareValueX', title: '触发规则' },
   { key: 'nextExecuteTime', dataIndex: 'nextExecuteTime', title: '执行时间' },
+  { key: 'plantTaskStatus', dataIndex: 'plantTaskStatus', title: '执行状态' },
   { key: 'options', title: '操作' },
 ];
 
@@ -170,12 +171,18 @@ function onDelete(ids: number[]) {
              ${record?.compareValueX}${record?.thingsPropUnit}`
           }}
         </span>
+        <span v-if="column.key === 'plantTaskStatus'">
+          <a-tag v-if="text === 1" color="processing">等待</a-tag>
+          <a-tag v-if="text === 3" color="success">完成</a-tag>
+          <a-tag v-if="text === 4">取消</a-tag>
+        </span>
         <a-button
           v-if="column.key === 'options'"
           size="small"
           type="link"
-          style="color: #00b96b"
+          :class="classes.btn"
           :loading="mutationTask.isPending.value"
+          :disabled="record.plantTaskStatus !== 1"
           @click="mutationTask.mutate(record.id)"
         >
           编辑

@@ -3,4 +3,9 @@
   display: grid;
   grid-template-rows: 1fr 1fr;
   gap: 16px;
+
+  & > div {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }

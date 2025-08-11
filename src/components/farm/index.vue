@@ -59,10 +59,11 @@ function onCancel() {
     <a-alert
       v-if="picking"
       :class="classes.alert"
-      message="Informational Notes"
-      description="Additional description and informations about copywriting."
+      message="提示"
+      description="请点击农场上的土地将其选中, 再次点击取消选中"
       type="info"
       show-icon
+      closable
     />
     <plant-info :open="open" :initial-value="plant" @cancel="onCancel" />
     <div :class="classes.ground">

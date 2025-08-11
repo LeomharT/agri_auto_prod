@@ -236,6 +236,7 @@ watch(
     </template>
     <div
       v-bind:data-selected="isSelected"
+      v-bind:data-picking="!!picking"
       dropzone="move"
       ref="block"
       :class="classes.block"

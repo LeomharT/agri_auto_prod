@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  getMonitorConfig,
-  removePhoto,
-  savePhoto,
-  takePhoto,
-} from '@/api/device';
+import { getMonitorConfig, takePhoto } from '@/api/device';
 import useContext from '@/app/composables/useContext';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
@@ -55,31 +50,6 @@ const mutationPhoto = useMutation({
   },
 });
 
-const mutationDelete = useMutation({
-  mutationKey: [MUTATIONS.REMOVE_PHOTO],
-  mutationFn: () => removePhoto(fileId.value),
-  onSuccess() {
-    message.success('照片删除成功');
-    fileId.value = '';
-  },
-});
-
-const mutationUpload = useMutation({
-  mutationKey: [MUTATIONS.SAVE_PHOTO],
-  mutationFn: () =>
-    savePhoto({ fileId: fileId.value, farmId: farmConfig?.value?.id }),
-  onMutate() {
-    message.loading({
-      key: 'UPLOADING',
-      content: '图片保存中',
-      duration: 100000,
-    });
-  },
-  onSuccess() {
-    message.success({ key: 'UPLOADING', content: '照片保存成功' });
-  },
-});
-
 async function onPlay() {
   if (!query.data.value?.monitorUrl) {
     message.error('未获取到视频地址');
@@ -99,18 +69,18 @@ function onCancel() {
 }
 
 function uploadSnapShot() {
-  modal.confirm({
-    title: '上传截图',
-    content: '您确定要上传截图吗',
-    onOk: () => mutationUpload.mutate(),
-  });
+  window.open(
+    `${host}/api/file/source?fileId=${fileId.value}&userId=${userId}`
+  );
 }
 
 function deleteSnapShot() {
   modal.confirm({
     title: '删除截图',
     content: '您确定要删除截图吗',
-    onOk: () => mutationDelete.mutate(),
+    onOk() {
+      fileId.value = '';
+    },
   });
 }
 
@@ -198,19 +168,8 @@ onUnmounted(() => {
         拍摄截图
       </a-button>
       <a-space v-if="fileId">
-        <a-button
-          :loading="mutationUpload.isPending.value"
-          @click="uploadSnapShot"
-        >
-          保存截图
-        </a-button>
-        <a-button
-          :loading="mutationDelete.isPending.value"
-          danger
-          @click="deleteSnapShot"
-        >
-          删除截图
-        </a-button>
+        <a-button @click="uploadSnapShot"> 保存截图 </a-button>
+        <a-button danger @click="deleteSnapShot"> 删除截图 </a-button>
       </a-space>
     </a-flex>
     <a-divider />

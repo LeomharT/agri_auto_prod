@@ -156,6 +156,9 @@ function onDelete(ids: number[]) {
         <span v-if="column.key === 'toolType'">
           {{ toolsType[text as '1' | '2' | '3'] }}
         </span>
+        <span v-if="column.key === 'nextExecuteTime'">
+          {{ dayjs(record.nextExecuteTime).format('HH:mm:ss') }}
+        </span>
         <span v-if="column.key === 'compareValueX'">
           {{
             `${

@@ -74,6 +74,7 @@ const mutation = useMutation({
 
     setPicking(false);
     setSelected([]);
+    selected.value = [];
   },
 });
 
@@ -225,14 +226,14 @@ onUnmounted(() => {
       <a-form-item label="x" v-bind="validateInfos.positionX">
         <a-input-number
           v-model:value="modalRef.positionX"
-          readonly
+          :max="farmConfig?.width"
           style="width: 50px"
         />
       </a-form-item>
       <a-form-item label="y" v-bind="validateInfos.positionY">
         <a-input-number
           v-model:value="modalRef.positionY"
-          readonly
+          :max="farmConfig?.length"
           style="width: 50px"
         />
       </a-form-item>

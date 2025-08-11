@@ -2,8 +2,7 @@
 import { ref } from 'vue';
 import DeviceManage from './components/device-manage/index.vue';
 import Monitor from './components/monitor/index.vue';
-import ToolsManage from './components/tools-manage/index.vue';
-
+import classes from './style.module.css';
 const isMonitor = ref<boolean>(false);
 
 function switchPanel() {
@@ -12,11 +11,11 @@ function switchPanel() {
 </script>
 
 <template>
-  <div>
-    <a-flex vertical gap="middle" v-if="!isMonitor">
+  <div :class="classes.layout">
+    <div v-if="!isMonitor" :class="classes.grid">
       <device-manage />
       <tools-manage @siwtch="switchPanel" />
-    </a-flex>
+    </div>
     <div v-if="isMonitor">
       <monitor @back="switchPanel" />
     </div>

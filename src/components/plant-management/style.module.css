@@ -1,0 +1,9 @@
+.layout {
+  height: 100%;
+  flex-flow: column nowrap;
+
+  & > div:nth-of-type(2) {
+    flex-grow: 1;
+    overflow: auto;
+  }
+}

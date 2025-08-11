@@ -4,6 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { ref } from 'vue';
 import TaskCalendar from './components/task-calendar/index.vue';
 import TaskPlan from './components/task-plan/index.vue';
+import classes from './style.module.css';
 
 const date = ref(dayjs());
 const selected = ref<Key[]>([]);
@@ -14,12 +15,12 @@ function onCalendarChange(value: Dayjs) {
 }
 </script>
 <template>
-  <a-flex vertical gap="middle">
+  <div :class="classes.layout">
     <task-calendar @change="onCalendarChange" />
     <task-plan
       :date="date"
       :selected="selected"
       @selected="(keys) => (selected = keys)"
     />
-  </a-flex>
+  </div>
 </template>

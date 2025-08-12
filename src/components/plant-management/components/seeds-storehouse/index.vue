@@ -13,7 +13,7 @@ import classes from './style.module.css';
 
 const listRef = useTemplateRef('list-ref');
 
-const open = ref(true);
+const open = ref(false);
 
 const initialData = ref<undefined | Seed>();
 

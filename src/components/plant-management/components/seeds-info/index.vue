@@ -15,7 +15,7 @@ import {
   type UploadProps,
 } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface';
-import { defineProps, ref, watchEffect } from 'vue';
+import { defineProps, ref, useTemplateRef, watchEffect } from 'vue';
 
 type FormInput = {
   name: string;
@@ -29,6 +29,8 @@ const { message, modal } = App.useApp();
 const { farmConfig } = useContext();
 
 const queryClient = useQueryClient();
+
+const canvas = useTemplateRef('canvasRef');
 
 const modelRef = ref<FormInput>({
   name: '',
@@ -106,17 +108,38 @@ const _delete = useMutation({
 function onUpload(e: UploadRequestOption) {
   const _file = e.file as UploadFile;
 
+  const ctx = canvas.value?.getContext('2d') as CanvasRenderingContext2D;
+
+  const img = new Image(40, 40);
+  const imgUrl = URL.createObjectURL(e.file as File);
+  img.src = imgUrl;
+
   const file = {
     uid: _file.uid,
     name: _file.name,
     fileName: _file.fileName,
     status: 'uploading',
     percent: 50,
+    url: imgUrl,
   } satisfies UploadFile;
 
+  // Set file list
   fileList.value = [file];
 
-  upload.mutate(e.file as File);
+  img.onload = () => {
+    // Clear canvas
+    ctx.clearRect(0, 0, 40, 40);
+    // Draw image on canvas
+    ctx.drawImage(img, 0, 0, 40, 40);
+    // Upload file to server
+    canvas.value?.toBlob((blob) => {
+      if (blob) {
+        const canvasFile = new File([blob], _file.name!);
+        upload.mutate(canvasFile);
+        URL.revokeObjectURL(imgUrl);
+      }
+    });
+  };
 }
 
 function onUpdateList(_fileList: UploadFile[]) {
@@ -184,6 +207,12 @@ watchEffect(() => {
     @ok="onOk"
     @cancel="onCancel"
   >
+    <canvas
+      style="visibility: hidden; position: absolute"
+      ref="canvasRef"
+      width="40px"
+      height="40px"
+    ></canvas>
     <a-form layout="vertical">
       <a-form-item label="种子名称" v-bind="validateInfos.name">
         <a-input v-model:value="modelRef.name" placeholder="请输入种子名称" />

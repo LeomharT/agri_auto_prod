@@ -101,6 +101,10 @@ function onCancel() {
   task.value = undefined;
 }
 
+function onPicking() {
+  open.value = false;
+}
+
 function onDelete(ids: number[]) {
   modal.confirm({
     title: '删除任务',
@@ -117,6 +121,7 @@ function onDelete(ids: number[]) {
     <task-info
       :open="open"
       :initial-value="task"
+      @picking="onPicking"
       @confirm="onOpen"
       @cancel="onCancel"
     />

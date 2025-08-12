@@ -29,6 +29,7 @@ const props = defineProps<
 >();
 
 const emit = defineEmits<{
+  (e: 'picking'): void;
   (e: 'confirm'): void;
 }>();
 
@@ -159,10 +160,10 @@ function onCancel() {
   props.onCancel?.call({}, {} as MouseEvent);
 }
 
-function onPicking(e: MouseEvent) {
+function onPicking() {
   message.info('请选择需要执行的土地');
 
-  props.onCancel?.call({}, e);
+  emit('picking');
   setPicking(true);
 
   if (modalRef.value.positionList.length) {
@@ -181,9 +182,9 @@ function onPickConfirm(_selected: never[]) {
 }
 
 watch(
-  () => props.open,
-  (value) => {
-    if (value && props.initialValue) {
+  () => props.initialValue,
+  () => {
+    if (props.initialValue) {
       const defaultValue: any = {
         ...props.initialValue,
         positionList: props.initialValue.positionList.map((item) => ({

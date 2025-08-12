@@ -44,13 +44,23 @@ function onPlantClick(args: Partial<PlantProps>) {
   };
   open.value = true;
 
-  setEditingPlant(args.id);
+  setEditingPlant(args.no);
 }
 
 function onCancel() {
   open.value = false;
 
   setEditingPlant(undefined);
+}
+
+function onConfirm(parent: string, args?: Partial<PlantProps>) {
+  if (parent === 'farm') {
+    open.value = true;
+
+    if (args) {
+      setEditingPlant(args.no);
+    }
+  }
 }
 </script>
 
@@ -65,7 +75,13 @@ function onCancel() {
       show-icon
       closable
     />
-    <plant-info :open="open" :initial-value="plant" @cancel="onCancel" />
+    <plant-info
+      :open="open"
+      :initial-value="plant"
+      :parent="'farm'"
+      @confirm="onConfirm"
+      @cancel="onCancel"
+    />
     <div :class="classes.ground">
       <field-tools />
       <div v-for="i in 3 * 6" :class="classes.blocks" :key="i">

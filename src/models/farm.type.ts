@@ -11,6 +11,7 @@ export interface FarmConfig {
 }
 
 export interface PlantProps {
+  no: number;
   id: number;
   name: string;
   seedId: number;

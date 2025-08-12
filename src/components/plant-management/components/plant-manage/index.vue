@@ -125,7 +125,6 @@ function onDeleteSeed(e: MouseEvent, seedId: number) {
 
 function onCancel() {
   open.value = false;
-  plant.value = {};
 
   setEditingPlant(undefined);
 }
@@ -164,6 +163,16 @@ function onSelect(
   }
 }
 
+function onConfirm(parent: string, args?: Partial<PlantProps>) {
+  if (parent === 'plant') {
+    open.value = true;
+
+    if (args) {
+      setEditingPlant(args.no);
+    }
+  }
+}
+
 onUnmounted(() => {
   setSelected([]);
 });
@@ -171,7 +180,13 @@ onUnmounted(() => {
 
 <template>
   <a-card title="植物管理">
-    <plant-info :open="open" :initial-value="plant" @cancel="onCancel" />
+    <plant-info
+      :open="open"
+      :initial-value="plant"
+      :parent="'plant'"
+      @confirm="onConfirm"
+      @cancel="onCancel"
+    />
     <a-flex vertical :gap="16">
       <a-input-search
         v-model:value="search"

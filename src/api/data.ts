@@ -5,7 +5,7 @@ const prefix = import.meta.env.VITE_SERVER_HOST;
 export async function getTaskRecordList(_params: any) {
   const params = new URLSearchParams(_params);
 
-  params.set('PageSize', '10');
+  params.set('PageSize', '5');
 
   if (_params.DateRange) {
     params.set('BeginTime', _params.DateRange[0].format('YYYY-MM-DD 00:00:01'));

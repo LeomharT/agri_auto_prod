@@ -59,15 +59,21 @@ const plant: Ref<PlantProps | undefined> = ref(undefined);
 
 const { message } = App.useApp();
 
-const { farmConfig, picking, setSelected, selected, editingPlant } =
-  useContext();
+const {
+  farmConfig,
+  picking,
+  setSelected,
+  selected,
+  editingPlant,
+  setEditingPlant,
+} = useContext();
 
 const isSelected = computed(() => {
   return !!selected.value.filter((item) => item.no === props.no).length;
 });
 
 const isEditing = computed(() => {
-  return plant?.value?.id && plant.value.id === editingPlant.value;
+  return props.no === editingPlant.value;
 });
 
 function onDragOver(e: DragEvent) {
@@ -114,6 +120,8 @@ function onDrop(e: DragEvent) {
       soilPositionY: props.y,
       seedId: Number.parseInt(seedId!),
     });
+
+    setEditingPlant(props.no);
   } else {
     message.error('只能在没有作物的土地上种植');
   }
@@ -172,6 +180,7 @@ function onEditing() {
     message.warning('土地上没有种植作物');
   } else {
     emit('click', {
+      no: props.no,
       id: plant.value?.id,
       seedId: plant.value?.seedId,
       soilPositionX: props.x,

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { addOrUpdateCrop, deleteCrop } from '@/api/farm';
 import useContext from '@/app/composables/useContext';
+import useEventEmitter from '@/app/composables/useEventEmitter';
 import { MUTATIONS } from '@/data/mutations';
 import { QUERIES } from '@/data/queries';
 import type { PlantProps } from '@/models/farm.type';
@@ -8,18 +9,38 @@ import { IconTrash } from '@tabler/icons-vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { useDraggable } from '@vueuse/core';
 import { App, Form, message, type ModalProps } from 'ant-design-vue';
-import { computed, ref, watch, watchEffect, type CSSProperties } from 'vue';
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  ref,
+  toRaw,
+  unref,
+  watch,
+  watchEffect,
+  type CSSProperties,
+} from 'vue';
 import classes from './style.module.css';
 
 const props = defineProps<
   ModalProps & {
     initialValue: Partial<PlantProps>;
+    parent: 'plant' | 'farm';
   }
 >();
+
+const emit = defineEmits<{
+  /**
+   * @param parent Where should trigger
+   */
+  (e: 'confirm', parent: string, args: Partial<PlantProps>): void;
+}>();
 
 const modalTitleRef = ref<HTMLElement>();
 
 const { x, y, isDragging } = useDraggable(modalTitleRef);
+
+const { on, off } = useEventEmitter();
 
 const startX = ref<number>(0);
 const startY = ref<number>(0);
@@ -40,7 +61,10 @@ const { modal } = App.useApp();
 
 const queryClient = useQueryClient();
 
-const { farmConfig } = useContext();
+const { farmConfig, setPicking } = useContext();
+
+/** Where the modal is opem */
+const whereIsComeForm = ref<string>('');
 
 const modalRef = ref<Partial<PlantProps>>({
   name: '',
@@ -134,6 +158,8 @@ function onCancel(e: MouseEvent) {
     soilPositionX: undefined,
     soilPositionY: undefined,
   };
+
+  whereIsComeForm.value = '';
 }
 
 function onDelete() {
@@ -146,15 +172,43 @@ function onDelete() {
   });
 }
 
+function onPick(e: MouseEvent) {
+  setPicking({
+    seeds: false,
+    multiple: false,
+    hideConfirm: false,
+  });
+
+  props.onCancel?.call({}, e);
+
+  whereIsComeForm.value = props.parent;
+}
+
+async function onPickConfirm(_selected: any[]) {
+  const selected = toRaw(unref(_selected));
+
+  emit('confirm', whereIsComeForm.value, selected[0]);
+
+  if (selected.length) {
+    modalRef.value.soilPositionX = selected[0].soilPositionX;
+    modalRef.value.soilPositionY = selected[0].soilPositionY;
+  }
+}
+
+watch(
+  () => props.initialValue,
+  (value) => {
+    modalRef.value = {
+      ...modalRef.value,
+      ...value,
+    };
+  }
+);
+
 watch(
   () => props.open,
   (value) => {
     if (value) {
-      modalRef.value = {
-        ...modalRef.value,
-        ...props.initialValue,
-      };
-
       transformX.value = 0;
       transformY.value = 0;
     }
@@ -192,6 +246,14 @@ watch(isDragging, () => {
   if (!isDragging) {
     startedDrag.value = false;
   }
+});
+
+onMounted(() => {
+  on('PICK_CONFIRM', onPickConfirm);
+});
+
+onUnmounted(() => {
+  off('PICK_CONFIRM', onPickConfirm);
 });
 </script>
 
@@ -256,7 +318,10 @@ watch(isDragging, () => {
       </a-space>
       <p>植物坐标</p>
       <a-space size="large">
-        <a-space align="start">
+        <a-form-item>
+          <a-button @click="onPick">选择区域</a-button>
+        </a-form-item>
+        <a-space align="start" hidden>
           <p style="margin-top: 6px">X :</p>
           <a-form-item v-bind="validateInfos.soilPositionX">
             <a-select
@@ -270,7 +335,7 @@ watch(isDragging, () => {
             />
           </a-form-item>
         </a-space>
-        <a-space align="start">
+        <a-space align="start" hidden>
           <p style="margin-top: 6px">Y :</p>
           <a-form-item v-bind="validateInfos.soilPositionY">
             <a-select

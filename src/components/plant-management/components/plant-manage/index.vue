@@ -180,76 +180,78 @@ onUnmounted(() => {
 
 <template>
   <a-card title="植物管理">
-    <plant-info
-      :open="open"
-      :initial-value="plant"
-      :parent="'plant'"
-      @confirm="onConfirm"
-      @cancel="onCancel"
-    />
-    <a-flex vertical :gap="16">
-      <a-input-search
-        v-model:value="search"
-        placeholder="请输入种子或植物名称"
-        @search="onSearch"
+    <a-spin :spinning="query.isFetching.value">
+      <plant-info
+        :open="open"
+        :initial-value="plant"
+        :parent="'plant'"
+        @confirm="onConfirm"
+        @cancel="onCancel"
       />
-      <a-typography-title :level="5">植物分组</a-typography-title>
-      <a-tree
-        block-node
-        auto-expand-parent
-        default-expand-all
-        :tree-data="query.data.value"
-        :field-names="{
-          key: 'key',
-          title: 'name',
-          children: 'cropList',
-        }"
-        @select="onSelect"
-      >
-        <template #title="{ name, cropList, id, seedId }">
-          <div :class="classes.item">
-            <span v-if="name.indexOf(search) > -1">
-              {{ name.substring(0, name.indexOf(search)) }}
-              <span style="color: #f50">{{ search }}</span>
-              {{ name.substring(name.indexOf(search) + search.length) }}
-            </span>
-            <span v-else>{{ name }} </span>
-            <a-space v-if="!!cropList">
-              <a-button
-                danger
-                type="link"
-                size="small"
-                @click="(e) => onDeleteSeed(e, seedId)"
-              >
-                删除所有植物
-              </a-button>
-            </a-space>
-            <a-space :size="0" v-else>
-              <a-button
-                type="link"
-                size="small"
-                style="color: #00b96b"
-                :loading="mutation.isPending.value"
-                @click="(e) => onEdit(e, id)"
-              >
-                编辑
-              </a-button>
-              <a-button
-                danger
-                type="link"
-                size="small"
-                @click="(e) => onDelete(e, id)"
-              >
-                删除
-              </a-button>
-            </a-space>
-          </div>
-        </template>
-      </a-tree>
-    </a-flex>
-    <a-empty
-      v-if="!query.data.value.length"
-      :image="Empty.PRESENTED_IMAGE_SIMPLE"
-    />
+      <a-flex vertical :gap="16">
+        <a-input-search
+          v-model:value="search"
+          placeholder="请输入种子或植物名称"
+          @search="onSearch"
+        />
+        <a-typography-title :level="5">植物分组</a-typography-title>
+        <a-tree
+          block-node
+          auto-expand-parent
+          default-expand-all
+          :tree-data="query.data.value"
+          :field-names="{
+            key: 'key',
+            title: 'name',
+            children: 'cropList',
+          }"
+          @select="onSelect"
+        >
+          <template #title="{ name, cropList, id, seedId }">
+            <div :class="classes.item">
+              <span v-if="name.indexOf(search) > -1">
+                {{ name.substring(0, name.indexOf(search)) }}
+                <span style="color: #f50">{{ search }}</span>
+                {{ name.substring(name.indexOf(search) + search.length) }}
+              </span>
+              <span v-else>{{ name }} </span>
+              <a-space v-if="!!cropList">
+                <a-button
+                  danger
+                  type="link"
+                  size="small"
+                  @click="(e) => onDeleteSeed(e, seedId)"
+                >
+                  删除所有植物
+                </a-button>
+              </a-space>
+              <a-space :size="0" v-else>
+                <a-button
+                  type="link"
+                  size="small"
+                  style="color: #00b96b"
+                  :loading="mutation.isPending.value"
+                  @click="(e) => onEdit(e, id)"
+                >
+                  编辑
+                </a-button>
+                <a-button
+                  danger
+                  type="link"
+                  size="small"
+                  @click="(e) => onDelete(e, id)"
+                >
+                  删除
+                </a-button>
+              </a-space>
+            </div>
+          </template>
+        </a-tree>
+      </a-flex>
+      <a-empty
+        v-if="!query.data.value.length"
+        :image="Empty.PRESENTED_IMAGE_SIMPLE"
+      />
+    </a-spin>
   </a-card>
 </template>

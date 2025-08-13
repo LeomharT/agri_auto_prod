@@ -111,6 +111,11 @@ onUnmounted(() => {
   player.value?.closeIVS();
 
   player.value = null;
+
+  const scripts = document.head.querySelectorAll('script');
+  scripts.forEach((s) => {
+    if (s.src.includes('libplay.js')) s.remove();
+  });
 });
 </script>
 <template>

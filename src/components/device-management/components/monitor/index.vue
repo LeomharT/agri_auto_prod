@@ -11,7 +11,14 @@ import {
 } from '@tabler/icons-vue';
 import { useMutation, useQuery } from '@tanstack/vue-query';
 import { App, Empty } from 'ant-design-vue';
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from 'vue';
 import MonitorSettings from '../monitor-settings/index.vue';
 import VideoPlayer from './VideoPlayer.vue';
 import classes from './style.module.css';
@@ -106,16 +113,16 @@ onMounted(() => {
   }
 });
 
-onUnmounted(() => {
-  player.value?.close();
-  player.value?.closeIVS();
-
-  player.value = null;
-
+onBeforeUnmount(() => {
   const scripts = document.head.querySelectorAll('script');
   scripts.forEach((s) => {
     if (s.src.includes('libplay.js')) s.remove();
   });
+
+  player.value?.close();
+  player.value?.closeIVS();
+
+  player.value = null;
 });
 </script>
 <template>
@@ -146,6 +153,7 @@ onUnmounted(() => {
         :isLive="true"
         :isEncrypt="false"
         :videoURL="query.data.value?.monitorUrl ?? ''"
+        @update:rtspURL="() => console.log('Video Closed')"
       />
       <a-button
         v-if="!isPlaying && !query.isFetching.value"

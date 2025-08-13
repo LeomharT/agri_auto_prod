@@ -1,11 +1,16 @@
 <script lang="ts" setup>
-import { installTool, unInstallTool } from '@/api/device';
+import {
+  getRoboticArmToolInfo,
+  installTool,
+  unInstallTool,
+} from '@/api/device';
 import useContext from '@/app/composables/useContext';
 import useEventEmitter from '@/app/composables/useEventEmitter';
 import { MUTATIONS } from '@/data/mutations';
-import { useMutation } from '@tanstack/vue-query';
+import { QUERIES } from '@/data/queries';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import { App } from 'ant-design-vue';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import RobotArm from '../robot-arm/index.vue';
 import ToolsTask from '../tools-task/index.vue';
 
@@ -27,11 +32,22 @@ const tools = [
   { title: '除草工具', toolType: 3, seeds: false },
 ];
 
+const query = useQuery({
+  queryKey: [QUERIES.TOOLS_STATUS],
+  queryFn: () => getRoboticArmToolInfo(farmConfig?.value?.id!),
+  enabled: computed(() => Boolean(farmConfig?.value?.id)),
+  initialData: {
+    toolType: 0,
+    workStatus: 0,
+  },
+  refetchInterval: 5000,
+});
+
 const install = useMutation({
   mutationKey: [MUTATIONS.INSTALL_TOOL],
   mutationFn: installTool,
   onSuccess() {
-    message.success('工具安装成功');
+    message.success('工具安装请求以发送');
   },
 });
 
@@ -101,6 +117,7 @@ onUnmounted(() => {
         <template #extra>
           <a-space>
             <a-button
+              v-if="query.data.value.toolType !== tool.toolType"
               size="small"
               type="text"
               @click="(e) => onInstall(e, tool.toolType)"
@@ -108,6 +125,7 @@ onUnmounted(() => {
               安装工具
             </a-button>
             <a-button
+              v-if="query.data.value.toolType === tool.toolType"
               danger
               type="text"
               size="small"

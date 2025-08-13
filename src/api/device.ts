@@ -123,3 +123,10 @@ export function moveArm(body: {
     body: JSON.stringify(body),
   });
 }
+
+export function getRoboticArmToolInfo(id: number) {
+  return fetchData<{
+    workStatus: number;
+    toolType: number;
+  }>(`${prefix}/api/farmDevice/getRoboticArmToolInfo?FarmId=${id}`);
+}

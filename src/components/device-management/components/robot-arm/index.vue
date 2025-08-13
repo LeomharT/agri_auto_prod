@@ -103,7 +103,7 @@ onUnmounted(() => {
       <a-space>
         <a-button @click="startPicking">拾取坐标</a-button>
         <a-button :loading="mutation.isPending.value" @click="onExecute">
-          执行任务
+          移动机械臂
         </a-button>
       </a-space>
     </a-form>

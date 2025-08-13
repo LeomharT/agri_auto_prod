@@ -221,7 +221,7 @@ watch(
     if (value.plantStatus === 2) {
       // Seed
       if (value.growStatus === 1) {
-        type.value = 'moundWet';
+        type.value = 'mound';
       }
       // Growing
       if (value.growStatus === 2) {

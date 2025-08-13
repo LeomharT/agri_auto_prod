@@ -179,7 +179,9 @@ onUnmounted(() => {
   <a-flex vertical>
     <a-form layout="inline">
       <a-typography-paragraph :class="classes.label">
-        设置种植工具速度 (%)
+        设置{{
+          { '1': '种植', '2': '喷淋', '3': '除草' }[props.toolType]
+        }}工具速度 (%)
       </a-typography-paragraph>
       <a-form-item label="x" v-bind="validateInfos.speedX">
         <a-input-number v-model:value="modalRef.speedX" />

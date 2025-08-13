@@ -159,7 +159,6 @@ onBeforeUnmount(() => {
         v-if="!isPlaying && !query.isFetching.value"
         :class="classes.btn"
         ghost
-        @click="onPlay"
       >
         <icon-player-play-filled />
       </a-button>

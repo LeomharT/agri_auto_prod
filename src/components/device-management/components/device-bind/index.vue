@@ -92,6 +92,8 @@ function onProjectChange(val: DefaultOptionType) {
 }
 
 function onDeviceChange(val: SelectValue) {
+  modelRef.value.deviceId = val as number;
+
   const device = devices.data.value.filter((item) => item.id === val)[0];
   if (device) {
     bindDevice.value = {
@@ -114,6 +116,7 @@ watch(props, () => {
         deviceId: props.initialData.deviceId,
       };
 
+      onProjectChange({ id: props.initialData.productId });
       onDeviceChange(props.initialData.deviceId);
     }
   }

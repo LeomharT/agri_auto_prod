@@ -15,6 +15,7 @@ const ICONS: Record<string, string> = {
   soil_ph: 'imgs/sensor/icon_PH.png',
   air_hum: 'imgs/sensor/icon_humidity.png',
   air_tmp: 'imgs/sensor/icon_temperature.png',
+  soil_ec: 'imgs/sensor/icon_ec.png',
 };
 
 const { farmConfig, collapse } = useContext();

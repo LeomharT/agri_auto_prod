@@ -83,8 +83,8 @@ function onCancel() {
   bindDevice.value = {};
 }
 
-function onProjectChange(val: DefaultOptionType) {
-  devices.refetch();
+async function onProjectChange(val: DefaultOptionType) {
+  await devices.refetch();
   modelRef.value.deviceId = undefined;
 
   // Set submit value
@@ -107,16 +107,15 @@ function onDeviceChange(val: SelectValue) {
   }
 }
 
-watch(props, () => {
+watch(props, async () => {
   if (props.open) {
     if (props.initialData) {
       modelRef.value = {
         projectId: props.initialData.projectId,
         deviceBindType: props.initialData.deviceBindType,
-        deviceId: props.initialData.deviceId,
       };
 
-      onProjectChange({ id: props.initialData.productId });
+      await onProjectChange({ id: props.initialData.productId });
       onDeviceChange(props.initialData.deviceId);
     }
   }
@@ -172,7 +171,6 @@ watch(props, () => {
             { label: '传感器', value: 2 },
             { label: '机械臂', value: 3 },
           ]"
-          @change="onDeviceChange"
         />
       </a-form-item>
     </a-form>

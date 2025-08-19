@@ -83,21 +83,21 @@ onUnmounted(() => {
         <a-input-number
           v-model:value="modalRef.destinationX"
           readonly
-          style="width: 50px"
+          style="width: 70px"
         />
       </a-form-item>
       <a-form-item label="y" v-bind="validateInfos.destinationY">
         <a-input-number
           v-model:value="modalRef.destinationY"
           readonly
-          style="width: 50px"
+          style="width: 70px"
         />
       </a-form-item>
       <a-form-item label="z" v-bind="validateInfos.destinationZ">
         <a-input-number
           v-model:value="modalRef.destinationZ"
           readonly
-          style="width: 50px"
+          style="width: 70px"
         />
       </a-form-item>
       <a-space>

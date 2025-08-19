@@ -229,21 +229,21 @@ onUnmounted(() => {
         <a-input-number
           v-model:value="modalRef.positionX"
           :max="farmConfig?.width"
-          style="width: 50px"
+          style="width: 70px"
         />
       </a-form-item>
       <a-form-item label="y" v-bind="validateInfos.positionY">
         <a-input-number
           v-model:value="modalRef.positionY"
           :max="farmConfig?.length"
-          style="width: 50px"
+          style="width: 70px"
         />
       </a-form-item>
       <a-form-item label="z" v-bind="validateInfos.positionZ">
         <a-input-number
           v-model:value="modalRef.positionZ"
           readonly
-          style="width: 50px"
+          style="width: 70px"
         />
       </a-form-item>
       <a-button html-type="submit" @click="onExecution">执行任务</a-button>

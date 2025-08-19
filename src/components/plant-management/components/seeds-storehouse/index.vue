@@ -7,7 +7,7 @@ import type { Seed } from '@/models/seed.type';
 import { IconPlus } from '@tabler/icons-vue';
 import { useQuery } from '@tanstack/vue-query';
 import { Empty } from 'ant-design-vue';
-import { computed, h, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, h, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 import SeedsInfo from '../seeds-info/index.vue';
 import classes from './style.module.css';
 
@@ -18,6 +18,10 @@ const open = ref(false);
 const initialData = ref<undefined | Seed>();
 
 const { farmConfig } = useContext();
+
+const observer = new ResizeObserver((entries) => {
+  scrollShadow(entries[0].target as HTMLDivElement);
+});
 
 const query = useQuery({
   queryKey: [QUERIES.ALL_CROP_SEED_LIST],
@@ -76,8 +80,12 @@ function onClose() {
 
 onMounted(() => {
   if (listRef.value) {
-    scrollShadow(listRef.value);
+    observer.observe(listRef.value);
   }
+});
+
+onUnmounted(() => {
+  observer.disconnect();
 });
 </script>
 

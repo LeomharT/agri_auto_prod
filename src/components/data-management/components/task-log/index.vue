@@ -137,7 +137,7 @@ function onReset() {
       <a-form-item name="Name">
         <a-input
           v-model:value="params.Name"
-          style="width: 100px"
+          style="width: 130px"
           type="text"
           placeholder="请输入任务名称"
         />
@@ -145,7 +145,7 @@ function onReset() {
       <a-form-item name="ToolType">
         <a-select
           v-model:value="params.ToolType"
-          style="width: 100px"
+          style="width: 120px"
           placeholder="请选择工具"
           :allow-clear="false"
           :options="[
@@ -158,7 +158,7 @@ function onReset() {
       <a-form-item name="DateRange">
         <a-range-picker
           v-model:value="params.DateRange"
-          style="width: 200px"
+          style="width: 220px"
           :allow-clear="false"
         />
       </a-form-item>

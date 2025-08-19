@@ -41,9 +41,9 @@ const query = useQuery({
       </a-typography-text>
     </template>
     <div :class="classes.list">
-      <a-space v-for="item in query.data.value">
+      <a-space :class="classes.item" v-for="item in query.data.value">
         <img draggable="false" :src="ICONS[item.propKey]" />
-        <a-space direction="vertical" :size="0">
+        <a-space :class="classes.label" direction="vertical" :size="0">
           <a-typography-title :level="3" style="margin: 0">
             {{ item.propValue }}
             <sup>

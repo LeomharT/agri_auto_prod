@@ -173,7 +173,7 @@ onMounted(() => {
       <a-form-item name="DateRange" :rules="[{ required: true }]">
         <a-range-picker
           v-model:value="params.DateRange"
-          style="width: 150px"
+          style="width: 220px"
           :disabled-date="
             (current) => {
               return current.isAfter(dayjs());

@@ -26,6 +26,7 @@
 
 .tabs {
   min-width: 0;
+  width: 503px;
   padding-inline-end: 16px;
 
   & :global(.ant-tabs-nav) {

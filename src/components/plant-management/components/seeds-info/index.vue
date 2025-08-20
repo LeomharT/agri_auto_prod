@@ -15,7 +15,7 @@ import {
   type UploadProps,
 } from 'ant-design-vue';
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface';
-import { defineProps, ref, useTemplateRef, watchEffect } from 'vue';
+import { ref, useTemplateRef, watchEffect } from 'vue';
 
 type FormInput = {
   name: string;

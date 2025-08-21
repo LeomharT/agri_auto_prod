@@ -150,6 +150,11 @@ function onRemove() {
 function getFarmCord(open: boolean) {
   if (open) {
     data.value = queryClient.getQueryData([QUERIES.FARM_CROP_LIST]);
+    if (data.value) {
+      data.value = data.value.filter((item) => {
+        return item.plantStatus === 1 && item.growStatus === 1;
+      });
+    }
   }
 }
 

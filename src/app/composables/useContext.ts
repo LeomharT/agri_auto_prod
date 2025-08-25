@@ -1,4 +1,4 @@
-import { inject, type ComputedRef, type Ref } from 'vue';
+import { computed, inject, type ComputedRef, type Ref } from 'vue';
 import type { FarmConfig } from '../../models/farm.type';
 import { APP_CONTEXT, type PickingStatus } from '../contex';
 
@@ -30,6 +30,16 @@ export default function useContext() {
 
   const farmConfig = inject<ComputedRef<FarmConfig>>(APP_CONTEXT.FARM_CONFIG);
 
+  /**
+   * @default 3
+   */
+  const rowCount = computed(() => farmConfig?.value?.rowCount ?? 0);
+
+  /**
+   * @default 6
+   */
+  const columnCount = computed(() => farmConfig?.value?.columnCount ?? 0);
+
   return {
     farmConfig,
     activeKey,
@@ -42,5 +52,7 @@ export default function useContext() {
     setSelected,
     editingPlant,
     setEditingPlant,
+    rowCount,
+    columnCount,
   };
 }

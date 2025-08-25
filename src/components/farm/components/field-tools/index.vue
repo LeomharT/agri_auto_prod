@@ -28,16 +28,6 @@ function onToolClick(type: number) {
 
 <template>
   <div :class="classes.tools">
-    <a-tooltip title="种植槽1号">
-      <div :class="classes.sloat">
-        <img src="/imgs/tools/seed_hover.png" />
-      </div>
-    </a-tooltip>
-    <a-tooltip title="种植槽2号">
-      <div :class="classes.sloat" style="margin-right: 30px">
-        <img src="/imgs/tools/seed_hover.png" />
-      </div>
-    </a-tooltip>
     <a-tooltip title="种植工具">
       <div :class="classes.tool" @click="onToolClick(1)">
         <img :src="activeKey === 'device' ? active.plant : deactive.plant" />
@@ -51,6 +41,21 @@ function onToolClick(type: number) {
     <a-tooltip title="除草工具">
       <div :class="classes.tool" @click="onToolClick(3)">
         <img :src="activeKey === 'device' ? active.grass : deactive.grass" />
+      </div>
+    </a-tooltip>
+    <a-tooltip title="种植槽1号">
+      <div :class="classes.sloat">
+        <img src="/imgs/tools/seed_hover.png" />
+      </div>
+    </a-tooltip>
+    <a-tooltip title="种植槽2号">
+      <div :class="classes.sloat">
+        <img src="/imgs/tools/seed_hover.png" />
+      </div>
+    </a-tooltip>
+    <a-tooltip title="种植槽3号">
+      <div :class="classes.sloat">
+        <img src="/imgs/tools/seed_hover.png" />
       </div>
     </a-tooltip>
   </div>

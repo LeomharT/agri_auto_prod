@@ -140,7 +140,7 @@ function onSelect(
   }
 ) {
   if (info.selectedNodes.length) {
-    if (info.selectedNodes[0].cropList) {
+    if (info.selectedNodes[0]?.cropList) {
       setSelected(
         info.selectedNodes[0].cropList.map((item: any) => ({
           no: getPlantIndex(item.soilPositionX, item.soilPositionY),
@@ -148,11 +148,17 @@ function onSelect(
         }))
       );
     } else {
+      console.log(
+        getPlantIndex(
+          info.selectedNodes[0]?.soilPositionX,
+          info.selectedNodes[0]?.soilPositionY
+        )
+      );
       setSelected([
         {
           no: getPlantIndex(
-            info.selectedNodes[0].soilPositionX,
-            info.selectedNodes[0].soilPositionY
+            info.selectedNodes[0]?.soilPositionX,
+            info.selectedNodes[0]?.soilPositionY
           ),
           ...info.selectedNodes[0],
         },

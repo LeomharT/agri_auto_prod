@@ -10,7 +10,8 @@ import FieldTools from './components/field-tools/index.vue';
 import MoundBlock from './components/mound-block/index.vue';
 import classes from './style.module.css';
 
-const { farmConfig, picking, setEditingPlant } = useContext();
+const { farmConfig, rowCount, columnCount, picking, setEditingPlant } =
+  useContext();
 
 const open = ref(false);
 
@@ -24,11 +25,11 @@ const query = useQuery({
 });
 
 function xIndex(i: number) {
-  return (i - 1) % 3;
+  return (i - 1) % rowCount.value;
 }
 
 function yIndex(i: number) {
-  return Math.floor((i - 1) / 3);
+  return columnCount.value - Math.ceil(i / rowCount.value);
 }
 
 function onPlantDrop(args: Partial<PlantProps>) {

@@ -1,3 +1,3 @@
 export function getPlantIndex(x: number, y: number) {
-  return y * 3 + x + 1;
+  return (6 - 1 - y) * 3 + x + 1;
 }

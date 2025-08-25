@@ -312,6 +312,7 @@ onUnmounted(() => {
             :options="[
               { value: 1, label: '1号种子槽' },
               { value: 2, label: '2号种子槽' },
+              { value: 3, label: '3号种子槽' },
             ]"
           />
         </a-form-item>
@@ -321,7 +322,7 @@ onUnmounted(() => {
         <a-form-item>
           <a-button @click="onPick">选择区域</a-button>
         </a-form-item>
-        <a-space align="start" hidden>
+        <a-space align="start" hidden="false">
           <p style="margin-top: 6px">X :</p>
           <a-form-item v-bind="validateInfos.soilPositionX">
             <a-select
@@ -335,7 +336,7 @@ onUnmounted(() => {
             />
           </a-form-item>
         </a-space>
-        <a-space align="start" hidden>
+        <a-space align="start" hidden="false">
           <p style="margin-top: 6px">Y :</p>
           <a-form-item v-bind="validateInfos.soilPositionY">
             <a-select

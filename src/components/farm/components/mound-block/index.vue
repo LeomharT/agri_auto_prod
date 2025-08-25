@@ -243,9 +243,6 @@ watch(
         />
         <a-space>
           <a-typography-text>
-            {{ no }}
-            <br />
-            x: {{ props.x }}, y:{{ props.y }}
             {{ props.palnt?.name ?? '空地' }}
           </a-typography-text>
         </a-space>

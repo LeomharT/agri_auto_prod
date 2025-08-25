@@ -17,6 +17,11 @@ const props = defineProps<{
   seeds: boolean;
   activeKey: string;
   allowPicking?: boolean;
+  initialValue: {
+    speedX: number;
+    speedY: number;
+    speedZ: number;
+  };
 }>();
 
 const queryClient = useQueryClient();
@@ -37,9 +42,9 @@ const modalRef = ref({
   positionZ: 0,
   soilPositionX: 0,
   soilPositionY: 0,
-  speedX: 0,
-  speedY: 0,
-  speedZ: 0,
+  speedX: props.initialValue.speedX,
+  speedY: props.initialValue.speedY,
+  speedZ: props.initialValue.speedZ,
   toolType: props.toolType,
   seedId: undefined as number | undefined,
 });
@@ -189,13 +194,13 @@ onUnmounted(() => {
         }}工具速度 (%)
       </a-typography-paragraph>
       <a-form-item label="x" v-bind="validateInfos.speedX">
-        <a-input-number v-model:value="modalRef.speedX" />
+        <a-input-number v-model:value="modalRef.speedX" :min="0" :max="5000" />
       </a-form-item>
       <a-form-item label="y" v-bind="validateInfos.speedY">
-        <a-input-number v-model:value="modalRef.speedY" />
+        <a-input-number v-model:value="modalRef.speedY" :min="0" :max="5000" />
       </a-form-item>
       <a-form-item label="z" v-bind="validateInfos.speedZ">
-        <a-input-number v-model:value="modalRef.speedZ" />
+        <a-input-number v-model:value="modalRef.speedZ" :min="0" :max="5000" />
       </a-form-item>
       <a-divider />
       <a-typography-paragraph :class="classes.label">

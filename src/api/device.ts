@@ -128,5 +128,8 @@ export function getRoboticArmToolInfo(id: number) {
   return fetchData<{
     workStatus: number;
     toolType: number;
+    speedX: number;
+    speedY: number;
+    speedZ: number;
   }>(`${prefix}/api/farmDevice/getRoboticArmToolInfo?FarmId=${id}`);
 }

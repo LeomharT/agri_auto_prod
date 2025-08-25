@@ -39,6 +39,9 @@ const query = useQuery({
   initialData: {
     toolType: 0,
     workStatus: 0,
+    speedX: 1000,
+    speedY: 1000,
+    speedZ: 1000,
   },
   refetchInterval: 5000,
 });
@@ -140,6 +143,11 @@ onUnmounted(() => {
           :tool-type="tool.toolType"
           :seeds="tool.seeds"
           :allow-picking="tool.toolType !== 1"
+          :initial-value="{
+            speedX: query.data.value.speedX,
+            speedY: query.data.value.speedX,
+            speedZ: query.data.value.speedX,
+          }"
         />
       </a-collapse-panel>
     </a-collapse>

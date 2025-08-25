@@ -48,7 +48,7 @@ function startPicking() {
   message.info('请选择需要执行的土地');
 }
 
-function onPicking(_selected: any[]) {
+function onPickConfirm(_selected: any[]) {
   const selected = toRaw(unref(_selected));
 
   if (selected.length) {
@@ -68,11 +68,11 @@ function onExecute() {
 }
 
 onMounted(() => {
-  on('PICK_CONFIRM', onPicking);
+  on('PICK_CONFIRM', onPickConfirm);
 });
 
 onUnmounted(() => {
-  off('PICK_CONFIRM', onPicking);
+  off('PICK_CONFIRM', onPickConfirm);
 });
 </script>
 

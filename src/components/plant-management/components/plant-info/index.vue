@@ -61,7 +61,7 @@ const { modal } = App.useApp();
 
 const queryClient = useQueryClient();
 
-const { farmConfig, setPicking } = useContext();
+const { farmConfig, rowCount, columnCount, setPicking } = useContext();
 
 /** Where the modal is opem */
 const whereIsComeForm = ref<string>('');
@@ -126,11 +126,15 @@ function onOk() {
   validate().then((_data) => {
     const config = farmConfig;
 
-    const xCoord =
-      (config!.value.width / config!.value.rowCount) * _data.soilPositionX;
+    const block = {
+      width: Math.round(farmConfig!.value.width / rowCount.value),
+      height: Math.round(farmConfig!.value.length / columnCount.value),
+    };
 
-    const yCoord =
-      (config!.value.length / config!.value.columnCount) * _data.soilPositionY;
+    const [xCoord, yCoord] = [
+      block.width * _data.soilPositionX + block.width / 2,
+      block.height * _data.soilPositionY + block.height / 2,
+    ];
 
     const data = {
       ..._data,

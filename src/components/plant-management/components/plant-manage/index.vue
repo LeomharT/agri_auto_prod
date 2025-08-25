@@ -148,12 +148,6 @@ function onSelect(
         }))
       );
     } else {
-      console.log(
-        getPlantIndex(
-          info.selectedNodes[0]?.soilPositionX,
-          info.selectedNodes[0]?.soilPositionY
-        )
-      );
       setSelected([
         {
           no: getPlantIndex(

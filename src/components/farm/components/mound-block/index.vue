@@ -62,6 +62,8 @@ const { message } = App.useApp();
 const {
   farmConfig,
   picking,
+  rowCount,
+  columnCount,
   setSelected,
   selected,
   editingPlant,
@@ -144,9 +146,14 @@ function onPicking() {
       return prev;
     });
   } else {
+    const block = {
+      width: Math.round(farmConfig!.value.width / rowCount.value),
+      height: Math.round(farmConfig!.value.length / columnCount.value),
+    };
+
     const [xCoord, yCoord] = [
-      (farmConfig!.value.width / farmConfig!.value.rowCount) * props.x,
-      (farmConfig!.value.length / farmConfig!.value.columnCount) * props.y,
+      block.width * props.x + block.width / 2,
+      block.height * props.y + block.height / 2,
     ];
 
     if (picking.value instanceof Object && !picking.value.multiple) {

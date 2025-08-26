@@ -28,9 +28,9 @@ function onToolClick(type: number) {
 
 <template>
   <div :class="classes.tools">
-    <a-tooltip title="种植工具">
-      <div :class="classes.tool" @click="onToolClick(1)">
-        <img :src="activeKey === 'device' ? active.plant : deactive.plant" />
+    <a-tooltip title="除草工具">
+      <div :class="classes.tool" @click="onToolClick(3)">
+        <img :src="activeKey === 'device' ? active.grass : deactive.grass" />
       </div>
     </a-tooltip>
     <a-tooltip title="喷淋工具">
@@ -38,9 +38,9 @@ function onToolClick(type: number) {
         <img :src="activeKey === 'device' ? active.water : deactive.water" />
       </div>
     </a-tooltip>
-    <a-tooltip title="除草工具">
-      <div :class="classes.tool" @click="onToolClick(3)">
-        <img :src="activeKey === 'device' ? active.grass : deactive.grass" />
+    <a-tooltip title="种植工具">
+      <div :class="classes.tool" @click="onToolClick(1)">
+        <img :src="activeKey === 'device' ? active.plant : deactive.plant" />
       </div>
     </a-tooltip>
     <a-tooltip title="种植槽1号">

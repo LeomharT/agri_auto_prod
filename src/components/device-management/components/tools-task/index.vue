@@ -191,7 +191,7 @@ onUnmounted(() => {
       <a-typography-paragraph :class="classes.label">
         设置{{
           { '1': '种植', '2': '喷淋', '3': '除草' }[props.toolType]
-        }}工具速度 (%)
+        }}工具速度 (PRM)
       </a-typography-paragraph>
       <a-form-item label="x" v-bind="validateInfos.speedX">
         <a-input-number v-model:value="modalRef.speedX" :min="0" :max="5000" />
@@ -204,7 +204,7 @@ onUnmounted(() => {
       </a-form-item>
       <a-divider />
       <a-typography-paragraph :class="classes.label">
-        设置目的坐标 (cm)
+        设置目的坐标 (mm)
       </a-typography-paragraph>
       <a-form-item v-if="!props.allowPicking" v-bind="validateInfos.seedId">
         <a-select

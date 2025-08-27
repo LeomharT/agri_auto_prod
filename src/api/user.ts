@@ -3,8 +3,6 @@ import fetchData from '../utils/fetchData';
 
 const prefix: string = window.VITE_SERVER_HOST;
 
-console.log(prefix);
-
 export function login({
   account,
   password,
@@ -25,8 +23,6 @@ export function login({
 }
 
 export function adminLogin(body: { appId: string; appSecret: string }) {
-  console.log(`${prefix}/api/auth/adminLogin`);
-
   return fetchData<any>(`${prefix}/api/auth/adminLogin`, {
     method: 'POST',
     body: JSON.stringify(body),

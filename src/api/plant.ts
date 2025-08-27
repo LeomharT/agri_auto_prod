@@ -1,7 +1,7 @@
 import type { Seed } from '../models/seed.type';
 import fetchData from '../utils/fetchData';
 
-const prefix: string = import.meta.env.VITE_SERVER_HOST;
+const prefix: string = window.VITE_SERVER_HOST;
 
 export async function getAllCropSeedList(farmId: number) {
   const data = await fetchData<{ items: Seed[] }>(

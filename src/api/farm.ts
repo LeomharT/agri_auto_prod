@@ -1,6 +1,6 @@
 import type { PlantProps } from '@/models/farm.type';
 import fetchData from '../utils/fetchData';
-const prefix: string = import.meta.env.VITE_SERVER_HOST;
+const prefix: string = window.VITE_SERVER_HOST;
 
 /** 获取农场植物列表 */
 export async function getFarmCropList(id?: number) {

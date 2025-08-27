@@ -1,5 +1,5 @@
 import fetchData from '../utils/fetchData';
-const prefix: string = import.meta.env.VITE_SERVER_HOST;
+const prefix: string = window.VITE_SERVER_HOST;
 
 type UploadFileResponse = {
   fileUrl: string;

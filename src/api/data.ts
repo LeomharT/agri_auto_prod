@@ -1,6 +1,6 @@
 import type { Task } from '@/models/task.type';
 import fetchData from '@/utils/fetchData';
-const prefix = import.meta.env.VITE_SERVER_HOST;
+const prefix: string = window.VITE_SERVER_HOST;
 
 export async function getTaskRecordList(_params: any) {
   const params = new URLSearchParams(_params);

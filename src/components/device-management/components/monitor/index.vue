@@ -23,7 +23,7 @@ import MonitorSettings from '../monitor-settings/index.vue';
 import VideoPlayer from './VideoPlayer.vue';
 import classes from './style.module.css';
 import videoPlayer from './videoPlayer';
-const host = import.meta.env.VITE_SERVER_HOST;
+const host = window.VITE_SERVER_HOST;
 
 const emit = defineEmits<{
   (e: 'back'): void;

@@ -17,5 +17,11 @@
     "noUncheckedSideEffectImports": true
   },
   "files": ["components.d.ts"],
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "components.d.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "components.d.ts",
+    "modules.d.ts"
+  ]
 }

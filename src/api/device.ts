@@ -1,7 +1,8 @@
 import type { PlantProps } from '@/models/farm.type';
 import type { DaHuaConfig, Device, SensorData } from '../models/device.type';
 import fetchData from '../utils/fetchData';
-const prefix = import.meta.env.VITE_SERVER_HOST;
+const prefix: string = window.VITE_SERVER_HOST;
+
 export function getBindDeviceList(id: number) {
   return fetchData<Device[]>(
     `${prefix}/api/farmDevice/getBindDeviceList?FarmId=${id}`

@@ -43,17 +43,17 @@ function onToolClick(type: number) {
         <img :src="activeKey === 'device' ? active.plant : deactive.plant" />
       </div>
     </a-tooltip>
-    <a-tooltip title="种植槽1号">
+    <a-tooltip title="种子槽1号">
       <div :class="classes.sloat">
         <img src="/imgs/tools/seed_hover.png" />
       </div>
     </a-tooltip>
-    <a-tooltip title="种植槽2号">
+    <a-tooltip title="种子槽2号">
       <div :class="classes.sloat">
         <img src="/imgs/tools/seed_hover.png" />
       </div>
     </a-tooltip>
-    <a-tooltip title="种植槽3号">
+    <a-tooltip title="种子槽3号">
       <div :class="classes.sloat">
         <img src="/imgs/tools/seed_hover.png" />
       </div>

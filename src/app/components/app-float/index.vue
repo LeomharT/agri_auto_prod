@@ -18,7 +18,7 @@ function onPickConfirm() {
 </script>
 
 <template>
-  <a-tooltip title="确认选择" placement="left" open>
+  <a-tooltip title="确认选择" :arrow="false">
     <a-float-button
       v-if="picking"
       v-show="!(picking instanceof Object && picking.hideConfirm)"

@@ -196,6 +196,7 @@ function onEditing() {
       name: plant.value?.name,
       plantStatus: plant.value?.plantStatus,
       growStatus: plant.value?.growStatus,
+      seedSlot: plant.value?.seedSlot,
     });
   }
 }

@@ -37,7 +37,7 @@ const query = useQuery({
         type="secondary"
         style="display: inline-block; margin-left: 36px"
       >
-        {{ dayjs(query.dataUpdatedAt.value).format('YYYY-MM-DD hh:mm:ss') }}
+        {{ dayjs(query.dataUpdatedAt.value).format('YYYY-MM-DD HH:mm:ss') }}
       </a-typography-text>
     </template>
     <div :class="classes.list">

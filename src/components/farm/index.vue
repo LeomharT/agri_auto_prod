@@ -17,11 +17,29 @@ const open = ref(false);
 
 const plant = ref<Partial<PlantProps>>({});
 
+const spec: Record<string, any> = {
+  '3': {
+    x: 285,
+    y: 40,
+    url: '/imgs/ground/pic_land_3x3.png',
+  },
+  '6': {
+    x: 92,
+    y: 55,
+    url: '/imgs/ground/pic_land_3x6.png',
+  },
+};
+
 const query = useQuery({
   queryKey: [QUERIES.FARM_CROP_LIST],
   queryFn: () => getFarmCropList(farmConfig?.value?.id),
   enabled: computed(() => Boolean(farmConfig?.value?.id)),
   initialData: [],
+});
+
+const transformStyle = computed(() => {
+  const column = String(columnCount.value) ?? '6';
+  return `translate(${spec[column]?.x}px, ${spec[column]?.y}px) rotateX(-60deg) rotateZ(45deg)`;
 });
 
 function xIndex(i: number) {
@@ -66,7 +84,10 @@ function onConfirm(parent: string, args?: Partial<PlantProps>) {
 </script>
 
 <template>
-  <div :class="classes.board">
+  <div
+    :class="classes.board"
+    :style="{ backgroundImage: `url(${spec[columnCount]?.url})` }"
+  >
     <a-alert
       v-if="picking"
       :class="classes.alert"
@@ -83,7 +104,14 @@ function onConfirm(parent: string, args?: Partial<PlantProps>) {
       @confirm="onConfirm"
       @cancel="onCancel"
     />
-    <div :class="classes.ground">
+    <div
+      :class="classes.ground"
+      :style="{
+        gridTemplateRows: `repeat(${rowCount}, 130px)`,
+        gridTemplateColumns: `repeat(${columnCount}, 130px)`,
+        transform: transformStyle,
+      }"
+    >
       <field-tools />
       <div v-for="i in rowCount * columnCount" :class="classes.blocks" :key="i">
         <mound-block

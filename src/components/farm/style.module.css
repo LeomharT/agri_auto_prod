@@ -5,7 +5,7 @@
   min-height: 680px;
   background-size: contain;
   background-repeat: no-repeat;
-  background-image: url('/imgs/ground/pic_land@2x.png');
+  background-image: url('/imgs/ground/pic_land_3x3.png');
 
   transform: scale(0.85);
 }

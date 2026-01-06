@@ -39,6 +39,7 @@ const props = defineProps<{
   y: number;
   no: number;
   palnt?: PlantProps;
+  showCoord?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -254,6 +255,9 @@ watch(
             {{ props.palnt?.name ?? '空地' }}
           </a-typography-text>
         </a-space>
+        <a-typography-text v-if="showCoord">
+          x: {{ x }} y: {{ y }}
+        </a-typography-text>
       </a-space>
     </template>
     <div

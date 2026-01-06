@@ -85,11 +85,12 @@ function onConfirm(parent: string, args?: Partial<PlantProps>) {
     />
     <div :class="classes.ground">
       <field-tools />
-      <div v-for="i in 3 * 6" :class="classes.blocks" :key="i">
+      <div v-for="i in rowCount * columnCount" :class="classes.blocks" :key="i">
         <mound-block
           :no="i"
           :x="xIndex(i)"
           :y="yIndex(i)"
+          :show-coord="true"
           :palnt="
             query.data.value.filter(
               (item) =>

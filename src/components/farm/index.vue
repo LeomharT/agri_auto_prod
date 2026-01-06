@@ -118,7 +118,7 @@ function onConfirm(parent: string, args?: Partial<PlantProps>) {
           :no="i"
           :x="xIndex(i)"
           :y="yIndex(i)"
-          :show-coord="true"
+          :show-coord="false"
           :palnt="
             query.data.value.filter(
               (item) =>
